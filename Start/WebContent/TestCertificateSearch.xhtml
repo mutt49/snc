@@ -1,0 +1,114 @@
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="content">
+
+
+		<f:view>
+			<h:form>
+				<rich:toolbar styleClass="toolbar">
+					<h:commandLink value="Masters" styleClass="toolbar" />
+					<h:commandLink value="Invoices" styleClass="toolbar" />
+					<h:commandLink value="Test Certificates" action="TestCertificateSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Purchase Orders" action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
+				</rich:toolbar>
+
+				<h:outputText value="Test Certificates" styleClass="pageTitle" />
+				<h:commandLink value="Add New" action="TestCertificateAdd.jsf"
+					styleClass="pageSubTitle">
+					<f:setPropertyActionListener value="#{false}"
+						target="#{TestCertificateBean.editFlag}" />
+				</h:commandLink>
+				<rich:panel>
+					<table class="table" cellspacing="0">
+						<tr>
+							<td class="leftColumn"><h:outputText value="Client Name: " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="clientName"
+									value="#{TestCertificateBean.testCertificateVO.name}"
+									label="Client Name" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Description: " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="description"
+									value="#{TestCertificateBean.testCertificateVO.description}"
+									label="Description" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Quantity: " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="quantity"
+									value="#{TestCertificateBean.testCertificateVO.quantity}"
+									label="Quantity" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Rate: " /></td>
+							<td><h:inputText styleClass="searchEntry" id="rate"
+									value="#{TestCertificateBean.testCertificateVO.rate}"
+									label="Rate" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><a4j:commandButton
+									styleClass="searchButton" value="Search" reRender="SearchTable"
+									action="#{TestCertificateBean.search}" /></td>
+							<td><a4j:commandButton styleClass="searchButton"
+									value="Reset" reRender="SearchTable"
+									action="#{TestCertificateBean.reset}" /></td>
+						</tr>
+					</table>
+					<a4j:outputPanel ajaxRendered="true" id="SearchTable">
+						<h:outputText value="There are no items with the search criteria."
+							rendered="#{TestCertificateBean.searchList.size () == 0}" />
+						<rich:dataTable value="#{TestCertificateBean.searchList}" var="tc"
+							id="table" rows="20"
+							rendered="#{TestCertificateBean.searchList.size () != 0}"
+							styleClass="searchResultsTable">
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Name " />
+								</f:facet>
+								<h:outputText value="#{tc.name}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Description" />
+								</f:facet>
+								<h:outputText value="#{tc.description}" />
+							</rich:column>
+							<rich:column>
+								<h:commandButton value="Edit"
+									action="TestCertificateAdd.xhtml">
+									<f:setPropertyActionListener value="#{tc.name}"
+										target="#{TestCertificateBean.testCertificateVO.name}" />
+									<f:setPropertyActionListener value="#{tc.description}"
+										target="#{TestCertificateBean.testCertificateVO.description}" />
+									<f:setPropertyActionListener value="#{tc.quantity}"
+										target="#{TestCertificateBean.testCertificateVO.quantity}" />
+									<f:setPropertyActionListener value="#{tc.rate}"
+										target="#{TestCertificateBean.testCertificateVO.rate}" />
+									<f:setPropertyActionListener value="#{tc.id}"
+										target="#{TestCertificateBean.testCertificateVO.id}" />
+									<f:setPropertyActionListener value="#{tc.id}"
+										target="#{TestCertificateBean.selectedId}" />
+									<f:setPropertyActionListener value="#{true}"
+										target="#{TestCertificateBean.editFlag}" />
+								</h:commandButton>
+							</rich:column>
+						</rich:dataTable>
+					</a4j:outputPanel>
+				</rich:panel>
+			</h:form>        
+            <a4j:status>
+            <f:facet name="start">
+                <h:graphicImage value="/images/ai.gif" alt="ai" />
+            </f:facet>
+        </a4j:status>
+		</f:view>
+	</ui:define>
+</ui:composition>

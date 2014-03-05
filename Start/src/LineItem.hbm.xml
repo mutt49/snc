@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+    <!DOCTYPE hibernate-mapping PUBLIC  
+     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
+     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.demo.spinncast.hibernate.LineItemHBC" table="line_items">
+		<id name="line_item_id" column="line_item_id">
+			<generator class="native"/>
+		</id>
+		<property name="purchase_order_id" column="purchase_order_id"></property>
+		<property name="description" column="description"></property>
+		<property name="rate" column="rate"></property>
+		<property name="status" column="status"></property>
+	</class>
+</hibernate-mapping>  

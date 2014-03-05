@@ -1,0 +1,83 @@
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="content">
+
+
+		<f:view>
+			<h:form>
+				<rich:toolbar styleClass="toolbar">
+					<h:commandLink value="Masters" styleClass="toolbar" />
+					<h:commandLink value="Invoices" styleClass="toolbar" />
+					<h:commandLink value="Test Certificates" action="TestCertificateSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Purchase Orders" action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
+				</rich:toolbar>
+
+				<h:outputText value="Purchase Orders" styleClass="pageTitle" />
+				<h:commandLink value="Add New" action="PurchaseOrderAdd.jsf"
+					styleClass="pageSubTitle">
+					<f:setPropertyActionListener value="#{false}"
+						target="#{PurchaseOrderBean.editFlag}" />
+				</h:commandLink>
+				<rich:panel>
+					<table class="table" cellspacing="0">
+						<tr>
+							<td class="leftColumn"><h:outputText value="Description: " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="description"
+									value="#{PurchaseOrderBean.purchaseOrderVO.description}"
+									label="Description" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><a4j:commandButton
+									styleClass="searchButton" value="Search" reRender="SearchTable"
+									action="#{PurchaseOrderBean.search}" /></td>
+							<td><a4j:commandButton styleClass="searchButton"
+									value="Reset" reRender="SearchTable"
+									action="#{PurchaseOrderBean.reset}" /></td>
+						</tr>
+					</table>
+					<a4j:outputPanel ajaxRendered="true" id="SearchTable">
+						<h:outputText value="There are no items with the search criteria."
+							rendered="#{PurchaseOrderBean.searchList.size () == 0}" />
+						<rich:dataTable value="#{PurchaseOrderBean.searchList}" var="po"
+							id="table" rows="20"
+							rendered="#{PurchaseOrderBean.searchList.size () != 0}"
+							styleClass="searchResultsTable">
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Description" />
+								</f:facet>
+								<h:outputText value="#{po.description}" />
+							</rich:column>
+							<rich:column>
+								<h:commandButton value="Edit" action="PurchaseOrderAdd.xhtml">
+									<f:setPropertyActionListener value="#{po.description}"
+										target="#{PurchaseOrderBean.purchaseOrderVO.description}" />
+									<f:setPropertyActionListener value="#{po.gross_price}"
+										target="#{PurchaseOrderBean.purchaseOrderVO.gross_price}" />
+									<f:setPropertyActionListener value="#{po.net_value}"
+										target="#{PurchaseOrderBean.purchaseOrderVO.net_value}" />
+									<f:setPropertyActionListener value="#{po.order_id}"
+										target="#{PurchaseOrderBean.selectedId}" />
+									<f:setPropertyActionListener value="#{true}"
+										target="#{PurchaseOrderBean.editFlag}" />
+								</h:commandButton>
+							</rich:column>
+						</rich:dataTable>
+					</a4j:outputPanel>
+				</rich:panel>
+			</h:form>        
+            <a4j:status>
+            <f:facet name="start">
+                <h:graphicImage value="/images/ai.gif" alt="ai" />
+            </f:facet>
+        </a4j:status>
+		</f:view>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,46 @@
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="content">
+
+
+		<f:view>
+			<h:form>
+				<rich:toolbar styleClass="toolbar">
+					<h:commandLink value="Masters" styleClass="toolbar" />
+					<h:commandLink value="Invoices" styleClass="toolbar" />
+					<h:commandLink value="Test Certificates" action="TestCertificateSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Purchase Orders" action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
+				</rich:toolbar>
+
+				<h:outputText value="Purchase Orders" styleClass="pageTitle" />
+				<h:outputText value="Add New" styleClass="pageSubTitleActive" />
+				<rich:panel>
+					<table class="table" cellspacing="0">
+						<tr>
+							<td class="leftColumn"><h:outputText value="Description: " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="description"
+									value="#{PurchaseOrderBean.purchaseOrderVO.description}"
+									label="Description" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><a4j:commandButton value="Add"
+									styleClass="searchButton" action="#{PurchaseOrderBean.add}"
+									rendered="#{!PurchaseOrderBean.editFlag}" /></td>
+							<td><a4j:commandButton value="Edit"
+									styleClass="searchButton" action="#{PurchaseOrderBean.edit}"
+									rendered="#{PurchaseOrderBean.editFlag}" /></td>
+						</tr>
+					</table>
+				</rich:panel>
+			</h:form>
+		</f:view>
+
+	</ui:define>
+</ui:composition>

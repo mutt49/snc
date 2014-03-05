@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:a4j="http://richfaces.org/a4j"
+      xmlns:rich="http://richfaces.org/rich"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets">
+
+      <h:head>
+            <title>RichFaces Greeter</title>
+      </h:head>
+      <body>
+            <f:view>
+                  <h:form>
+                        <rich:panel header="RichFaces Greeteraaa" style="width: 315px">
+                              <h:outputText value="Your name: " />
+                              <h:outputLabel for="userName" value="UserName" />
+								<h:inputText id="userName" value="#{user.name}" label="UserName">
+                                    <f:validateLength minimum="1" maximum="30" />
+                              </h:inputText>
+                              <a4j:commandButton value="Get greeting" reRender="boo" />
+                              <a4j:commandButton value="Commit" action="#{user.commit}" />
+                              <a4j:outputPanel ajaxRendered="true" id="boo">
+                                    <h:outputText value="Hello, "/>
+                                    <h:outputText value="#{user.name}" />
+                                    <h:outputText value="!" rendered="#{not empty user.name}" />
+                         		</a4j:outputPanel >
+                        </rich:panel>
+                  </h:form>
+            </f:view>
+      </body>
+</html>
+

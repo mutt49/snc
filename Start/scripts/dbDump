@@ -1,0 +1,135 @@
+-- MySQL dump 10.13  Distrib 5.6.12, for Win64 (x86_64)
+--
+-- Host: localhost    Database: spinncast
+-- ------------------------------------------------------
+-- Server version	5.6.12
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `employee`
+--
+
+DROP TABLE IF EXISTS `employee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `employee` (
+  `emp_id` int(11) NOT NULL AUTO_INCREMENT,
+  `emp_name` varchar(100) DEFAULT NULL,
+  `emp_last_name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`emp_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `employee`
+--
+
+LOCK TABLES `employee` WRITE;
+/*!40000 ALTER TABLE `employee` DISABLE KEYS */;
+INSERT INTO `employee` VALUES (1,'zxczxc','tempLastName'),(2,'QWE','tempLastName'),(3,'QWE','tempLastName'),(4,'QWEzxc','tempLastName'),(5,'QWEzxc','tempLastName'),(6,'Aniket','tempLastName'),(7,'Aniket','tempLastName'),(8,'q','tempLastName'),(9,'q','tempLastName'),(10,'Ann','tempLastName'),(11,'Ann','tempLastName');
+/*!40000 ALTER TABLE `employee` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `line_item`
+--
+
+DROP TABLE IF EXISTS `line_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `line_item` (
+  `line_item_id` int(11) NOT NULL AUTO_INCREMENT,
+  `purchase_order_id` int(11) NOT NULL,
+  `description` text,
+  `quantity` float DEFAULT NULL,
+  `unit` text,
+  `rate` float DEFAULT NULL,
+  `status` text,
+  PRIMARY KEY (`line_item_id`),
+  KEY `purchase_order_id` (`purchase_order_id`),
+  CONSTRAINT `line_item_ibfk_1` FOREIGN KEY (`purchase_order_id`) REFERENCES `purchase_order` (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `line_item`
+--
+
+LOCK TABLES `line_item` WRITE;
+/*!40000 ALTER TABLE `line_item` DISABLE KEYS */;
+/*!40000 ALTER TABLE `line_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `purchase_order`
+--
+
+DROP TABLE IF EXISTS `purchase_order`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `purchase_order` (
+  `order_id` int(11) NOT NULL AUTO_INCREMENT,
+  `description` text,
+  `gross_price` float DEFAULT NULL,
+  `net_value` float DEFAULT NULL,
+  PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `purchase_order`
+--
+
+LOCK TABLES `purchase_order` WRITE;
+/*!40000 ALTER TABLE `purchase_order` DISABLE KEYS */;
+INSERT INTO `purchase_order` VALUES (1,'First PO',12,12.23),(2,'qqq',NULL,NULL),(3,'www',NULL,NULL);
+/*!40000 ALTER TABLE `purchase_order` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `test_certificates`
+--
+
+DROP TABLE IF EXISTS `test_certificates`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `test_certificates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(200) DEFAULT NULL,
+  `description` varchar(200) DEFAULT NULL,
+  `quantity` double DEFAULT NULL,
+  `rate` double DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `test_certificates`
+--
+
+LOCK TABLES `test_certificates` WRITE;
+/*!40000 ALTER TABLE `test_certificates` DISABLE KEYS */;
+INSERT INTO `test_certificates` VALUES (10,'Varshaw','qweqweqwe',123123,12311),(11,'asas','asasd',123,123),(12,'qweqe','qweqe',0,0.02),(13,'q','q',0,0);
+/*!40000 ALTER TABLE `test_certificates` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2014-03-05 14:00:49
