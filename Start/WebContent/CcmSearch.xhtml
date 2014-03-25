@@ -1,0 +1,82 @@
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="content">
+
+
+		<f:view>
+			<h:form>
+				<rich:toolbar styleClass="toolbar">
+					<h:commandLink value="Masters" styleClass="toolbar" />
+					<h:commandLink value="Invoices" styleClass="toolbar" />
+					<h:commandLink value="Test Certificates" action="TestCertificateSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Purchase Orders" action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
+				</rich:toolbar>
+
+				<h:outputText value="Chemical Composition Master" styleClass="pageTitle" />
+				<h:commandLink value="Add New" action="CcmAdd.jsf"
+					styleClass="pageSubTitle">
+					<f:setPropertyActionListener value="#{false}"
+						target="#{CcmBean.editFlag}" />
+				</h:commandLink>
+				<rich:panel>
+					<table class="table" cellspacing="0">
+						<tr>
+							<td class="leftColumn"><h:outputText value="Name: " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="name"
+									value="#{CcmBean.ccmVO.ccm_name}"
+									label="Name" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><a4j:commandButton
+									styleClass="searchButton" value="Search" reRender="SearchTable"
+									action="#{CcmBean.search}" /></td>
+							<td><a4j:commandButton styleClass="searchButton"
+									value="Reset" reRender="SearchTable"
+									action="#{CcmBean.reset}" /></td>
+						</tr>
+					</table>
+					<a4j:outputPanel ajaxRendered="true" id="SearchTable">
+						<h:outputText value="There are no items with the search criteria."
+							rendered="#{CcmBean.searchList.size () == 0}" />
+						<rich:dataTable value="#{CcmBean.searchList}" var="ccm"
+							id="table" rows="20"
+							rendered="#{CcmBean.searchList.size () != 0}"
+							styleClass="searchResultsTable">
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Name " />
+								</f:facet>
+								<h:outputText value="#{ccm.ccm_name}" />
+							</rich:column>
+							<rich:column>
+								<h:commandButton value="Edit"
+									action="#{CcmBean.edit}">
+									<f:setPropertyActionListener value="#{ccm.ccm_id}"
+										target="#{CcmBean.ccmVO.ccm_id}" />
+									<f:setPropertyActionListener value="#{ccm.ccm_name}"
+										target="#{CcmBean.ccmVO.ccm_name}" />
+									<f:setPropertyActionListener value="#{ccm.ccm_id}"
+										target="#{CcmBean.selectedId}" />
+									<f:setPropertyActionListener value="#{true}"
+										target="#{CcmBean.editFlag}" />
+								</h:commandButton>
+							</rich:column>
+						</rich:dataTable>
+					</a4j:outputPanel>
+				</rich:panel>
+			</h:form>        
+            <a4j:status>
+            <f:facet name="start">
+                <h:graphicImage value="/images/ai.gif" alt="ai" />
+            </f:facet>
+        </a4j:status>
+		</f:view>
+	</ui:define>
+</ui:composition>

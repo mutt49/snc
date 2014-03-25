@@ -1,0 +1,136 @@
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="content">
+
+
+		<f:view>
+			<h:form>
+				<rich:toolbar styleClass="toolbar">
+					<h:commandLink value="Masters" styleClass="toolbar" />
+					<h:commandLink value="Invoices" styleClass="toolbar" />
+					<h:commandLink value="Test Certificates" action="TestCertificateSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Purchase Orders" action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
+				</rich:toolbar>
+
+				<h:outputText value="Customer Master"  action="CustomerSearch.jsf" styleClass="pageTitle" />
+				<h:outputText value="Add New" styleClass="pageSubTitleActive" />
+				<rich:panel>
+					<table class="table" cellspacing="0">
+						<tr>
+							<td class="leftColumn"><h:outputText value="Name: " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="clientName"
+									value="#{CustomerBean.customerVO.customer_name}"
+									label="Name" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Address: " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="address"
+									value="#{CustomerBean.customerVO.customer_address}"
+									label="Address" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="CST No. " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="cst_no"
+									value="#{CustomerBean.customerVO.cst_no}"
+									label="CST No." /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="BST No. " /></td>
+							<td><h:inputText styleClass="searchEntry" id="bst_no"
+									value="#{CustomerBean.customerVO.bst_no}"
+									label="BST No." /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="ECC No. " /></td>
+							<td><h:inputText styleClass="searchEntry" id="ecc_no"
+									value="#{CustomerBean.customerVO.ecc_no}"
+									label="ECC No." /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Octroi No. " /></td>
+							<td><h:inputText styleClass="searchEntry" id="octroi_no"
+									value="#{CustomerBean.customerVO.octroi_no}"
+									label="Octroi No." /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Vendor Code " /></td>
+							<td><h:inputText styleClass="searchEntry" id="vendor_code"
+									value="#{CustomerBean.customerVO.vendor_code}"
+									label="Vendor Code" /></td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<rich:dataTable value="#{CustomerBean.customerVO.personnelList}" var="personnel"
+									id="table" rows="20"
+									rendered="#{CustomerBean.searchList.size () != 0}"
+									styleClass="searchResultsTable">
+									<rich:column>
+										<f:facet name="header">
+											<h:outputText value="Department " />
+										</f:facet>
+										<h:inputText value="#{personnel.department}" />
+									</rich:column>
+									<rich:column>
+										<f:facet name="header">
+											<h:outputText value="Name" />
+										</f:facet>
+										<h:inputText value="#{personnel.name}" />
+									</rich:column>
+									<rich:column>
+										<f:facet name="header">
+											<h:outputText value="Phone" />
+										</f:facet>
+										<h:inputText value="#{personnel.phone}" />
+									</rich:column>
+									<rich:column>
+										<f:facet name="header">
+											<h:outputText value="Email" />
+										</f:facet>
+										<h:inputText value="#{personnel.email}" />
+									</rich:column>
+									<rich:column>
+										<h:commandButton value="Save"
+											action="#{CustomerBean.savePersonnel}">
+											<f:setPropertyActionListener value="#{personnel.customer_id}"
+												target="#{CustomerBean.customerPersonnelVO.customer_id}" />
+											<f:setPropertyActionListener value="#{personnel.department}"
+												target="#{CustomerBean.customerPersonnelVO.department}" />
+											<f:setPropertyActionListener value="#{personnel.name}"
+												target="#{CustomerBean.customerPersonnelVO.name}" />
+											<f:setPropertyActionListener value="#{personnel.phone}"
+												target="#{CustomerBean.customerPersonnelVO.phone}" />
+											<f:setPropertyActionListener value="#{personnel.email}"
+												target="#{CustomerBean.customerPersonnelVO.email}" />
+											<f:setPropertyActionListener value="#{customer.customer_id}"
+												target="#{CustomerBean.selectedPersonnelId}" />
+										</h:commandButton>
+									</rich:column>
+								</rich:dataTable>
+							</td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><a4j:commandButton value="Add"
+									styleClass="searchButton" action="#{CustomerBean.add}"
+									rendered="#{!CustomerBean.editFlag}" /></td>
+							<td><a4j:commandButton value="Edit"
+									styleClass="searchButton" action="#{CustomerBean.save}"
+									rendered="#{CustomerBean.editFlag}" /></td>
+							<td><h:commandButton value="Print"
+									styleClass="searchButton" action="#{CustomerBean.print}"
+									rendered="#{CustomerBean.editFlag}" /></td>
+						</tr>
+					</table>
+				</rich:panel>
+			</h:form>
+		</f:view>
+	</ui:define>
+</ui:composition>

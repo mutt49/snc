@@ -12,7 +12,10 @@
 		<f:view>
 			<h:form>
 				<rich:toolbar styleClass="toolbar">
-					<h:commandLink value="Masters" styleClass="toolbar" />
+					<rich:dropDownMenu id="dropDownMenu" label="Masters">
+						<rich:menuItem action="PartMasterSearch.jsf" label="Part Masters"
+							id="partMaster" styleClass="toolbar"></rich:menuItem>
+					</rich:dropDownMenu>
 					<h:commandLink value="Invoices" styleClass="toolbar" />
 					<h:commandLink value="Test Certificates" action="TestCertificateSearch.jsf" styleClass="toolbar" />
 					<h:commandLink value="Purchase Orders" action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
@@ -30,7 +33,7 @@
 							<td class="leftColumn"><h:outputText value="Description: " />
 							</td>
 							<td><h:inputText styleClass="searchEntry" id="description"
-									value="#{PurchaseOrderBean.purchaseOrderVO.description}"
+									value="#{PurchaseOrderBean.selectedPurchaseOrderVO.description}"
 									label="Description" /></td>
 						</tr>
 						<tr>
@@ -44,10 +47,10 @@
 					</table>
 					<a4j:outputPanel ajaxRendered="true" id="SearchTable">
 						<h:outputText value="There are no items with the search criteria."
-							rendered="#{PurchaseOrderBean.searchList.size () == 0}" />
+							rendered="#{PurchaseOrderBean.searchList.size()== 0}" />
 						<rich:dataTable value="#{PurchaseOrderBean.searchList}" var="po"
 							id="table" rows="20"
-							rendered="#{PurchaseOrderBean.searchList.size () != 0}"
+							rendered="#{PurchaseOrderBean.searchList.size()!= 0}"
 							styleClass="searchResultsTable">
 							<rich:column>
 								<f:facet name="header">
@@ -57,17 +60,18 @@
 							</rich:column>
 							<rich:column>
 								<h:commandButton value="Edit" action="PurchaseOrderAdd.xhtml">
-									<f:setPropertyActionListener value="#{po.description}"
-										target="#{PurchaseOrderBean.purchaseOrderVO.description}" />
-									<f:setPropertyActionListener value="#{po.gross_price}"
-										target="#{PurchaseOrderBean.purchaseOrderVO.gross_price}" />
-									<f:setPropertyActionListener value="#{po.net_value}"
-										target="#{PurchaseOrderBean.purchaseOrderVO.net_value}" />
+									<f:setPropertyActionListener target="#{PurchaseOrderBean.selectedPurchaseOrderVO}" value="#{po}"/>
 									<f:setPropertyActionListener value="#{po.order_id}"
 										target="#{PurchaseOrderBean.selectedId}" />
 									<f:setPropertyActionListener value="#{true}"
 										target="#{PurchaseOrderBean.editFlag}" />
 								</h:commandButton>
+							</rich:column>
+							<rich:column>
+								<a4j:commandButton value="View" action="#{LineItemBean.fetchLineItems}">
+									<f:setPropertyActionListener value="#{po.order_id}"
+										target="#{LineItemBean.selectedPurchaseOrderId}" />
+								</a4j:commandButton>
 							</rich:column>
 						</rich:dataTable>
 					</a4j:outputPanel>

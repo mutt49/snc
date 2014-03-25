@@ -1,0 +1,107 @@
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="content">
+
+
+		<f:view>
+			<h:form>
+				<rich:toolbar styleClass="toolbar">
+					<rich:dropDownMenu id="dropDownMenu" label="Masters">
+						<rich:menuItem action="PartMasterSearch.jsf" label="Part Masters"
+							id="partMaster" styleClass="toolbar"></rich:menuItem>
+					</rich:dropDownMenu>
+					<h:commandLink value="Invoices" styleClass="toolbar" />
+					<h:commandLink value="Test Certificates"
+						action="TestCertificateSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Purchase Orders"
+						action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
+				</rich:toolbar>
+
+				<h:outputText value="Purchase Orders" styleClass="pageTitle" />
+				<h:outputText value="Add New" styleClass="pageSubTitleActive" />
+				<rich:panel>
+					<table class="table" cellspacing="0">
+						<tr>
+							<td class="leftColumn"><h:outputText value="Part Name " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="partName"
+									value="#{PartMasterBean.selectedPartMasterVO.partName}"
+									label="partName" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Drg No.: " /></td>
+							<td><h:inputText styleClass="searchEntry" id="DrgNo"
+									value="#{PartMasterBean.selectedPartMasterVO.drgNo}"
+									label="drgNo" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Part Rate: " /></td>
+							<td><h:inputText styleClass="searchEntry" id="partRate"
+									value="#{PartMasterBean.selectedPartMasterVO.partRate}"
+									label="partRate" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="P.M.Size: " /></td>
+							<td><h:inputText styleClass="searchEntry" id="pmSize"
+									value="#{PartMasterBean.selectedPartMasterVO.pmSize}"
+									label="pmSize" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="U.O.M.: " /></td>
+							<td><h:inputText styleClass="searchEntry" id="partUom"
+									value="#{PartMasterBean.selectedPartMasterVO.partUom}"
+									label="partUom" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Grade: " /></td>
+							<td><h:inputText styleClass="searchEntry" id="grade"
+									value="#{PartMasterBean.selectedPartMasterVO.grade}"
+									label="grade" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Cast Weight: " /></td>
+							<td><h:inputText styleClass="searchEntry" id="castWeight"
+									value="#{PartMasterBean.selectedPartMasterVO.castWeight}"
+									label="castWeight" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText
+									value="Proof Machine Weight: " /></td>
+							<td><h:inputText styleClass="searchEntry"
+									id="proofMachineWeight"
+									value="#{PartMasterBean.selectedPartMasterVO.proofMachineWeight}"
+									label="proofMachineWeight" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Quantity: " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="quantity"
+									value="#{PartMasterBean.selectedPartMasterVO.quantity}"
+									label="Quantity" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><a4j:commandButton value="Save"
+									styleClass="searchButton"
+									rendered="#{!PartMasterBean.editFlag}"
+									action="#{PartMasterBean.add}" />
+							<a4j:commandButton value="Update"
+									styleClass="searchButton"
+									rendered="#{PartMasterBean.editFlag}"
+									action="#{PartMasterBean.edit}" /></td>
+							<td><a4j:commandButton value="Reset"
+									styleClass="searchButton" action="#{PartMasterBean.reset}"
+									rendered="#{!PartMasterBean.editFlag}" /></td>
+						</tr>
+					</table>
+				</rich:panel>
+			</h:form>
+		</f:view>
+
+	</ui:define>
+</ui:composition>

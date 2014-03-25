@@ -1,0 +1,163 @@
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="content">
+
+
+		<f:view>
+			<h:form>
+				<rich:toolbar styleClass="toolbar">
+					<h:commandLink value="Masters" styleClass="toolbar" />
+					<h:commandLink value="Invoices" styleClass="toolbar" />
+					<h:commandLink value="Test Certificates" action="TestCertificateSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Purchase Orders" action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
+				</rich:toolbar>
+
+				<h:outputText value="Customer Master" styleClass="pageTitle" />
+				<h:commandLink value="Add New" action="CustomerAdd.jsf"
+					styleClass="pageSubTitle">
+					<f:setPropertyActionListener value="#{false}"
+						target="#{CustomerBean.editFlag}" />
+				</h:commandLink>
+				<rich:panel>
+					<table class="table" cellspacing="0">
+						<tr>
+							<td class="leftColumn"><h:outputText value="Name: " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="clientName"
+									value="#{CustomerBean.customerVO.customer_name}"
+									label="Name" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Address: " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="address"
+									value="#{CustomerBean.customerVO.customer_address}"
+									label="Address" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="CST No. " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="cst_no"
+									value="#{CustomerBean.customerVO.cst_no}"
+									label="CST No." /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="BST No. " /></td>
+							<td><h:inputText styleClass="searchEntry" id="bst_no"
+									value="#{CustomerBean.customerVO.bst_no}"
+									label="BST No." /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="ECC No. " /></td>
+							<td><h:inputText styleClass="searchEntry" id="ecc_no"
+									value="#{CustomerBean.customerVO.ecc_no}"
+									label="ECC No." /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Octroi No. " /></td>
+							<td><h:inputText styleClass="searchEntry" id="octroi_no"
+									value="#{CustomerBean.customerVO.octroi_no}"
+									label="Octroi No." /></td>
+						</tr>
+						
+						<tr>
+							<td class="leftColumn"><a4j:commandButton
+									styleClass="searchButton" value="Search" reRender="SearchTable"
+									action="#{CustomerBean.search}" /></td>
+							<td><a4j:commandButton styleClass="searchButton"
+									value="Reset" reRender="SearchTable"
+									action="#{CustomerBean.print}" /></td>
+						</tr>
+					</table>
+					<a4j:outputPanel ajaxRendered="true" id="SearchTable">
+						<h:outputText value="There are no items with the search criteria."
+							rendered="#{CustomerBean.searchList.size () == 0}" />
+						<rich:dataTable value="#{CustomerBean.searchList}" var="customer"
+							id="table" rows="20"
+							rendered="#{CustomerBean.searchList.size () != 0}"
+							styleClass="searchResultsTable">
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Name " />
+								</f:facet>
+								<h:outputText value="#{customer.customer_name}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Address" />
+								</f:facet>
+								<h:outputText value="#{customer.customer_address}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="CST No." />
+								</f:facet>
+								<h:outputText value="#{customer.cst_no}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="BST No." />
+								</f:facet>
+								<h:outputText value="#{customer.bst_no}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="ECC No." />
+								</f:facet>
+								<h:outputText value="#{customer.ecc_no}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Octroi No." />
+								</f:facet>
+								<h:outputText value="#{customer.octroi_no}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Vendor Code." />
+								</f:facet>
+								<h:outputText value="#{customer.vendor_code}" />
+							</rich:column>
+							<rich:column>
+								<h:commandButton value="Edit"
+									action="#{CustomerBean.edit}">
+									<f:setPropertyActionListener value="#{customer.customer_id}"
+										target="#{CustomerBean.customerVO.customer_id}" />
+									<f:setPropertyActionListener value="#{customer.customer_name}"
+										target="#{CustomerBean.customerVO.customer_name}" />
+									<f:setPropertyActionListener value="#{customer.customer_address}"
+										target="#{CustomerBean.customerVO.customer_address}" />
+									<f:setPropertyActionListener value="#{customer.cst_no}"
+										target="#{CustomerBean.customerVO.cst_no}" />
+									<f:setPropertyActionListener value="#{customer.bst_no}"
+										target="#{CustomerBean.customerVO.bst_no}" />
+									<f:setPropertyActionListener value="#{customer.ecc_no}"
+										target="#{CustomerBean.customerVO.ecc_no}" />
+									<f:setPropertyActionListener value="#{customer.octroi_no}"
+										target="#{CustomerBean.customerVO.octroi_no}" />
+									<f:setPropertyActionListener value="#{customer.vendor_code}"
+										target="#{CustomerBean.customerVO.vendor_code}" />
+									<f:setPropertyActionListener value="#{customer.customer_id}"
+										target="#{CustomerBean.selectedId}" />
+									<f:setPropertyActionListener value="#{true}"
+										target="#{CustomerBean.editFlag}" />
+								</h:commandButton>
+							</rich:column>
+						</rich:dataTable>
+					</a4j:outputPanel>
+				</rich:panel>
+			</h:form>        
+            <a4j:status>
+            <f:facet name="start">
+                <h:graphicImage value="/images/ai.gif" alt="ai" />
+            </f:facet>
+        </a4j:status>
+		</f:view>
+	</ui:define>
+</ui:composition>

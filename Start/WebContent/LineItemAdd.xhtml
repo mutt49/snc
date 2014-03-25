@@ -1,0 +1,78 @@
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="content">
+
+		<f:view>
+			<h:form>
+				<rich:toolbar styleClass="toolbar">
+					<rich:dropDownMenu id="dropDownMenu" label="Masters">
+						<rich:menuItem action="PartMasterSearch.jsf" label="Part Masters"
+							id="partMaster" styleClass="toolbar"></rich:menuItem>
+					</rich:dropDownMenu>
+					<h:commandLink value="Invoices" styleClass="toolbar" />
+					<h:commandLink value="Test Certificates"
+						action="TestCertificateSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Purchase Orders"
+						action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
+				</rich:toolbar>
+
+				<h:outputText value="Purchase Orders" styleClass="pageTitle" />
+				<h:outputText value="Add New" styleClass="pageSubTitleActive" />
+				<rich:panel>
+					<table class="table" cellspacing="0">
+						<tr>
+							<td class="leftColumn"><h:outputText value="Description: " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="description"
+									value="#{LineItemBean.selectedLineItemVO.description}"
+									label="Description" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Part No: " /></td>
+							<td><h:inputText styleClass="searchEntry" id="PartNo"
+									value="#{LineItemBean.selectedLineItemVO.partNo}"
+									label="Part No" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Quantity: " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="quantity"
+									value="#{LineItemBean.selectedLineItemVO.quantity}"
+									label="Quantity" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Rate: " /></td>
+							<td><h:inputText styleClass="searchEntry" id="rate"
+									value="#{LineItemBean.selectedLineItemVO.rate}"
+									label="Rate" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Unit: " /></td>
+							<td><h:inputText styleClass="searchEntry" id="unit"
+									value="#{LineItemBean.selectedLineItemVO.unit}"
+									label="Unit" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><a4j:commandButton value="Add"
+									styleClass="searchButton"
+									action="#{LineItemBean.saveLineItem}">
+									<f:setPropertyActionListener value="#{PurchaseOrderBean.selectedPurchaseOrderVO.order_id}"
+										target="#{LineItemBean.selectedLineItemVO.purchase_order_id}" />
+									</a4j:commandButton></td>
+									
+							<td><a4j:commandButton value="Reset"
+									styleClass="searchButton" action="#{LineItemBean.resetLineItemAdd}" /></td>
+						</tr>
+					</table>
+				</rich:panel>
+			</h:form>
+		</f:view>
+
+	</ui:define>
+</ui:composition>

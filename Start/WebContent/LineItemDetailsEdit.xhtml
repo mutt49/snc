@@ -1,0 +1,100 @@
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="content">
+
+
+		<f:view>
+			<h:form>
+				<rich:toolbar styleClass="toolbar">
+					<rich:dropDownMenu id="dropDownMenu" label="Masters">
+						<rich:menuItem action="PartMasterSearch.jsf" label="Part Masters"
+							id="partMaster" styleClass="toolbar"></rich:menuItem>
+					</rich:dropDownMenu>
+					<h:commandLink value="Invoices" styleClass="toolbar" />
+					<h:commandLink value="Test Certificates"
+						action="TestCertificateSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Purchase Orders"
+						action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
+				</rich:toolbar>
+
+				<h:outputText value="Line Items" styleClass="pageTitle" />
+				<h:commandLink value="Add New" action="LineItemAdd.jsf"
+					styleClass="pageSubTitle">
+				</h:commandLink>
+
+				<rich:panel>
+					<table class="table" cellspacing="0">
+						<tr>
+							<td><h:outputText value="PO Number: " /></td>
+							<td><h:outputText
+									value="#{PurchaseOrderBean.selectedPurchaseOrderVO.order_id}" /></td>
+							<td><h:outputText value="Description: " /></td>
+							<td><h:outputText
+									value="#{PurchaseOrderBean.selectedPurchaseOrderVO.description}" /></td>
+						</tr>
+					</table>
+					<a4j:outputPanel ajaxRendered="true" id="SearchTable">
+						<h:outputText value="There are no items with the search criteria."
+							rendered="#{LineItemBean.lineItemList.size()== 0}" />
+						<rich:dataTable value="#{LineItemBean.lineItemList}" var="lo"
+							id="table" rows="20"
+							rendered="#{LineItemBean.lineItemList.size()!= 0}"
+							styleClass="searchResultsTable">
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Description" />
+								</f:facet>
+								<h:outputText value="#{lo.description}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Part Number" />
+								</f:facet>
+								<h:outputText value="#{lo.partNo}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Quantity" />
+								</f:facet>
+								<h:inputText value="#{lo.quantity}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Rate" />
+								</f:facet>
+								<h:inputText value="#{lo.rate}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Unit of Measure" />
+								</f:facet>
+								<h:outputText value="#{lo.unit}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Edit" />
+								</f:facet>
+								<a4j:commandButton value="Save"
+									action="#{LineItemBean.editLineItems}">
+									<f:setPropertyActionListener
+										target="#{LineItemBean.selectedLineItemVO}" value="#{lo}" />
+								</a4j:commandButton>
+							</rich:column>
+						</rich:dataTable>
+					</a4j:outputPanel>
+				</rich:panel>
+			</h:form>        
+            <a4j:status>
+            <f:facet name="start">
+                <h:graphicImage value="/images/ai.gif" alt="ai" />
+            </f:facet>
+        </a4j:status>
+		</f:view>
+	</ui:define>
+</ui:composition>

@@ -12,7 +12,10 @@
 		<f:view>
 			<h:form>
 				<rich:toolbar styleClass="toolbar">
-					<h:commandLink value="Masters" styleClass="toolbar" />
+					<rich:dropDownMenu id="dropDownMenu" label="Masters">
+						<rich:menuItem action="PartMasterSearch.jsf" label="Part Masters"
+							id="partMaster" styleClass="toolbar"></rich:menuItem>
+					</rich:dropDownMenu>
 					<h:commandLink value="Invoices" styleClass="toolbar" />
 					<h:commandLink value="Test Certificates" action="TestCertificateSearch.jsf" styleClass="toolbar" />
 					<h:commandLink value="Purchase Orders" action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
@@ -26,7 +29,7 @@
 							<td class="leftColumn"><h:outputText value="Description: " />
 							</td>
 							<td><h:inputText styleClass="searchEntry" id="description"
-									value="#{PurchaseOrderBean.purchaseOrderVO.description}"
+									value="#{PurchaseOrderBean.selectedPurchaseOrderVO.description}"
 									label="Description" /></td>
 						</tr>
 						<tr>
