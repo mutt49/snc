@@ -11,7 +11,16 @@ public class LineItemHBC {
 	private String status;
 	private Integer purchase_order_id;
 	private String unit;
+	private int partNo;
 	
+	public int getPartNo() {
+		return partNo;
+	}
+
+	public void setPartNo(int part_no) {
+		this.partNo = part_no;
+	}
+
 	public String getUnit() {
 		return unit;
 	}
@@ -19,30 +28,7 @@ public class LineItemHBC {
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
-
-	public LineItemHBC() {
-
-	}
-
-	public LineItemHBC(LineItemVO lineItemVO) {
-		setLine_item_id(lineItemVO.getId());
-		description = lineItemVO.getDescription();
-		quantity = lineItemVO.getQuantity();
-		rate = lineItemVO.getRate();
-		purchase_order_id = lineItemVO.getPurchase_order_id();
-		status = lineItemVO.getStatus();
-		unit = lineItemVO.getUnit();
-	}
-
-	public void update(LineItemVO lineItemVO) {
-		description = lineItemVO.getDescription();
-		quantity = lineItemVO.getQuantity();
-		rate = lineItemVO.getRate();
-		purchase_order_id = lineItemVO.getPurchase_order_id();
-		status = lineItemVO.getStatus();
-		unit = lineItemVO.getUnit();
-	}
-
+	
 	public Integer getOrder_id() {
 		return getLine_item_id();
 	}
@@ -98,4 +84,31 @@ public class LineItemHBC {
 	public void setLine_item_id(Integer line_item_id) {
 		this.line_item_id = line_item_id;
 	}
+
+	public LineItemHBC() {
+
+	}
+
+	public LineItemHBC(LineItemVO lineItemVO) {
+		setLine_item_id(lineItemVO.getId());
+		description = lineItemVO.getDescription();
+		quantity = lineItemVO.getQuantity();
+		rate = lineItemVO.getRate();
+		purchase_order_id = lineItemVO.getPurchase_order_id();
+		status = lineItemVO.getStatus();
+		unit = lineItemVO.getUnit();
+		partNo = lineItemVO.getPartNo();
+	}
+
+	public void update(LineItemVO lineItemVO) {
+		description = lineItemVO.getDescription();
+		quantity = lineItemVO.getQuantity();
+		rate = lineItemVO.getRate();
+		purchase_order_id = lineItemVO.getPurchase_order_id();
+		status = lineItemVO.getStatus();
+		unit = lineItemVO.getUnit();
+		partNo = lineItemVO.getPartNo();
+	}
+
+	
 }

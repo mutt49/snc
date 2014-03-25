@@ -16,7 +16,7 @@ public class PurchaseOrderVO {
 	private Float gross_price;
 
 	private Float net_value;
-	private Integer customer_id;
+	private Integer customer_id = 0;
 	
 	List<LineItemVO> lineItemList;
 	public Integer getOrder_id() {

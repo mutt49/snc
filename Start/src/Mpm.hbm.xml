@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+<!DOCTYPE hibernate-mapping SYSTEM 
+"hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.demo.spinncast.hibernate.MpmHBC" table="mechanical_properties_master">
+		<id name="mpm_id" column="mpm_id">
+			<generator class="native"/>
+		</id>
+		<property name="mpm_name" column="mpm_name"></property>
+	</class>
+</hibernate-mapping>  

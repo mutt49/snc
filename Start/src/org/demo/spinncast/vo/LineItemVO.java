@@ -2,13 +2,20 @@ package org.demo.spinncast.vo;
 
 public class LineItemVO {
 	
-	Integer id;
-	String description;
-	Float rate, quantity;
-	String status;
-	Integer purchase_order_id;
+	private Integer id;
+	private String description;
+	private Float rate, quantity;
+	private String status;
+	private Integer purchase_order_id;
 	private String unit;
+	private int partNo;
 	
+	public int getPartNo() {
+		return partNo;
+	}
+	public void setPartNo(int partNo) {
+		this.partNo = partNo;
+	}
 	public String getUnit() {
 		return unit;
 	}

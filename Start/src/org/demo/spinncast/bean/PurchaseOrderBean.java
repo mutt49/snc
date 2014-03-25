@@ -7,27 +7,78 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import org.demo.spinncast.connections.ConnectionPool;
+import org.demo.spinncast.hibernate.LineItemHBC;
 import org.demo.spinncast.hibernate.PurchaseOrderHBC;
+import org.demo.spinncast.vo.LineItemVO;
 import org.demo.spinncast.vo.PurchaseOrderVO;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.sun.nio.sctp.SctpStandardSocketOptions.InitMaxStreams;
+
 @ManagedBean(name = "PurchaseOrderBean")
 @SessionScoped
 public class PurchaseOrderBean {
-	private Transaction trans;
 
-	private PurchaseOrderVO purchaseOrderVO;
+	private Transaction trans;
+	private PurchaseOrderVO selectedPurchaseOrderVO;
+
 	private List<PurchaseOrderVO> searchList;
 
 	private Boolean editFlag = true;
-	
 	private Integer selectedId;
-	
+
+	public Transaction getTrans() {
+		return trans;
+	}
+
+	public void setTrans(Transaction trans) {
+		this.trans = trans;
+	}
+
+	public PurchaseOrderVO getSelectedPurchaseOrderVO() {
+		return selectedPurchaseOrderVO;
+	}
+
+	public void setSelectedPurchaseOrderVO(
+			PurchaseOrderVO selectedPurchaseOrderVO) {
+		this.selectedPurchaseOrderVO = selectedPurchaseOrderVO;
+	}
+
+	public List<PurchaseOrderVO> getSearchList() {
+		return searchList;
+	}
+
+	public void setSearchList(List<PurchaseOrderVO> searchList) {
+		this.searchList = searchList;
+	}
+
+	public Boolean getEditFlag() {
+		return editFlag;
+	}
+
+	public void setEditFlag(Boolean editFlag) {
+		this.editFlag = editFlag;
+	}
+
+	public Integer getSelectedId() {
+		return selectedId;
+	}
+
+	public void setSelectedId(Integer selectedId) {
+		this.selectedId = selectedId;
+	}
+
 	public PurchaseOrderBean() {
-		purchaseOrderVO = new PurchaseOrderVO();
+		selectedPurchaseOrderVO = new PurchaseOrderVO();
 		searchList = new ArrayList<PurchaseOrderVO>();
+	}
+
+	public String reset() {
+		getSearchList().clear();
+		selectedId = null;
+		return "PurchaseOrderSearch";
 	}
 
 	public String search() {
@@ -62,74 +113,30 @@ public class PurchaseOrderBean {
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Transaction trans = session.beginTransaction();
-		PurchaseOrderHBC purchaseOrderHBC= new PurchaseOrderHBC (purchaseOrderVO);
-		session.saveOrUpdate(purchaseOrderHBC );
+		PurchaseOrderHBC purchaseOrderHBC = new PurchaseOrderHBC(
+				selectedPurchaseOrderVO);
+		session.saveOrUpdate(purchaseOrderHBC);
 		trans.commit();
-		session.close ();
+		session.close();
 		/*
 		 * Also save Line Items
 		 */
-		purchaseOrderVO = new PurchaseOrderVO();
-		return search ();
+		selectedPurchaseOrderVO = new PurchaseOrderVO();
+		return search();
 	}
-	
-	
+
 	public String edit() {
 		System.out.println(getSelectedId());
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Transaction trans = session.beginTransaction();
-		PurchaseOrderHBC testcertificatehbc = new PurchaseOrderHBC (purchaseOrderVO);
+		PurchaseOrderHBC testcertificatehbc = new PurchaseOrderHBC(
+				selectedPurchaseOrderVO);
 		session.update(testcertificatehbc);
 		trans.commit();
-		session.close ();
-		purchaseOrderVO = new PurchaseOrderVO ();
-		return search ();
-	}
-
-	public String reset() {
-		getSearchList().clear();
-		return "PurchaseOrderSearch";
-	}
-	
-	public Transaction getTrans() {
-		return trans;
-	}
-
-	public void setTrans(Transaction trans) {
-		this.trans = trans;
-	}
-
-	public PurchaseOrderVO getPurchaseOrderVO() {
-		return purchaseOrderVO;
-	}
-
-	public void setPurchaseOrderVO(PurchaseOrderVO purchaseOrderVO) {
-		this.purchaseOrderVO = purchaseOrderVO;
-	}
-
-	public List<PurchaseOrderVO> getSearchList() {
-		return searchList;
-	}
-
-	public void setSearchList(List<PurchaseOrderVO> searchList) {
-		this.searchList = searchList;
-	}
-
-	public Boolean getEditFlag() {
-		return editFlag;
-	}
-
-	public void setEditFlag(Boolean editFlag) {
-		this.editFlag = editFlag;
-	}
-
-	public Integer getSelectedId() {
-		return selectedId;
-	}
-
-	public void setSelectedId(Integer selectedId) {
-		this.selectedId = selectedId;
+		session.close();
+		selectedPurchaseOrderVO = new PurchaseOrderVO();
+		return search();
 	}
 
 }

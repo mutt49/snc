@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+<!DOCTYPE hibernate-mapping SYSTEM 
+"hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.demo.spinncast.hibernate.CustomerHBC" table="customer_master">
+		<id name="customer_id" column="customer_id">
+			<generator class="native"/>
+		</id>
+		<property name="customer_name" column="customer_name"></property>
+		<property name="customer_address" column="customer_address"></property>
+		<property name="cst_no" column="cst_no"></property>
+		<property name="bst_no" column="bst_no"></property>
+		<property name="ecc_no" column="ecc_no"></property>
+		<property name="octroi_no" column="octroi_no"></property>
+		<property name="vendor_code" column="vendor_code"></property>
+	</class>
+</hibernate-mapping>  

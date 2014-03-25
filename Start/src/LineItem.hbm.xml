@@ -4,13 +4,16 @@
      "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="org.demo.spinncast.hibernate.LineItemHBC" table="line_items">
+	<class name="org.demo.spinncast.hibernate.LineItemHBC" table="line_item">
 		<id name="line_item_id" column="line_item_id">
 			<generator class="native"/>
 		</id>
 		<property name="purchase_order_id" column="purchase_order_id"></property>
 		<property name="description" column="description"></property>
+		<property name="quantity" column="quantity"></property>
+		<property name="unit" column="unit"></property>
 		<property name="rate" column="rate"></property>
 		<property name="status" column="status"></property>
+		<property name="partNo" column="part_no"></property>
 	</class>
 </hibernate-mapping>  

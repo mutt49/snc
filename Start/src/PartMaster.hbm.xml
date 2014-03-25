@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+    <!DOCTYPE hibernate-mapping PUBLIC  
+     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
+     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.demo.spinncast.hibernate.PartMasterHBC" table="part_master">
+		<id name="partId" column="part_id">
+			<generator class="native"/>
+		</id>
+		<property name="partName" column="part_name"/>
+		<property name="drgNo" column="part_drg_no"/>
+		<property name="partRate" column="part_rate"/>
+		<property name="pmSize" column="pm_size"/>
+		<property name="partUom" column="part_uom"/>
+		<property name="grade" column="grade"/>
+		<property name="castWeight" column="cast_weight"/>
+		<property name="proofMachineWeight" column="proof_machine_weight"/>
+		<property name="quantity" column="quantity"/>
+	</class>
+</hibernate-mapping>  

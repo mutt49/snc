@@ -4,11 +4,11 @@ import org.demo.spinncast.vo.PurchaseOrderVO;
 
 public class PurchaseOrderHBC {
 
-	private Integer order_id;
+	private Integer order_id = 0;
 	private String description;
 	private Float gross_price;
 	private Float net_value;
-	private Integer customer_id;
+	private Integer customer_id = 0;
 	
 	public PurchaseOrderHBC () {
 		
@@ -30,6 +30,7 @@ public class PurchaseOrderHBC {
 */
 		gross_price = new Float (1.0);
 		net_value = new Float (2.0);
+		// Delete this JK
 		customer_id = 3;
 	}
 	

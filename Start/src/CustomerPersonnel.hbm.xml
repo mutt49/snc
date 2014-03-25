@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+<!DOCTYPE hibernate-mapping SYSTEM 
+"hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.demo.spinncast.hibernate.CustomerPersonnelHBC" table="customer_personnel">
+		<id name="personnel_id" column="personal_id">
+			<generator class="native"/>
+		</id>
+		<property name="customer_id" column="customer_id"></property>
+		<property name="department" column="department"></property>
+		<property name="name" column="name"></property>
+		<property name="phone" column="phone"></property>
+		<property name="email" column="email"></property>
+	</class>
+</hibernate-mapping>  
