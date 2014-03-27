@@ -16,28 +16,141 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `employee`
+-- Table structure for table `chemical_composition_master`
 --
 
-DROP TABLE IF EXISTS `employee`;
+DROP TABLE IF EXISTS `chemical_composition_master`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `employee` (
-  `emp_id` int(11) NOT NULL AUTO_INCREMENT,
-  `emp_name` varchar(100) DEFAULT NULL,
-  `emp_last_name` varchar(100) DEFAULT NULL,
-  PRIMARY KEY (`emp_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
+CREATE TABLE `chemical_composition_master` (
+  `ccm_id` int(11) NOT NULL AUTO_INCREMENT,
+  `ccm_name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`ccm_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `employee`
+-- Dumping data for table `chemical_composition_master`
 --
 
-LOCK TABLES `employee` WRITE;
-/*!40000 ALTER TABLE `employee` DISABLE KEYS */;
-INSERT INTO `employee` VALUES (1,'zxczxc','tempLastName'),(2,'QWE','tempLastName'),(3,'QWE','tempLastName'),(4,'QWEzxc','tempLastName'),(5,'QWEzxc','tempLastName'),(6,'Aniket','tempLastName'),(7,'Aniket','tempLastName'),(8,'q','tempLastName'),(9,'q','tempLastName'),(10,'Ann','tempLastName'),(11,'Ann','tempLastName');
-/*!40000 ALTER TABLE `employee` ENABLE KEYS */;
+LOCK TABLES `chemical_composition_master` WRITE;
+/*!40000 ALTER TABLE `chemical_composition_master` DISABLE KEYS */;
+INSERT INTO `chemical_composition_master` VALUES (1,'SnA'),(2,'Jf');
+/*!40000 ALTER TABLE `chemical_composition_master` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customer_master`
+--
+
+DROP TABLE IF EXISTS `customer_master`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customer_master` (
+  `customer_id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_name` varchar(200) DEFAULT NULL,
+  `customer_address` varchar(200) DEFAULT NULL,
+  `cst_no` varchar(100) DEFAULT NULL,
+  `bst_no` varchar(100) DEFAULT NULL,
+  `ecc_no` varchar(100) DEFAULT NULL,
+  `octroi_no` varchar(100) DEFAULT NULL,
+  `vendor_code` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`customer_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customer_master`
+--
+
+LOCK TABLES `customer_master` WRITE;
+/*!40000 ALTER TABLE `customer_master` DISABLE KEYS */;
+INSERT INTO `customer_master` VALUES (1,'Larsen & Tuobro','Kothrud','12333','23133','1231323','V12333','A22'),(2,'Anitech Inc.','Kothrud','233','AS122','mklac','pas123','apas223');
+/*!40000 ALTER TABLE `customer_master` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customer_personnel`
+--
+
+DROP TABLE IF EXISTS `customer_personnel`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `customer_personnel` (
+  `personal_id` int(11) NOT NULL AUTO_INCREMENT,
+  `customer_id` int(11) NOT NULL,
+  `department` varchar(100) DEFAULT NULL,
+  `name` varchar(200) DEFAULT NULL,
+  `phone` varchar(50) DEFAULT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`personal_id`),
+  KEY `customer_id` (`customer_id`),
+  CONSTRAINT `customer_personnel_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer_master` (`customer_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customer_personnel`
+--
+
+LOCK TABLES `customer_personnel` WRITE;
+/*!40000 ALTER TABLE `customer_personnel` DISABLE KEYS */;
+INSERT INTO `customer_personnel` VALUES (2,1,'Account','Aniket Deole','989283','aniket@amisd.com'),(3,1,'Account','Aniket Deole','989283','aniket@amasdd.com'),(4,1,'Pagara','Third One','999999','aosda@asdasd.com'),(5,2,'New DEpt','aposdaposdk','123123213','odkpasd@asdasd.com');
+/*!40000 ALTER TABLE `customer_personnel` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `grade_composition`
+--
+
+DROP TABLE IF EXISTS `grade_composition`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `grade_composition` (
+  `grade_comp_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `grade_id` int(10) unsigned NOT NULL,
+  `ingrediant_type` varchar(45) NOT NULL,
+  `ingrediant_name` varchar(45) NOT NULL,
+  `min_value` varchar(45) NOT NULL,
+  `max_value` varchar(45) NOT NULL,
+  PRIMARY KEY (`grade_comp_id`),
+  KEY `FK_grade_composition_1` (`grade_id`),
+  CONSTRAINT `FK_grade_composition_1` FOREIGN KEY (`grade_id`) REFERENCES `grade_master` (`grade_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `grade_composition`
+--
+
+LOCK TABLES `grade_composition` WRITE;
+/*!40000 ALTER TABLE `grade_composition` DISABLE KEYS */;
+INSERT INTO `grade_composition` VALUES (1,1,'C','Cu','0','31'),(2,1,'C','Fe','5','20'),(3,1,'M','Hardening','0','5'),(4,2,'C','Cu','0','45');
+/*!40000 ALTER TABLE `grade_composition` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `grade_master`
+--
+
+DROP TABLE IF EXISTS `grade_master`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `grade_master` (
+  `grade_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `grade_name` varchar(45) NOT NULL,
+  PRIMARY KEY (`grade_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `grade_master`
+--
+
+LOCK TABLES `grade_master` WRITE;
+/*!40000 ALTER TABLE `grade_master` DISABLE KEYS */;
+INSERT INTO `grade_master` VALUES (1,'CU31'),(2,'CU35');
+/*!40000 ALTER TABLE `grade_master` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -55,10 +168,12 @@ CREATE TABLE `line_item` (
   `unit` text,
   `rate` float DEFAULT NULL,
   `status` text,
+  `part_no` int(10) unsigned NOT NULL,
+  `pending_quantity` int(10) unsigned NOT NULL,
   PRIMARY KEY (`line_item_id`),
   KEY `purchase_order_id` (`purchase_order_id`),
   CONSTRAINT `line_item_ibfk_1` FOREIGN KEY (`purchase_order_id`) REFERENCES `purchase_order` (`order_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +182,64 @@ CREATE TABLE `line_item` (
 
 LOCK TABLES `line_item` WRITE;
 /*!40000 ALTER TABLE `line_item` DISABLE KEYS */;
+INSERT INTO `line_item` VALUES (1,4,'LI1',21,'KG',120,'Y',0,0),(2,4,'LI2',100,'KG',500,'Y',0,0),(3,7,'LI3',125,'kg',100,NULL,0,0),(4,4,'New Li',125,'each',200,NULL,0,0),(7,4,'New LI',125,'kg',50,NULL,0,0),(8,4,'LiTest',300,'each',250,NULL,1,0),(9,5,'LiTest2',320,'EA',270,NULL,2,0);
 /*!40000 ALTER TABLE `line_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `mechanical_properties_master`
+--
+
+DROP TABLE IF EXISTS `mechanical_properties_master`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mechanical_properties_master` (
+  `mpm_id` int(11) NOT NULL AUTO_INCREMENT,
+  `mpm_name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`mpm_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `mechanical_properties_master`
+--
+
+LOCK TABLES `mechanical_properties_master` WRITE;
+/*!40000 ALTER TABLE `mechanical_properties_master` DISABLE KEYS */;
+INSERT INTO `mechanical_properties_master` VALUES (1,'Thrust'),(2,'Menu'),(3,'');
+/*!40000 ALTER TABLE `mechanical_properties_master` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `part_master`
+--
+
+DROP TABLE IF EXISTS `part_master`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `part_master` (
+  `part_id` int(11) NOT NULL AUTO_INCREMENT,
+  `part_name` text,
+  `part_drg_no` text,
+  `part_rate` float DEFAULT NULL,
+  `pm_size` float DEFAULT NULL,
+  `part_uom` text,
+  `grade` text,
+  `cast_weight` float DEFAULT NULL,
+  `proof_machine_weight` float DEFAULT NULL,
+  `quantity` float DEFAULT NULL,
+  PRIMARY KEY (`part_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `part_master`
+--
+
+LOCK TABLES `part_master` WRITE;
+/*!40000 ALTER TABLE `part_master` DISABLE KEYS */;
+INSERT INTO `part_master` VALUES (1,'Test','a12djk45s',10.03,120,'nos','1',120,50,5),(2,'TestPart','abc123',15.2,140,'KG','Cu31',120,115,20),(3,'New Part','123def',10,0,'No','abc',25,30,20);
+/*!40000 ALTER TABLE `part_master` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -82,8 +254,9 @@ CREATE TABLE `purchase_order` (
   `description` text,
   `gross_price` float DEFAULT NULL,
   `net_value` float DEFAULT NULL,
+  `purchaseOrderNo` varchar(45) NOT NULL,
   PRIMARY KEY (`order_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -92,7 +265,7 @@ CREATE TABLE `purchase_order` (
 
 LOCK TABLES `purchase_order` WRITE;
 /*!40000 ALTER TABLE `purchase_order` DISABLE KEYS */;
-INSERT INTO `purchase_order` VALUES (1,'First PO',12,12.23),(2,'qqq',NULL,NULL),(3,'www',NULL,NULL);
+INSERT INTO `purchase_order` VALUES (4,'Test1237',NULL,NULL,''),(5,'Abcd',NULL,NULL,''),(6,'Test12345',0,0,''),(7,'Test12375',NULL,NULL,'');
 /*!40000 ALTER TABLE `purchase_order` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -119,7 +292,7 @@ CREATE TABLE `test_certificates` (
 
 LOCK TABLES `test_certificates` WRITE;
 /*!40000 ALTER TABLE `test_certificates` DISABLE KEYS */;
-INSERT INTO `test_certificates` VALUES (10,'Varshaw','qweqweqwe',123123,12311),(11,'asas','asasd',123,123),(12,'qweqe','qweqe',0,0.02),(13,'q','q',0,0);
+INSERT INTO `test_certificates` VALUES (10,'Varshaw','qq',123123,12311),(11,'asas','asasd',123,123),(12,'qweqe','qweqe',0,0.02),(13,'q','q',0,0);
 /*!40000 ALTER TABLE `test_certificates` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -132,4 +305,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-05 14:00:49
+-- Dump completed on 2014-03-25 23:44:32
