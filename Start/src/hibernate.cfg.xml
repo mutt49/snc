@@ -33,5 +33,9 @@
 		<mapping resource="LineItem.hbm.xml" />
 		<mapping resource="PurchaseOrder.hbm.xml" />
 		<mapping resource="PartMaster.hbm.xml" />
-</session-factory>
+		<mapping resource="GradeMaster.hbm.xml" />
+		<mapping resource="GradeComposition.hbm.xml" />
+		<mapping resource="InvoiceHeader.hbm.xml" />
+		<mapping resource="InvoiceLineItem.hbm.xml" />
+	</session-factory>
 </hibernate-configuration>

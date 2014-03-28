@@ -1,29 +1,66 @@
 package org.demo.spinncast.bean;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import org.demo.spinncast.connections.ConnectionPool;
+import org.demo.spinncast.hibernate.GradeCompositionHBC;
 import org.demo.spinncast.hibernate.PartMasterHBC;
 import org.demo.spinncast.hibernate.PurchaseOrderHBC;
+import org.demo.spinncast.vo.GradeCompositionVO;
+import org.demo.spinncast.vo.GradeMasterVO;
 import org.demo.spinncast.vo.PartMasterVO;
 import org.demo.spinncast.vo.PurchaseOrderVO;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-@ManagedBean(name = "PartMasterBean")
+@ManagedBean(name = "GradeMasterBean")
 @SessionScoped
 public class GradeMasterBean {
 
-	private PartMasterVO selectedPartMasterVO;
-	private String partName;
-	private String grade;
-	private List<PartMasterVO> searchList = new ArrayList<PartMasterVO>();
+	private GradeMasterVO selectedGradeMasterVO;
+	private GradeCompositionVO selectedGradeCompositionVO;
+	private String gradeName;
+	private List<GradeCompositionVO> searchList = new ArrayList<GradeCompositionVO>();
 	private Boolean editFlag = false;
+	
+	public GradeMasterVO getSelectedGradeMasterVO() {
+		return selectedGradeMasterVO;
+	}
+
+	public void setSelectedGradeMasterVO(GradeMasterVO selectedGradeMasterVO) {
+		this.selectedGradeMasterVO = selectedGradeMasterVO;
+	}
+
+	public GradeCompositionVO getSelectedGradeCompositionVO() {
+		return selectedGradeCompositionVO;
+	}
+
+	public void setSelectedGradeCompositionVO(
+			GradeCompositionVO selectedGradeCompositionVO) {
+		this.selectedGradeCompositionVO = selectedGradeCompositionVO;
+	}
+
+	public String getGradeName() {
+		return gradeName;
+	}
+
+	public void setGradeName(String gradeName) {
+		this.gradeName = gradeName;
+	}
+
+	public List<GradeCompositionVO> getSearchList() {
+		return searchList;
+	}
+
+	public void setSearchList(List<GradeCompositionVO> searchList) {
+		this.searchList = searchList;
+	}
 
 	public Boolean getEditFlag() {
 		return editFlag;
@@ -33,86 +70,50 @@ public class GradeMasterBean {
 		this.editFlag = editFlag;
 	}
 
-	public PartMasterVO getSelectedPartMasterVO() {
-		return selectedPartMasterVO;
-	}
-
-	public void setSelectedPartMasterVO(PartMasterVO selectedPartMasterVO) {
-		this.selectedPartMasterVO = selectedPartMasterVO;
-	}
-
-	public String getPartName() {
-		return partName;
-	}
-
-	public void setPartName(String partName) {
-		this.partName = partName;
-	}
-
-	public String getGrade() {
-		return grade;
-	}
-
-	public void setGrade(String grade) {
-		this.grade = grade;
-	}
-
-	public List<PartMasterVO> getSearchList() {
-		return searchList;
-	}
-
-	public void setSearchList(List<PartMasterVO> searchList) {
-		this.searchList = searchList;
-	}
-
 	public GradeMasterBean() {
-		selectedPartMasterVO = new PartMasterVO();
-		partName = "";
-		grade = "";
-		searchList = new ArrayList<PartMasterVO>();
 	}
 
 	public String reset() {
-		selectedPartMasterVO = new PartMasterVO();
-		partName = "";
-		grade = "";
-		searchList = new ArrayList<PartMasterVO>();
+		
 		return "";
 	}
 
 	@SuppressWarnings("unchecked")
 	public String search() {
-		searchList = new ArrayList<PartMasterVO>();
+		searchList = new ArrayList<GradeCompositionVO>();
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Query hibernateQuery = session
-				.createQuery("from PartMasterHBC as m where m.partName like :part_name order by m.partId");
-		hibernateQuery.setString("part_name", "%"+partName+"%");
-		java.util.List<PartMasterHBC> results = hibernateQuery.list();
+				.createQuery("select gc.gradeCompId from GradeMasterHBC as g, GradeCompositionHBC as gc where g.gradeId = gc.gradeId order by g.gradeName");
+		hibernateQuery.setString("grade_name", "%"+gradeName+"%");
+		java.util.List<?> results = hibernateQuery.list();
+		
+		 for (Iterator it = results.iterator(); it.hasNext(); ) {
+			 GradeCompositionVO tempObj = new GradeCompositionVO();
+             Object[] myResult = (Object[]) it.next();
+             tempObj.setGradeCompositionId(Integer.parseInt(myResult[0].toString()));
+             searchList.add(tempObj);
+          }
 
-		for (int i = 0; i < results.size(); i++) {
-			PartMasterVO tempObj = new PartMasterVO();
-			tempObj.setPartId(results.get(i).getPartId());
-			tempObj.setPartName(results.get(i).getPartName());
-			tempObj.setDrgNo(results.get(i).getDrgNo());
-			tempObj.setPartRate(results.get(i).getPartRate());
-			tempObj.setPartUom(results.get(i).getPartUom());
-			tempObj.setPmSize(results.get(i).getPmSize());
-			tempObj.setGrade(results.get(i).getGrade());
-			tempObj.setCastWeight(results.get(i).getCastWeight());
-			tempObj.setProofMachineWeight(results.get(i)
-					.getProofMachineWeight());
-			tempObj.setQuantity(results.get(i).getQuantity());
+		/*for (int i = 0; i < results.size(); i++) {
+			GradeCompositionVO tempObj = new GradeCompositionVO();
+			tempObj = (GradeCompositionVO) results.get(i);
+			tempObj.setGradeCompositionId(results.get(0).getGradeCompId());
+			tempObj.setGradeId(results.get(0).getGradeId());
+			tempObj.setIngrediantName(results.get(0).getIngrediantName());
+			tempObj.setIngrediantType(results.get(0).getIngrediantType());
+			tempObj.setMaxValue(results.get(0).getMaxValue());
+			tempObj.setMinValue(results.get(0).getMinValue());
 			searchList.add(tempObj);
-		}
+		}*/
 
 		Transaction trans = session.beginTransaction();
 		trans.commit();
 		session.close();
-		return "PartMasterSearch";
+		return "GradeMasterSearch";
 	}
 
-	public String add() {
+	/*public String add() {
 
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
@@ -153,6 +154,6 @@ public class GradeMasterBean {
 		selectedPartMasterVO = new PartMasterVO();
 		editFlag = false;
 		return "PartMasterAdd.xhtml";
-	}
+	}*/
 
 }

@@ -8,12 +8,32 @@ import org.hibernate.cfg.Configuration;
 public class ConnectionPool {
 	private static ConnectionPool instance = null;
 	
-	SessionFactory fact;
-	Session session;
-	Configuration cfg;
+	private SessionFactory fact;
+	private Session session;
+	private Configuration cfg;
 	
+	public SessionFactory getFact() {
+		return fact;
+	}
+
+	public void setFact(SessionFactory fact) {
+		this.fact = fact;
+	}
+
+	public Configuration getCfg() {
+		return cfg;
+	}
+
+	public void setCfg(Configuration cfg) {
+		this.cfg = cfg;
+	}
+
+	public void setSession(Session session) {
+		this.session = session;
+	}
+
 	private ConnectionPool () {
-		cfg = new Configuration();
+		cfg = new Configuration().setProperty("hibernate.show_sql", "true");
 		cfg.configure("hibernate.cfg.xml");
 		fact = cfg.buildSessionFactory();
 	}

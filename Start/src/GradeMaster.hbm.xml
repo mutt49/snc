@@ -10,15 +10,4 @@
 		</id>
 		<property name="gradeName" column="grade_name"/>
 	</class>
-	
-	<class name="org.demo.spinncast.hibernate.GradeCompositionHBC" table="grade_composition">
-		<id name="gradeCompId" column="grade_comp_id">
-			<generator class="native"/>
-		</id>
-		<property name="grade" column="grade_id"/>
-		<property name="ingrediantType" column="ingrediant_type"/>
-		<property name="ingrediantName" column="ingrediant_name"/>
-		<property name="minValue" column="min_value"/>
-		<property name="maxValue" column="max_value"/>
-	</class>
 </hibernate-mapping>  

@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+    <!DOCTYPE hibernate-mapping PUBLIC  
+     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
+     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.demo.spinncast.hibernate.InvoiceLineItemHBC" table="inv_line_item">
+		<id name="invLineItemId" column="inv_line_item_id">
+			<generator class="native"/>
+		</id>
+		<property name="partId" column="part_id"></property>
+		<property name="invId" column="inv_id"></property>
+		<property name="pkgDesc" column="package_desc"></property>
+		<property name="quantityNo" column="quantity_no"></property>
+		<property name="quantityKgs" column="quantity_kgs"></property>
+		<property name="unit" column="unit"></property>
+		<property name="rate" column="rate"></property>
+		<property name="amount" column="amount"></property>
+	</class>
+</hibernate-mapping>  

@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+    <!DOCTYPE hibernate-mapping PUBLIC  
+     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
+     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.demo.spinncast.hibernate.GradeCompositionHBC" table="grade_composition">
+		<id name="gradeCompositionId" column="grade_comp_id">
+			<generator class="native"/>
+		</id>
+		<property name="gradeId" column="grade_id"/>
+		<property name="ingrediantType" column="ingrediant_type"/>
+		<property name="ingrediantName" column="ingrediant_name"/>
+		<property name="minValue" column="min_value"/>
+		<property name="maxValue" column="max_value"/>
+	</class>
+</hibernate-mapping>  

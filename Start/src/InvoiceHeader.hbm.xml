@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+    <!DOCTYPE hibernate-mapping PUBLIC  
+     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
+     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.demo.spinncast.hibernate.InvoiceHeaderHBC" table="inv_hdr">
+		<id name="invId" column="inv_id">
+			<generator class="native"/>
+		</id>
+		<property name="invDate" column="inv_date"></property>
+		<property name="customerId" column="customer_id"></property>
+		<property name="purchaseOrderId" column="purchase_order_no"></property>
+		<property name="purchaseOrderDate" column="purchase_order_date"></property>
+		<property name="delivaryChallanNo" column="delivary_challan_no"></property>
+		<property name="delivaryChallanDate" column="delivary_challan_date"></property>
+		<property name="modeOfTransport" column="mode_of_transport"></property>
+		<property name="vehicleNo" column="vehicle_no"></property>
+		<property name="netTotalAmount" column="net_total_amount"></property>
+		<property name="freightInsurance" column="freight_insurance"></property>
+		<property name="grandTotal" column="grand_total"></property>
+	</class>
+</hibernate-mapping>  
