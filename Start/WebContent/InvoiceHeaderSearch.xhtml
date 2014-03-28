@@ -10,13 +10,12 @@
 
 		<f:view>
 			<h:form>
-
 				<rich:toolbar styleClass="toolbar">
 					<rich:dropDownMenu id="dropDownMenu" label="Masters">
 						<rich:menuItem action="PartMasterSearch.jsf" label="Part Masters"
 							id="partMaster" styleClass="toolbar"></rich:menuItem>
 						<rich:menuItem action="GradeMasterSearch.jsf" label="Part Masters"
-							id="GradeMaster" styleClass="toolbar"></rich:menuItem>	
+							id="GradeMaster" styleClass="toolbar"></rich:menuItem>
 					</rich:dropDownMenu>
 					<h:commandLink value="Invoices" action="InvoiceHeaderSearch.jsf" styleClass="toolbar" />
 					<h:commandLink value="Test Certificates"
@@ -25,103 +24,83 @@
 						action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
 				</rich:toolbar>
 
-				<h:outputText value="Part Master" styleClass="pageTitle" />
-				<h:commandLink value="Add New" action="#{PartMasterBean.addNewPart}"
+				<h:outputText value="Invoice Header" styleClass="pageTitle" />
+				<h:commandLink value="Add New" action="InvoiceHeaderAdd.jsf"
 					styleClass="pageSubTitle">
+					<f:setPropertyActionListener target="#{InvoiceHeaderBean.editFlag}" value="false"></f:setPropertyActionListener>
 				</h:commandLink>
 
 				<rich:panel>
 					<table class="table" cellspacing="0">
 						<tr>
-							<td class="leftColumn"><h:outputText value="Description: " />
+							<td class="leftColumn"><h:outputText value="Invoice Id: " />
 							</td>
-							<td><h:inputText styleClass="searchEntry" id="GradeName"
-									value="#{GradeMasterBean.gradeName}" label="GradeName" /></td>
+							<td><h:inputText styleClass="searchEntry" id="invId"
+									value="#{InvoiceHeaderBean.selectedInvId}" label="invId" /></td>
 						</tr>
 						<tr>
 							<td class="leftColumn"><h:commandButton
 									styleClass="searchButton" value="Search" reRender="SearchTable"
-									action="#{GradeMasterBean.search}" /></td>
-							<td><h:commandButton styleClass="searchButton"
-									value="Reset" reRender="SearchTable"
-									action="#{GradeMasterBean.reset}" /></td>
+									action="#{InvoiceHeaderBean.search}" /></td>
+							<td><h:commandButton styleClass="searchButton" value="Reset"
+									reRender="SearchTable" action="#{InvoiceHeaderBean.reset}" /></td>
 						</tr>
 					</table>
 					<a4j:outputPanel ajaxRendered="true" id="SearchTable">
 						<h:outputText value="There are no items with the search criteria."
-							rendered="#{GradeMasterBean.searchList.size()== 0}" />
-						<rich:dataTable value="#{GradeMasterBean.searchList}" var="pm"
+							rendered="#{InvoiceHeaderBean.searchList.size()== 0}" />
+						<rich:dataTable value="#{InvoiceHeaderBean.searchList}" var="ih"
 							id="table" rows="20"
-							rendered="#{GradeMasterBean.searchList.size()!= 0}"
+							rendered="#{InvoiceHeaderBean.searchList.size()!= 0}"
 							styleClass="searchResultsTable">
 							<rich:column>
 								<f:facet name="header">
-									<h:outputText value="Part Name" />
+									<h:outputText value="Invoice Header" />
 								</f:facet>
-								<h:outputText value="#{pm.gradeCompId}" />
-							</rich:column>
-							<!-- <rich:column>
-								<f:facet name="header">
-									<h:outputText value="Drg. No." />
-								</f:facet>
-								<h:outputText value="#{pm.drgNo}" />
+								<h:outputText value="#{ih.invId}" />
 							</rich:column>
 							<rich:column>
 								<f:facet name="header">
-									<h:outputText value="Part Rate" />
+									<h:outputText value="Invoice Date" />
 								</f:facet>
-								<h:outputText value="#{pm.partRate}" />
+								<h:outputText value="#{ih.invDate}" />
 							</rich:column>
 							<rich:column>
 								<f:facet name="header">
-									<h:outputText value="P.M. Size" />
+									<h:outputText value="Purchase Order ID" />
 								</f:facet>
-								<h:outputText value="#{pm.pmSize}" />
+								<h:outputText value="#{ih.purchaseOrderId}" />
 							</rich:column>
 							<rich:column>
 								<f:facet name="header">
-									<h:outputText value="U.O.M." />
+									<h:outputText value="Delivary Challan No" />
 								</f:facet>
-								<h:outputText value="#{pm.partUom}" />
+								<h:outputText value="#{ih.delivaryChallanNo}" />
 							</rich:column>
 							<rich:column>
 								<f:facet name="header">
-									<h:outputText value="Grade" />
+									<h:outputText value="Net Total Amount" />
 								</f:facet>
-								<h:outputText value="#{pm.grade}" />
+								<h:outputText value="#{ih.netTotalAmount}" />
 							</rich:column>
 							<rich:column>
 								<f:facet name="header">
-									<h:outputText value="Cast Weight" />
+									<h:outputText value="Customer Name" />
 								</f:facet>
-								<h:outputText value="#{pm.castWeight}" />
+								<h:outputText value="#{ih.custDetails.customer_name}" />
 							</rich:column>
 							<rich:column>
 								<f:facet name="header">
-									<h:outputText value="Proof Machine Weight" />
+									<h:outputText value="Customer Address" />
 								</f:facet>
-								<h:outputText value="#{pm.proofMachineWeight}" />
-							</rich:column>
+								<h:outputText value="#{ih.custDetails.customer_address}" />
+							</rich:column>						
 							<rich:column>
-								<f:facet name="header">
-									<h:outputText value="Quantity" />
-								</f:facet>
-								<h:outputText value="#{pm.quantity}" />
-							</rich:column>
-							<rich:column>
-								<a4j:commandButton value="Edit" action="PartMasterAdd.xhtml">
+								<h:commandButton value="View" action="#{InvoiceHeaderBean.viewInvoice}">
 									<f:setPropertyActionListener
-										target="#{PartMasterBean.selectedPartMasterVO}" value="#{pm}" />
-									<f:setPropertyActionListener value="true"
-										target="#{PartMasterBean.editFlag}" />
-								</a4j:commandButton>
-							</rich:column>
-							<rich:column>
-								<h:commandButton value="Delete" action="#{PartMasterBean.deletePart}">
-									<f:setPropertyActionListener
-										target="#{PartMasterBean.selectedPartMasterVO}" value="#{pm}" />
+										target="#{InvoiceHeaderBean.selectedInvHdrVo}" value="#{ih}" />
 								</h:commandButton>
-							</rich:column> -->
+							</rich:column> 
 						</rich:dataTable>
 					</a4j:outputPanel>
 				</rich:panel>

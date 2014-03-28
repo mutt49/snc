@@ -1,0 +1,325 @@
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="content">
+
+		<rich:popupPanel id="addLineItem" autosized="true">
+			<f:facet name="Header">
+				<h:outputText value="Add Line Item" />
+			</f:facet>
+			<a onclick="#{rich:component('addLineItem')}.hide()" href="#">Hide
+				ModalPanel</a>
+			<rich:panel>
+				<h:form>
+					<h:panelGrid id="addLineItemPanel" columns="2">
+						<h:outputText value="Part Name" />
+						<h:inputText value="#{InvoiceHeaderBean.partVo.partName}" />
+
+						<h:outputText value="Package Desc" />
+						<h:inputText value="#{InvoiceHeaderBean.invLineItem.pkgDesc}" />
+
+						<h:outputText value="Quantity Nos." />
+						<h:inputText value="#{InvoiceHeaderBean.invLineItem.quantityNo}" />
+
+						<h:outputText value="Quantity Kgs." />
+						<h:inputText value="#{InvoiceHeaderBean.invLineItem.quantityKgs}" />
+
+						<h:outputText value="Unit" />
+						<h:inputText value="#{InvoiceHeaderBean.invLineItem.unit}" />
+
+						<h:outputText value="Rate" />
+						<h:inputText value="#{InvoiceHeaderBean.invLineItem.rate}" />
+
+						<h:outputText value="Amount" />
+						<h:inputText value="#{InvoiceHeaderBean.invLineItem.amount}" />
+
+						<h:commandButton value="Edit" styleClass="searchButton"
+							action="#{InvoiceHeaderBean.addLineItem}">
+						</h:commandButton>
+
+					</h:panelGrid>
+				</h:form>
+			</rich:panel>
+		</rich:popupPanel>
+
+		<f:view>
+			<h:form>
+				<rich:toolbar styleClass="toolbar">
+					<rich:dropDownMenu id="dropDownMenu" label="Masters">
+						<rich:menuItem action="PartMasterSearch.jsf" label="Part Masters"
+							id="partMaster" styleClass="toolbar"></rich:menuItem>
+					</rich:dropDownMenu>
+					<h:commandLink value="Invoices" styleClass="toolbar" />
+					<h:commandLink value="Test Certificates"
+						action="TestCertificateSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Purchase Orders"
+						action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
+				</rich:toolbar>
+
+				<h:outputText value="Invoice Header" styleClass="pageTitle" />
+				<h:outputText value="Add New" styleClass="pageSubTitleActive" />
+				<ui:remove>
+					<rich:panel>
+						<table class="table" cellspacing="0">
+							<tr>
+								<td class="leftColumn"><h:outputText value="Inv Date: " />
+								</td>
+								<td><rich:calendar id="invDate"
+										value="#{InvoiceHeaderBean.selectedInvHdrVo.invDate}" /></td>
+							</tr>
+							<tr>
+								<td class="leftColumn"><h:outputText value="Customer Id " />
+								</td>
+								<td><h:inputText id="custId"
+										value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.customer_id}" /></td>
+							</tr>
+							<tr>
+								<td class="leftColumn"><h:outputText
+										value="Purchase Order No " /></td>
+								<td><h:inputText id="poId"
+										value="#{InvoiceHeaderBean.selectedInvHdrVo.purchaseOrderId}" /></td>
+							</tr>
+							<tr>
+								<td class="leftColumn"><h:outputText
+										value="Purchase Order Date " /></td>
+								<td><rich:calendar id="poDate"
+										value="#{InvoiceHeaderBean.selectedInvHdrVo.purchaseOrderDate}" /></td>
+							</tr>
+							<tr>
+								<td class="leftColumn"><h:outputText
+										value="Delivary Challan No " /></td>
+								<td><h:inputText id="dcId"
+										value="#{InvoiceHeaderBean.selectedInvHdrVo.delivaryChallanNo}" /></td>
+							</tr>
+							<tr>
+								<td class="leftColumn"><h:outputText
+										value="Delivary Challan Date " /></td>
+								<td><rich:calendar id="doDate"
+										value="#{InvoiceHeaderBean.selectedInvHdrVo.delivaryChallanDate}" /></td>
+							</tr>
+							<tr>
+								<td class="leftColumn"><h:outputText
+										value="Mode Of Transport" /></td>
+								<td><h:inputText id="modeTrp"
+										value="#{InvoiceHeaderBean.selectedInvHdrVo.modeOfTransport}" /></td>
+							</tr>
+							<tr>
+								<td class="leftColumn"><a4j:commandButton value="Add"
+										styleClass="searchButton" action="#{InvoiceHeaderBean.add}" /></td>
+								<td><a4j:commandButton value="Edit"
+										styleClass="searchButton" action="#{InvoiceHeaderBean.edit}" /></td>
+							</tr>
+						</table>
+					</rich:panel>
+				</ui:remove>
+
+				<h:panelGrid columns="2">
+					<h:outputText value="Invoice Number" />
+					<h:panelGroup>
+						<h:outputText value="Invoice Date" />
+						<rich:calendar id="invDate"
+							value="#{InvoiceHeaderBean.selectedInvHdrVo.invDate}" />
+					</h:panelGroup>
+				</h:panelGrid>
+
+				<h:panelGrid id="mainPanel" columns="2">
+					<h:panelGroup id="leftPane">
+						<h:panelGrid id="leftPanle1" columns="2">
+							<h:outputText value="Vendor/Supplier Code No." />
+							<h:inputText id="vendorCode"
+								value="#{InvoiceHeaderBean.vendorCode}" />
+							<h:outputText value="Code No./Central Excise" />
+							<h:inputText id="CodeNo" value="#{InvoiceHeaderBean.exciseCode}" />
+							<h:outputText value="Registration Certificate No." />
+							<h:inputText id="RegCertNo"
+								value="#{InvoiceHeaderBean.regCertNo}" />
+							<h:outputText value="P.L.A. NO." />
+							<h:inputText id="PLANo" value="#{InvoiceHeaderBean.plaNo}" />
+							<h:outputText value="Address Of Range" />
+							<h:inputTextarea id="rangeAddress"
+								value="#{InvoiceHeaderBean.rangeAddress}" rows="4" cols="30" />
+							<h:outputText value="Division" />
+							<h:inputTextarea id="division"
+								value="#{InvoiceHeaderBean.division}" rows="4" cols="30" />
+						</h:panelGrid>
+						<h:panelGrid id="leftPanle2" columns="2">
+							<h:outputText value="Your P.O. No." />
+							<h:inputText id="poNo"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.purchaseOrderId}" />
+							<h:outputText value="Date" />
+							<rich:calendar id="poDate"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.purchaseOrderDate}" />
+						</h:panelGrid>
+						<h:panelGrid id="leftPanle3" columns="2">
+							<h:outputText value="Our Delivary Challan No." />
+							<h:inputText id="dcNo"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.delivaryChallanNo}" />
+							<h:outputText value="Date" />
+							<rich:calendar id="doDate"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.delivaryChallanDate}" />
+						</h:panelGrid>
+						<h:panelGrid id="leftPanle4" columns="2">
+							<h:outputText value="Mode Of Transport" />
+							<h:inputText id="mot"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.modeOfTransport}" />
+							<h:outputText value="Vehicle No." />
+							<h:inputText id="vNo"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.vehicleNo}" />
+							<h:outputText value="T.C. No." />
+							<h:inputText id="tcNo" value="Test" />
+							<h:outputText value="I.R. No." />
+							<h:inputText id="irNo" value="Test" />
+						</h:panelGrid>
+					</h:panelGroup>
+
+					<h:panelGroup id="rightPane">
+						<h:panelGrid id="RightPanel1" columns="2">
+							<h:outputText value="Name of Excisable Commodity" />
+							<h:inputText id="nEc" value="N.F. Casting" />
+							<h:outputText value="Tariff Handling No." />
+							<h:inputText id="tHNo" value="74199100" />
+							<h:outputText value="Exemption Notif. No." />
+							<h:inputText id="eNNo" value="9/2005 DR.1.4.05" />
+							<h:outputText value="Rate of Duty" />
+							<h:inputText id="rDuty" value="12.36%" />
+							<h:outputText value="Tariff Rate/Notification No and DT" />
+							<h:inputText id="tRate" value="Test" />
+							<h:outputText value="Income Tax P.A.N./G.I.R. No. " />
+							<h:inputText id="panGirNo" value="Test" />
+						</h:panelGrid>
+
+						<h:panelGrid id="RightPanel2" columns="2">
+							<h:outputText value="Customer Name" />
+							<h:inputText id="cName"
+								valueChangeListener="#{InvoiceHeaderBean.getCustomerData}"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.customer_name}">
+								<a4j:ajax event="change"
+									render="cAddress,dTo,dAddress,ecCode,octroiNo,cstNo,bstNo" />
+							</h:inputText>
+							<!-- <rich:autocomplete mode="ajax" tokens=", " minChars="0"
+								id="cName" autoFill="false" selectFirst="false"
+								autocompleteMethod="#{SuggestionBean.getCustomerFromName}"
+								var="cap" fetchValue="#{cap.customer_name}">
+								<rich:column>
+									<h:outputText value="#{cap.customer_name}" />
+								</rich:column>
+							</rich:autocomplete> -->
+
+							<h:outputText value="Customer Address" />
+							<h:inputText id="cAddress"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.customer_address}" />
+						</h:panelGrid>
+
+						<h:panelGrid id="RightPanel3" columns="2">
+							<h:outputText value="Delivary To" />
+							<h:inputText id="dTo"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.customer_name}" />
+							<h:outputText value="Delivary Address" />
+							<h:inputText id="dAddress"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.customer_address}" />
+							<h:outputText value="E.C.Code No." />
+							<h:inputText id="ecCode"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.ecc_no}" />
+							<h:outputText value="Octroi No." />
+							<h:inputText id="octroiNo"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.octroi_no}" />
+							<h:outputText value="C.S.T. No." />
+							<h:inputText id="cstNo"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.cst_no}" />
+							<h:outputText value="B.S.T. No." />
+							<h:inputText id="bstNo"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.bst_no}" />
+						</h:panelGrid>
+
+					</h:panelGroup>
+				</h:panelGrid>
+
+				<h:panelGrid columns="2">
+					<h:commandButton value="Add" styleClass="searchButton"
+						action="#{InvoiceHeaderBean.add}"
+						rendered="#{!InvoiceHeaderBean.editFlag}" />
+					<h:commandButton value="Edit" styleClass="searchButton"
+						action="#{PurchaseOrderBean.edit}"
+						rendered="#{InvoiceHeaderBean.editFlag}" />
+						
+					<h:commandButton value="Print" styleClass="searchButton"
+						action="#{InvoiceHeaderBean.print}"
+						rendered="#{!InvoiceHeaderBean.editFlag}" />
+					<a4j:commandButton value="Add Line Item" styleClass="searchButton"
+						id="addLI" oncomplete="#{rich:component('addLineItem')}.show()}"
+						rendered="#{InvoiceHeaderBean.headerSaved}">
+						<rich:componentControl target="addLineItem" operation="show"
+							event="click" />
+					</a4j:commandButton>
+				</h:panelGrid>
+				
+				
+				<a4j:outputPanel ajaxRendered="true" id="SearchTable">
+						<h:outputText value="There are no items with the search criteria."
+							rendered="#{InvoiceHeaderBean.invLineItemList.size()== 0}" />
+						<rich:dataTable value="#{InvoiceHeaderBean.invLineItemList}" var="ilist"
+							id="table" rows="20"
+							rendered="#{InvoiceHeaderBean.invLineItemList.size()!= 0}"
+							styleClass="searchResultsTable">
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Part ID" />
+								</f:facet>
+								<h:outputText value="#{ilist.partId}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Package Desc" />
+								</f:facet>
+								<h:outputText value="#{ilist.pkgDesc}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Quantity Nos." />
+								</f:facet>
+								<h:outputText value="#{ilist.quantityNo}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Quantity Kgs." />
+								</f:facet>
+								<h:outputText value="#{ilist.quantityNo}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Unit" />
+								</f:facet>
+								<h:outputText value="#{ilist.unit}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Rate" />
+								</f:facet>
+								<h:outputText value="#{ilist.rate}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Amount" />
+								</f:facet>
+								<h:outputText value="#{ilist.amount}" />
+							</rich:column>
+							<rich:column>
+								<h:commandButton value="Delete" action="#{PartMasterBean.deletePart}">
+									<f:setPropertyActionListener
+										target="#{PartMasterBean.selectedPartMasterVO}" value="#{pm}" />
+								</h:commandButton>
+							</rich:column>
+						</rich:dataTable>
+					</a4j:outputPanel>
+
+
+			</h:form>
+		</f:view>
+
+	</ui:define>
+</ui:composition>

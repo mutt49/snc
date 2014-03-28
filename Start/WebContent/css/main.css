@@ -69,7 +69,7 @@ body {
 }
 
 .table, td {
-	padding: 15px;
+	padding: 5px;
 }
 
 .leftColumn {
@@ -202,8 +202,6 @@ body {
 	background-color:#ffffff; }
 .searchResultsTable td{
 	vertical-align:middle;
-	
-	
 	border:1px solid #000000;
 	border-width:1px 1px 1px 1px;
 	text-align:left;
@@ -239,4 +237,10 @@ body {
 }
 .searchResultsTable tr:first-child td:last-child{
 	border-width:1px 1px 1px 1px;v
+}
+
+.popupPanelRegular {
+	height: 600px;
+	width: 800px;
+	background-color: #ffffff;
 }
