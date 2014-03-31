@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>  
 <!DOCTYPE hibernate-mapping SYSTEM 
 "hibernate-mapping-3.0.dtd">
-
 <hibernate-mapping>
 	<class name="org.demo.spinncast.hibernate.CustomerHBC" table="customer_master">
 		<id name="customer_id" column="customer_id">

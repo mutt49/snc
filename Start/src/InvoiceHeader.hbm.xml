@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>  
-    <!DOCTYPE hibernate-mapping PUBLIC  
-     "-//Hibernate/Hibernate Mapping DTD 3.0//EN"  
-     "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!DOCTYPE hibernate-mapping SYSTEM 
+"hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
 	<class name="org.demo.spinncast.hibernate.InvoiceHeaderHBC" table="inv_hdr">
@@ -19,5 +18,13 @@
 		<property name="netTotalAmount" column="net_total_amount"></property>
 		<property name="freightInsurance" column="freight_insurance"></property>
 		<property name="grandTotal" column="grand_total"></property>
+		<property name="tcNo" column="tcNo"></property>
+		<property name="irNo" column="irNo"></property>
+		<property name="lrNo" column="lrNo"></property>
+		<property name="paymentTerms" column="paymentTerms"></property>
+		<property name="pkgFrwdChg" column="pkg_frwd_chg"></property>
+		<property name="invIssueDate" column="inv_issue_date"></property>
+		<property name="removalDate" column="removal_date"></property>
+		<property name="liAmountTotal" column="li_amount_total"></property>
 	</class>
 </hibernate-mapping>  

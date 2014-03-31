@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.6.12, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 5.1.51, for Win32 (ia32)
 --
 -- Host: localhost    Database: spinncast
 -- ------------------------------------------------------
--- Server version	5.6.12
+-- Server version	5.1.51-community
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,6 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `chem_master`
+--
+
+DROP TABLE IF EXISTS `chem_master`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `chem_master` (
+  `chem_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `chem_component` varchar(45) NOT NULL,
+  PRIMARY KEY (`chem_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `chem_master`
+--
+
+LOCK TABLES `chem_master` WRITE;
+/*!40000 ALTER TABLE `chem_master` DISABLE KEYS */;
+INSERT INTO `chem_master` VALUES (1,'cu'),(2,'al'),(3,'fe');
+/*!40000 ALTER TABLE `chem_master` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `chemical_composition_master`
 --
 
@@ -26,7 +50,7 @@ CREATE TABLE `chemical_composition_master` (
   `ccm_id` int(11) NOT NULL AUTO_INCREMENT,
   `ccm_name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`ccm_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -35,7 +59,6 @@ CREATE TABLE `chemical_composition_master` (
 
 LOCK TABLES `chemical_composition_master` WRITE;
 /*!40000 ALTER TABLE `chemical_composition_master` DISABLE KEYS */;
-INSERT INTO `chemical_composition_master` VALUES (1,'SnA'),(2,'Jf');
 /*!40000 ALTER TABLE `chemical_composition_master` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -56,7 +79,7 @@ CREATE TABLE `customer_master` (
   `octroi_no` varchar(100) DEFAULT NULL,
   `vendor_code` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -65,7 +88,7 @@ CREATE TABLE `customer_master` (
 
 LOCK TABLES `customer_master` WRITE;
 /*!40000 ALTER TABLE `customer_master` DISABLE KEYS */;
-INSERT INTO `customer_master` VALUES (1,'Larsen & Tuobro','Kothrud','12333','23133','1231323','V12333','A22'),(2,'Anitech Inc.','Kothrud','233','AS122','mklac','pas123','apas223');
+INSERT INTO `customer_master` VALUES (1,'TestCust','ABC','123','321','111','222','Abc123');
 /*!40000 ALTER TABLE `customer_master` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -86,7 +109,7 @@ CREATE TABLE `customer_personnel` (
   PRIMARY KEY (`personal_id`),
   KEY `customer_id` (`customer_id`),
   CONSTRAINT `customer_personnel_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer_master` (`customer_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,8 +118,31 @@ CREATE TABLE `customer_personnel` (
 
 LOCK TABLES `customer_personnel` WRITE;
 /*!40000 ALTER TABLE `customer_personnel` DISABLE KEYS */;
-INSERT INTO `customer_personnel` VALUES (2,1,'Account','Aniket Deole','989283','aniket@amisd.com'),(3,1,'Account','Aniket Deole','989283','aniket@amasdd.com'),(4,1,'Pagara','Third One','999999','aosda@asdasd.com'),(5,2,'New DEpt','aposdaposdk','123123213','odkpasd@asdasd.com');
 /*!40000 ALTER TABLE `customer_personnel` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `employee`
+--
+
+DROP TABLE IF EXISTS `employee`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `employee` (
+  `emp_id` int(11) NOT NULL AUTO_INCREMENT,
+  `emp_name` varchar(100) DEFAULT NULL,
+  `emp_last_name` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`emp_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `employee`
+--
+
+LOCK TABLES `employee` WRITE;
+/*!40000 ALTER TABLE `employee` DISABLE KEYS */;
+/*!40000 ALTER TABLE `employee` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -154,6 +200,71 @@ INSERT INTO `grade_master` VALUES (1,'CU31'),(2,'CU35');
 UNLOCK TABLES;
 
 --
+-- Table structure for table `inv_hdr`
+--
+
+DROP TABLE IF EXISTS `inv_hdr`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `inv_hdr` (
+  `inv_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `inv_date` datetime NOT NULL,
+  `customer_id` int(10) unsigned NOT NULL,
+  `purchase_order_no` int(10) unsigned NOT NULL,
+  `purchase_order_date` datetime NOT NULL,
+  `delivary_challan_no` int(10) unsigned NOT NULL,
+  `delivary_challan_date` datetime NOT NULL,
+  `mode_of_transport` varchar(45) DEFAULT NULL,
+  `vehicle_no` varchar(45) DEFAULT NULL,
+  `net_total_amount` float NOT NULL,
+  `freight_insurance` float NOT NULL,
+  `grand_total` float NOT NULL,
+  PRIMARY KEY (`inv_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `inv_hdr`
+--
+
+LOCK TABLES `inv_hdr` WRITE;
+/*!40000 ALTER TABLE `inv_hdr` DISABLE KEYS */;
+INSERT INTO `inv_hdr` VALUES (1,'2014-03-26 00:00:00',1,1,'2014-03-26 00:00:00',1000,'2014-03-26 00:00:00','Truck','MH 12 AB 1234',1500,50,1550),(2,'2014-03-03 00:00:00',0,150,'2014-03-03 00:00:00',123,'2014-03-03 00:00:00','Test',NULL,0,0,0),(3,'2014-03-03 00:00:00',0,150,'2014-03-03 00:00:00',123,'2014-03-03 00:00:00','Test',NULL,0,0,0),(4,'2014-03-03 00:00:00',0,123,'2014-03-03 00:00:00',234,'2014-03-04 00:00:00','Test',NULL,0,0,0),(20,'2014-03-03 00:00:00',0,0,'2014-03-18 00:00:00',0,'2014-03-18 00:00:00','By ROad','12323',0,0,0),(21,'2014-03-03 00:00:00',0,0,'2014-03-10 00:00:00',0,'2014-03-17 00:00:00','By ROad','12323',0,0,0),(22,'2014-03-03 00:00:00',0,0,'2014-03-10 00:00:00',0,'2014-03-17 00:00:00','By ROad','12323',0,0,0),(24,'2014-03-11 00:00:00',0,0,'2014-03-19 00:00:00',0,'2014-03-13 00:00:00','By ROad','12323',0,0,0),(25,'2014-03-10 00:00:00',0,0,'2014-03-19 00:00:00',0,'2014-03-25 00:00:00','By ROad','12323',0,0,0),(26,'2014-03-10 00:00:00',0,0,'2014-03-25 00:00:00',0,'2014-03-11 00:00:00','Test','abcd',0,0,0),(27,'2014-03-10 00:00:00',0,0,'2014-03-11 00:00:00',0,'2014-03-10 00:00:00','Test','abcd',0,0,0),(28,'2014-03-18 00:00:00',0,0,'2014-03-25 00:00:00',0,'2014-03-17 00:00:00','Test','abcd',0,0,0),(29,'2014-03-17 00:00:00',0,0,'2014-03-18 00:00:00',0,'2014-03-19 00:00:00','Test','abcd',0,0,0),(30,'2014-03-10 00:00:00',0,0,'2014-03-25 00:00:00',0,'2014-03-11 00:00:00','Test','abcd',0,0,0),(31,'2014-03-10 00:00:00',0,0,'2014-03-25 00:00:00',0,'2014-03-11 00:00:00','Test','abcd',0,0,0),(33,'2014-03-18 00:00:00',0,0,'2014-03-27 00:00:00',0,'2014-03-22 00:00:00','Test','abcd',0,0,0);
+/*!40000 ALTER TABLE `inv_hdr` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `inv_line_item`
+--
+
+DROP TABLE IF EXISTS `inv_line_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `inv_line_item` (
+  `inv_line_item_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `part_id` int(10) unsigned NOT NULL,
+  `package_desc` varchar(45) NOT NULL,
+  `quantity_no` int(10) unsigned NOT NULL,
+  `quantity_kgs` float NOT NULL,
+  `unit` varchar(45) NOT NULL,
+  `rate` float NOT NULL,
+  `amount` float NOT NULL,
+  `inv_id` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`inv_line_item_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `inv_line_item`
+--
+
+LOCK TABLES `inv_line_item` WRITE;
+/*!40000 ALTER TABLE `inv_line_item` DISABLE KEYS */;
+INSERT INTO `inv_line_item` VALUES (1,0,'',0,0,'',0,0,0),(2,0,'',0,0,'',0,0,0),(3,2,'Test',10,0,'',0,0,0),(4,0,'',0,0,'',0,0,0),(5,0,'',0,0,'',0,0,0),(6,0,'',0,0,'',0,0,0),(7,0,'A',0,0,'0.0',0,0,0),(8,0,'',0,0,'',0,0,0),(9,0,'',0,0,'',0,0,0),(10,2,'TestNew',0,0,'',0,0,0),(11,5,'NewDesc',200,200,'kg',200,200,0),(12,5,'NewDesc1',0,0,'kg',0,0,0),(13,5,'New Part',0,0,'kg',0,0,33),(14,5,'NewPart5',1,2,'kg',3,4,33),(15,2,'TestPart',200,10,'kg',50,1200,33);
+/*!40000 ALTER TABLE `inv_line_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `line_item`
 --
 
@@ -173,7 +284,7 @@ CREATE TABLE `line_item` (
   PRIMARY KEY (`line_item_id`),
   KEY `purchase_order_id` (`purchase_order_id`),
   CONSTRAINT `line_item_ibfk_1` FOREIGN KEY (`purchase_order_id`) REFERENCES `purchase_order` (`order_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -182,8 +293,31 @@ CREATE TABLE `line_item` (
 
 LOCK TABLES `line_item` WRITE;
 /*!40000 ALTER TABLE `line_item` DISABLE KEYS */;
-INSERT INTO `line_item` VALUES (1,4,'LI1',21,'KG',120,'Y',0,0),(2,4,'LI2',100,'KG',500,'Y',0,0),(3,7,'LI3',125,'kg',100,NULL,0,0),(4,4,'New Li',125,'each',200,NULL,0,0),(7,4,'New LI',125,'kg',50,NULL,0,0),(8,4,'LiTest',300,'each',250,NULL,1,0),(9,5,'LiTest2',320,'EA',270,NULL,2,0);
 /*!40000 ALTER TABLE `line_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `mech_prop_master`
+--
+
+DROP TABLE IF EXISTS `mech_prop_master`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mech_prop_master` (
+  `mech_prop_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `property_name` varchar(45) NOT NULL,
+  PRIMARY KEY (`mech_prop_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `mech_prop_master`
+--
+
+LOCK TABLES `mech_prop_master` WRITE;
+/*!40000 ALTER TABLE `mech_prop_master` DISABLE KEYS */;
+INSERT INTO `mech_prop_master` VALUES (1,'Hardness'),(2,'Elongation %');
+/*!40000 ALTER TABLE `mech_prop_master` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -197,7 +331,7 @@ CREATE TABLE `mechanical_properties_master` (
   `mpm_id` int(11) NOT NULL AUTO_INCREMENT,
   `mpm_name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`mpm_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -206,7 +340,6 @@ CREATE TABLE `mechanical_properties_master` (
 
 LOCK TABLES `mechanical_properties_master` WRITE;
 /*!40000 ALTER TABLE `mechanical_properties_master` DISABLE KEYS */;
-INSERT INTO `mechanical_properties_master` VALUES (1,'Thrust'),(2,'Menu'),(3,'');
 /*!40000 ALTER TABLE `mechanical_properties_master` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -229,7 +362,7 @@ CREATE TABLE `part_master` (
   `proof_machine_weight` float DEFAULT NULL,
   `quantity` float DEFAULT NULL,
   PRIMARY KEY (`part_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -238,7 +371,7 @@ CREATE TABLE `part_master` (
 
 LOCK TABLES `part_master` WRITE;
 /*!40000 ALTER TABLE `part_master` DISABLE KEYS */;
-INSERT INTO `part_master` VALUES (1,'Test','a12djk45s',10.03,120,'nos','1',120,50,5),(2,'TestPart','abc123',15.2,140,'KG','Cu31',120,115,20),(3,'New Part','123def',10,0,'No','abc',25,30,20);
+INSERT INTO `part_master` VALUES (2,'TestPart1','abc123',15.2,140,'KG','Cu31',120,115,20),(3,'New Part','123def',10,0,'No','abc',25,30,20),(5,'TestPart2','123#wer',10,120,'kg','a',20,35,14);
 /*!40000 ALTER TABLE `part_master` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -283,7 +416,7 @@ CREATE TABLE `test_certificates` (
   `quantity` double DEFAULT NULL,
   `rate` double DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -292,7 +425,6 @@ CREATE TABLE `test_certificates` (
 
 LOCK TABLES `test_certificates` WRITE;
 /*!40000 ALTER TABLE `test_certificates` DISABLE KEYS */;
-INSERT INTO `test_certificates` VALUES (10,'Varshaw','qq',123123,12311),(11,'asas','asasd',123,123),(12,'qweqe','qweqe',0,0.02),(13,'q','q',0,0);
 /*!40000 ALTER TABLE `test_certificates` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -305,4 +437,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-25 23:44:32
+-- Dump completed on 2014-03-27 20:57:54

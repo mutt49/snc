@@ -25,9 +25,10 @@
 				</rich:toolbar>
 
 				<h:outputText value="Invoice Header" styleClass="pageTitle" />
-				<h:commandLink value="Add New" action="InvoiceHeaderAdd.jsf"
+				<h:commandLink value="Add New" action="#{InvoiceHeaderBean.clearHeader}"
 					styleClass="pageSubTitle">
 					<f:setPropertyActionListener target="#{InvoiceHeaderBean.editFlag}" value="false"></f:setPropertyActionListener>
+					<f:setPropertyActionListener target="#{InvoiceHeaderBean.retPage}" value="InvoiceHeaderAdd"></f:setPropertyActionListener>
 				</h:commandLink>
 
 				<rich:panel>
