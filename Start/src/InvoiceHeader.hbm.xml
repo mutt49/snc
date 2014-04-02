@@ -2,6 +2,7 @@
 <!DOCTYPE hibernate-mapping SYSTEM 
 "hibernate-mapping-3.0.dtd">
 
+
 <hibernate-mapping>
 	<class name="org.demo.spinncast.hibernate.InvoiceHeaderHBC" table="inv_hdr">
 		<id name="invId" column="inv_id">
@@ -11,8 +12,6 @@
 		<property name="customerId" column="customer_id"></property>
 		<property name="purchaseOrderId" column="purchase_order_no"></property>
 		<property name="purchaseOrderDate" column="purchase_order_date"></property>
-		<property name="delivaryChallanNo" column="delivary_challan_no"></property>
-		<property name="delivaryChallanDate" column="delivary_challan_date"></property>
 		<property name="modeOfTransport" column="mode_of_transport"></property>
 		<property name="vehicleNo" column="vehicle_no"></property>
 		<property name="netTotalAmount" column="net_total_amount"></property>
@@ -26,5 +25,9 @@
 		<property name="invIssueDate" column="inv_issue_date"></property>
 		<property name="removalDate" column="removal_date"></property>
 		<property name="liAmountTotal" column="li_amount_total"></property>
+		<property name="bedRate" column="bed_rate"></property>
+		<property name="edCessRate" column="ed_cess_rate"></property>
+		<property name="shsCess" column="shs_cess"></property>
+		<property name="vatOrCst" column="vat_or_cst"></property>
 	</class>
 </hibernate-mapping>  

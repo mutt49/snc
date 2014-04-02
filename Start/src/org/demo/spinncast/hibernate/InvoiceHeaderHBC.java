@@ -9,10 +9,8 @@ public class InvoiceHeaderHBC {
 	private int invId;
 	private Date invDate;
 	private int customerId;
-	private int purchaseOrderId;
+	private String purchaseOrderId;
 	private Date purchaseOrderDate;
-	private int delivaryChallanNo;
-	private Date delivaryChallanDate;
 	private String modeOfTransport;
 	private String vehicleNo;
 	private float netTotalAmount;
@@ -26,6 +24,42 @@ public class InvoiceHeaderHBC {
 	private Date invIssueDate;
 	private Date removalDate;
 	private float liAmountTotal;
+	private float bedRate;
+	private float edCessRate;
+	private float shsCess;
+	private float vatOrCst;
+
+	public float getBedRate() {
+		return bedRate;
+	}
+
+	public void setBedRate(float bedRate) {
+		this.bedRate = bedRate;
+	}
+
+	public float getEdCessRate() {
+		return edCessRate;
+	}
+
+	public void setEdCessRate(float edCessRate) {
+		this.edCessRate = edCessRate;
+	}
+
+	public float getShsCess() {
+		return shsCess;
+	}
+
+	public void setShsCess(float shsCess) {
+		this.shsCess = shsCess;
+	}
+
+	public float getVatOrCst() {
+		return vatOrCst;
+	}
+
+	public void setVatOrCst(float vatOrCst) {
+		this.vatOrCst = vatOrCst;
+	}
 
 	public float getLiAmountTotal() {
 		return liAmountTotal;
@@ -115,11 +149,11 @@ public class InvoiceHeaderHBC {
 		this.customerId = customerId;
 	}
 
-	public int getPurchaseOrderId() {
+	public String getPurchaseOrderId() {
 		return purchaseOrderId;
 	}
 
-	public void setPurchaseOrderId(int purchaseOrderId) {
+	public void setPurchaseOrderId(String purchaseOrderId) {
 		this.purchaseOrderId = purchaseOrderId;
 	}
 
@@ -129,22 +163,6 @@ public class InvoiceHeaderHBC {
 
 	public void setPurchaseOrderDate(Date purchaseOrderDate) {
 		this.purchaseOrderDate = purchaseOrderDate;
-	}
-
-	public int getDelivaryChallanNo() {
-		return delivaryChallanNo;
-	}
-
-	public void setDelivaryChallanNo(int delivaryChallanNo) {
-		this.delivaryChallanNo = delivaryChallanNo;
-	}
-
-	public Date getDelivaryChallanDate() {
-		return delivaryChallanDate;
-	}
-
-	public void setDelivaryChallanDate(Date delivaryChallanDate) {
-		this.delivaryChallanDate = delivaryChallanDate;
 	}
 
 	public String getModeOfTransport() {
@@ -197,8 +215,6 @@ public class InvoiceHeaderHBC {
 		customerId = invHdr.getCustomerId();
 		purchaseOrderId = invHdr.getPurchaseOrderId();
 		purchaseOrderDate = invHdr.getPurchaseOrderDate();
-		delivaryChallanNo = invHdr.getDelivaryChallanNo();
-		delivaryChallanDate = invHdr.getDelivaryChallanDate();
 		modeOfTransport = invHdr.getModeOfTransport();
 		vehicleNo = invHdr.getVehicleNo();
 		netTotalAmount = invHdr.getNetTotalAmount();
@@ -212,6 +228,10 @@ public class InvoiceHeaderHBC {
 		invIssueDate = invHdr.getInvIssueDate();
 		removalDate = invHdr.getRemovalDate();
 		liAmountTotal = invHdr.getLiAmountTotal();
+		bedRate = invHdr.getBedRate();
+		edCessRate = invHdr.getEdCessRate();
+		shsCess = invHdr.getShsCess();
+		vatOrCst = invHdr.getVatOrCst();
 	}
 
 	public void update(InvoiceHeaderVO invHdr) {
@@ -220,8 +240,6 @@ public class InvoiceHeaderHBC {
 		customerId = invHdr.getCustomerId();
 		purchaseOrderId = invHdr.getPurchaseOrderId();
 		purchaseOrderDate = invHdr.getPurchaseOrderDate();
-		delivaryChallanNo = invHdr.getDelivaryChallanNo();
-		delivaryChallanDate = invHdr.getDelivaryChallanDate();
 		modeOfTransport = invHdr.getModeOfTransport();
 		vehicleNo = invHdr.getVehicleNo();
 		netTotalAmount = invHdr.getNetTotalAmount();
@@ -235,6 +253,10 @@ public class InvoiceHeaderHBC {
 		invIssueDate = invHdr.getInvIssueDate();
 		removalDate = invHdr.getRemovalDate();
 		liAmountTotal = invHdr.getLiAmountTotal();
+		bedRate = invHdr.getBedRate();
+		edCessRate = invHdr.getEdCessRate();
+		shsCess = invHdr.getShsCess();
+		vatOrCst = invHdr.getVatOrCst();
 	}
 
 }

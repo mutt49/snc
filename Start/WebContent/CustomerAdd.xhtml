@@ -13,53 +13,54 @@
 			<h:form>
 				<rich:toolbar styleClass="toolbar">
 					<h:commandLink value="Masters" styleClass="toolbar" />
-					<h:commandLink value="Invoices" action="InvoiceHeaderSearch.jsf" styleClass="toolbar" />
-					<h:commandLink value="Test Certificates" action="TestCertificateSearch.jsf" styleClass="toolbar" />
-					<h:commandLink value="Purchase Orders" action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Invoices" action="InvoiceHeaderSearch.jsf"
+						styleClass="toolbar" />
+					<h:commandLink value="Test Certificates"
+						action="TestCertificateSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Purchase Orders"
+						action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
 				</rich:toolbar>
 
-				<h:outputText value="Customer Master"  action="CustomerSearch.jsf" styleClass="pageTitle" />
+				<h:outputText value="Customer Master" action="CustomerSearch.jsf"
+					styleClass="pageTitle" />
 				<h:outputText value="Add New" styleClass="pageSubTitleActive" />
 				<rich:panel>
 					<table class="table" cellspacing="0">
 						<tr>
-							<td class="leftColumn"><h:outputText value="Name: " />
-							</td>
+							<td class="leftColumn"><h:outputText value="Name: " /></td>
 							<td><h:inputText styleClass="searchEntry" id="clientName"
-									value="#{CustomerBean.customerVO.customer_name}"
-									label="Name" /></td>
+									value="#{CustomerBean.customerVO.customer_name}" label="Name" /></td>
 						</tr>
 						<tr>
-							<td class="leftColumn"><h:outputText value="Address: " />
-							</td>
-							<td><h:inputText styleClass="searchEntry" id="address"
+							<td class="leftColumn"><h:outputText value="Address: " /></td>
+							<td>
+								<!-- <h:inputText styleClass="searchEntry" id="address"
 									value="#{CustomerBean.customerVO.customer_address}"
-									label="Address" /></td>
+									label="Address" /> -->
+								<h:inputTextarea value="#{CustomerBean.customerVO.customer_address}" 
+									id="address" label="Address" styleClass="searchEntryPreformatted"
+									cols="5" rows="5"/>
+							</td>
 						</tr>
 						<tr>
-							<td class="leftColumn"><h:outputText value="CST No. " />
-							</td>
+							<td class="leftColumn"><h:outputText value="CST No. " /></td>
 							<td><h:inputText styleClass="searchEntry" id="cst_no"
-									value="#{CustomerBean.customerVO.cst_no}"
-									label="CST No." /></td>
+									value="#{CustomerBean.customerVO.cst_no}" label="CST No." /></td>
 						</tr>
 						<tr>
 							<td class="leftColumn"><h:outputText value="BST No. " /></td>
 							<td><h:inputText styleClass="searchEntry" id="bst_no"
-									value="#{CustomerBean.customerVO.bst_no}"
-									label="BST No." /></td>
+									value="#{CustomerBean.customerVO.bst_no}" label="BST No." /></td>
 						</tr>
 						<tr>
 							<td class="leftColumn"><h:outputText value="ECC No. " /></td>
 							<td><h:inputText styleClass="searchEntry" id="ecc_no"
-									value="#{CustomerBean.customerVO.ecc_no}"
-									label="ECC No." /></td>
+									value="#{CustomerBean.customerVO.ecc_no}" label="ECC No." /></td>
 						</tr>
 						<tr>
 							<td class="leftColumn"><h:outputText value="Octroi No. " /></td>
 							<td><h:inputText styleClass="searchEntry" id="octroi_no"
-									value="#{CustomerBean.customerVO.octroi_no}"
-									label="Octroi No." /></td>
+									value="#{CustomerBean.customerVO.octroi_no}" label="Octroi No." /></td>
 						</tr>
 						<tr>
 							<td class="leftColumn"><h:outputText value="Vendor Code " /></td>
@@ -68,9 +69,9 @@
 									label="Vendor Code" /></td>
 						</tr>
 						<tr>
-							<td colspan="2">
-								<rich:dataTable value="#{CustomerBean.customerVO.personnelList}" var="personnel"
-									id="table" rows="20"
+							<td colspan="2"><rich:dataTable
+									value="#{CustomerBean.customerVO.personnelList}"
+									var="personnel" id="table" rows="20"
 									rendered="#{CustomerBean.searchList.size () != 0}"
 									styleClass="searchResultsTable">
 									<rich:column>
@@ -114,8 +115,7 @@
 												target="#{CustomerBean.selectedPersonnelId}" />
 										</h:commandButton>
 									</rich:column>
-								</rich:dataTable>
-							</td>
+								</rich:dataTable></td>
 						</tr>
 						<tr>
 							<td class="leftColumn"><a4j:commandButton value="Add"
@@ -124,8 +124,8 @@
 							<td><a4j:commandButton value="Edit"
 									styleClass="searchButton" action="#{CustomerBean.save}"
 									rendered="#{CustomerBean.editFlag}" /></td>
-							<td><h:commandButton value="Print"
-									styleClass="searchButton" action="#{CustomerBean.print}"
+							<td><h:commandButton value="Print" styleClass="searchButton"
+									action="#{CustomerBean.print}"
 									rendered="#{CustomerBean.editFlag}" /></td>
 						</tr>
 					</table>

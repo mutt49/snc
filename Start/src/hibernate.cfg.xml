@@ -41,6 +41,7 @@
 		<mapping resource="InvoiceHeader.hbm.xml" />
 		<mapping resource="InvoiceLineItem.hbm.xml" />
 		<mapping resource="Customer.hbm.xml"/>
+		<mapping resource="CustomerPersonnel.hbm.xml"/>
 		<mapping resource="TestCertificate.hbm.xml"/>
 	</session-factory>
 </hibernate-configuration>

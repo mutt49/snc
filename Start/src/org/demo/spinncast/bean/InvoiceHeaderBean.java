@@ -1,9 +1,13 @@
 package org.demo.spinncast.bean;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +26,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
 import org.demo.spinncast.connections.ConnectionPool;
 import org.demo.spinncast.hibernate.CustomerHBC;
 import org.demo.spinncast.hibernate.InvoiceHeaderHBC;
@@ -60,10 +65,40 @@ public class InvoiceHeaderBean {
 	private String plaNo;
 	private String rangeAddress;
 	private String division;
+	private String tariffHeading;
+	private String excemption;
+
+	public String getTariffHeading() {
+		return tariffHeading;
+	}
+
+	public void setTariffHeading(String tariffHeading) {
+		this.tariffHeading = tariffHeading;
+	}
+
+	public String getExcemption() {
+		return excemption;
+	}
+
+	public void setExcemption(String excemption) {
+		this.excemption = excemption;
+	}
 
 	private boolean headerSaved = false;
 	private String retPage;
+	private Integer maxInvNo;
 	private Boolean printEntirePage;
+	private String nameofexcisable;
+	private String serviceTax;
+	private String incomeTaxPan;
+
+	public int getMaxInvNo() {
+		return maxInvNo;
+	}
+
+	public void setMaxInvNo(int maxInvNo) {
+		this.maxInvNo = maxInvNo;
+	}
 
 	public String getRetPage() {
 		return retPage;
@@ -217,10 +252,6 @@ public class InvoiceHeaderBean {
 			tempInvHdr.setInvDate(results.get(i).getInvDate());
 			tempInvHdr.setCustDetails(populateCustomerDetails(results.get(i)
 					.getCustomerId()));
-			tempInvHdr.setDelivaryChallanNo(results.get(i)
-					.getDelivaryChallanNo());
-			tempInvHdr.setDelivaryChallanDate(results.get(i)
-					.getDelivaryChallanDate());
 			tempInvHdr.setPurchaseOrderId(results.get(i).getPurchaseOrderId());
 			tempInvHdr.setPurchaseOrderDate(results.get(i)
 					.getPurchaseOrderDate());
@@ -238,6 +269,11 @@ public class InvoiceHeaderBean {
 			tempInvHdr.setInvIssueDate(results.get(i).getInvIssueDate());
 			tempInvHdr.setRemovalDate(results.get(i).getRemovalDate());
 			tempInvHdr.setLiAmountTotal(results.get(i).getLiAmountTotal());
+			tempInvHdr.setBedRate(results.get(i).getBedRate());
+			tempInvHdr.setEdCessRate(results.get(i).getEdCessRate());
+			tempInvHdr.setShsCess(results.get(i).getShsCess());
+			tempInvHdr.setVatOrCst(results.get(i).getVatOrCst());
+			tempInvHdr.setInvNo(results.get(i).getInvNo());
 			searchList.add(tempInvHdr);
 		}
 		System.out.println(getSearchList().size());
@@ -363,6 +399,12 @@ public class InvoiceHeaderBean {
 			plaNo = prop.getProperty("PLANO");
 			rangeAddress = prop.getProperty("rangeAddress");
 			division = prop.getProperty("division");
+			nameofexcisable = prop.getProperty("nameofexcisablecommdity");
+			tariffHeading = prop.getProperty("tariffheadingnumber");
+			excemption = prop.getProperty("excemptionnotiff");
+			serviceTax = prop.getProperty("servicetax");
+			incomeTaxPan = prop.getProperty("incometaxpan");
+			System.out.println("inc" + incomeTaxPan);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		} finally {
@@ -374,6 +416,30 @@ public class InvoiceHeaderBean {
 				}
 			}
 		}
+	}
+
+	public String getNameofexcisable() {
+		return nameofexcisable;
+	}
+
+	public void setNameofexcisable(String nameofexcisable) {
+		this.nameofexcisable = nameofexcisable;
+	}
+
+	public String getServiceTax() {
+		return serviceTax;
+	}
+
+	public void setServiceTax(String serviceTax) {
+		this.serviceTax = serviceTax;
+	}
+
+	public String getIncomeTaxPan() {
+		return incomeTaxPan;
+	}
+
+	public void setIncomeTaxPan(String incomeTaxPan) {
+		this.incomeTaxPan = incomeTaxPan;
 	}
 
 	public PartMasterVO populatePartMaster(String partName) {
@@ -402,8 +468,38 @@ public class InvoiceHeaderBean {
 		return tempPartVo;
 	}
 
+	public PartMasterVO populatePartMaster(int partId) {
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		Session session = cpool.getSession();
+		Query hibernateQuery = session
+				.createQuery("from PartMasterHBC as m where part_id =:part_id");
+		hibernateQuery.setInteger("part_id", partId);
+		java.util.List<PartMasterHBC> results = hibernateQuery.list();
+
+		PartMasterVO tempPartVo = new PartMasterVO();
+		if (results.size() > 0) {
+			tempPartVo.setCastWeight(results.get(0).getCastWeight());
+			tempPartVo.setDrgNo(results.get(0).getDrgNo());
+			tempPartVo.setGrade(results.get(0).getGrade());
+			tempPartVo.setPartId(results.get(0).getPartId());
+			tempPartVo.setPartName(results.get(0).getPartName());
+			tempPartVo.setPartRate(results.get(0).getPartRate());
+			tempPartVo.setPartUom(results.get(0).getPartUom());
+			tempPartVo.setPmSize(results.get(0).getPmSize());
+			tempPartVo.setProofMachineWeight(results.get(0)
+					.getProofMachineWeight());
+			tempPartVo.setQuantity(results.get(0).getQuantity());
+		}
+		session.close();
+		return tempPartVo;
+	}
+
 	public void getPartDetails(String partName) {
 		partVo = populatePartMaster(partName);
+	}
+
+	public void getPartDetails(int partId) {
+		partVo = populatePartMaster(partId);
 	}
 
 	public String addLineItem() {
@@ -451,7 +547,8 @@ public class InvoiceHeaderBean {
 			tempInvLI.setQuantityNo(results.get(i).getQuantityNo());
 			tempInvLI.setRate(results.get(i).getRate());
 			tempInvLI.setUnit(results.get(i).getUnit());
-
+			tempInvLI.setSerialNo(results.get(i).getSerialNo());
+			tempInvLI.setNoOfPkgs(results.get(i).getNoOfPkgs());
 			invLineItemList.add(tempInvLI);
 		}
 		System.out.println(getSearchList().size());
@@ -479,6 +576,17 @@ public class InvoiceHeaderBean {
 		headerSaved = false;
 		searchList = new ArrayList<InvoiceHeaderVO>();
 		invLineItemList = new ArrayList<InvoiceLineItemVO>();
+
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		Session session = cpool.getSession();
+		Query hibernateQuery = session
+				.createQuery("select max(m.invId)+1 from InvoiceHeaderHBC as m");
+		List list = hibernateQuery.list();
+
+		maxInvNo = Integer.parseInt(list.get(0).toString());
+		selectedInvHdrVo.setInvNo(maxInvNo.toString());
+		session.close();
+
 		if (retPage.equalsIgnoreCase("InvoiceHeaderAdd")) {
 			return "InvoiceHeaderAdd";
 		} else {
@@ -507,11 +615,86 @@ public class InvoiceHeaderBean {
 		trans.commit();
 		session.close();
 
+		Float bedAmount = round(
+				((selectedInvHdrVo.getLiAmountTotal() + invLineItem.getAmount() + selectedInvHdrVo
+						.getPkgFrwdChg()) * (selectedInvHdrVo.getBedRate() / 100)),
+				2);
+		Float edCessAmount = round(
+				(bedAmount * (selectedInvHdrVo.getEdCessRate() / 100)), 2);
+		Float shsCessAmount = round(
+				(bedAmount * (selectedInvHdrVo.getShsCess() / 100)), 2);
+
+		Float vatAmount = round(
+				((selectedInvHdrVo.getLiAmountTotal() + invLineItem.getAmount()
+						+ selectedInvHdrVo.getPkgFrwdChg() + bedAmount
+						+ edCessAmount + shsCessAmount) * (selectedInvHdrVo
+						.getVatOrCst() / 100)),
+				2);
+
 		session = cpool.getSession();
 		trans = session.beginTransaction();
-		hql = "update InvoiceHeaderHBC set grand_total = net_total_amount + (net_total_amount * (12/100)) + freight_insurance where invId = :inv_id ";
+		hql = "update InvoiceHeaderHBC set grand_total = net_total_amount + :bedAmount + :edCessAmount + :shsCessAmount + :vatAmount + freight_insurance where invId = :inv_id ";
 		query = session.createQuery(hql);
 		query.setInteger("inv_id", invLineItem.getInvId());
+		query.setFloat("bedAmount", bedAmount);
+		query.setFloat("edCessAmount", edCessAmount);
+		query.setFloat("shsCessAmount", shsCessAmount);
+		query.setFloat("vatAmount", vatAmount);
+
+		result = query.executeUpdate();
+		trans.commit();
+		session.close();
+
+		System.out.println("No of rows updated" + result);
+		selectedInvId = selectedInvHdrVo.getInvId();
+		// remove this call
+		viewInvoice();
+	}
+
+	public void subtractLiAmount(InvoiceLineItemVO invLine) {
+		float liTotalAmount = invLine.getAmount();
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		Session session = cpool.getSession();
+		Transaction trans = session.beginTransaction();
+		String hql = "update InvoiceHeaderHBC set liAmountTotal = liAmountTotal - :li_Amount_Total where invId = :inv_id ";
+		Query query = session.createQuery(hql);
+		query.setFloat("li_Amount_Total", liTotalAmount);
+		query.setInteger("inv_id", invLineItem.getInvId());
+		int result = query.executeUpdate();
+		trans.commit();
+		session.close();
+		session = cpool.getSession();
+		trans = session.beginTransaction();
+		hql = "update InvoiceHeaderHBC set net_total_amount = pkg_frwd_chg + li_amount_total where invId = :inv_id ";
+		query = session.createQuery(hql);
+		query.setInteger("inv_id", invLineItem.getInvId());
+		result = query.executeUpdate();
+		trans.commit();
+		session.close();
+
+		search();
+		selectedInvHdrVo = searchList.get(0);
+
+		Float bedAmount = round(((selectedInvHdrVo.getLiAmountTotal() + selectedInvHdrVo
+				.getPkgFrwdChg()) * (selectedInvHdrVo.getBedRate() / 100)), 2);
+		Float edCessAmount = round((bedAmount
+				* (selectedInvHdrVo.getEdCessRate() / 100)),2);
+		Float shsCessAmount = round((bedAmount * (selectedInvHdrVo.getShsCess() / 100)),2);
+
+		Float vatAmount = round(((selectedInvHdrVo.getLiAmountTotal()
+				+ selectedInvHdrVo.getPkgFrwdChg() + bedAmount + edCessAmount + shsCessAmount)
+				* (selectedInvHdrVo.getVatOrCst() / 100)),2);
+
+		session = cpool.getSession();
+		trans = session.beginTransaction();
+		hql = "update InvoiceHeaderHBC set grand_total = net_total_amount + :bedAmount + :edCessAmount + :shsCessAmount + :vatAmount + freight_insurance where invId = :inv_id ";
+		query = session.createQuery(hql);
+		query.setInteger("inv_id", invLineItem.getInvId());
+		query.setFloat("bedAmount", bedAmount);
+		query.setFloat("edCessAmount", edCessAmount);
+		query.setFloat("shsCessAmount", shsCessAmount);
+		query.setFloat("vatAmount", vatAmount);
+
 		result = query.executeUpdate();
 		trans.commit();
 		session.close();
@@ -575,7 +758,9 @@ public class InvoiceHeaderBean {
 		try {
 			document = new PDDocument();
 			// Creating Pages
-			for (int i = 0; i < 1; i++) {
+			for (int i = 0; i < 6; i++) {
+
+
 
 				page = new PDPage(PDPage.PAGE_SIZE_A4);
 
@@ -583,8 +768,8 @@ public class InvoiceHeaderBean {
 				document.addPage(page);
 
 				// Adding FONT to document
-				font = PDType1Font.HELVETICA;
-				fontBold = PDType1Font.HELVETICA_BOLD;
+				font = new PDType1Font("Helvetica");
+				fontBold = new PDType1Font("Helvetica-Bold");
 				// Next we start a new content stream which will "hold" the to
 				// be
 				// created content.
@@ -592,7 +777,6 @@ public class InvoiceHeaderBean {
 
 				// Let's define the content stream
 				contentStream.setStrokingColor(0, 0, 0);
-				boolean printEntirePage = false;
 				if (printEntirePage) {
 					// Margin
 					contentStream.addLine(xOffset + 2, yOffset + 15,
@@ -607,7 +791,38 @@ public class InvoiceHeaderBean {
 					// Top Section
 					contentStream.addLine(xOffset + 2, yOffset + height - 80,
 							xOffset + width - 2, yOffset + height - 80);
-
+					if (i == 0) {
+						InputStream in = new FileInputStream(
+								new File(
+										"Uno.jpg"));
+						PDJpeg img = new PDJpeg(document, in);
+						contentStream.drawXObject(img, xOffset + 7, yOffset
+								+ height - 75, 550, 70);
+					}
+					if (i == 1) {
+						InputStream in = new FileInputStream(
+								new File(
+										"Two.jpg"));
+						PDJpeg img = new PDJpeg(document, in);
+						contentStream.drawXObject(img, xOffset + 7, yOffset
+								+ height - 75, 550, 70);
+					}
+					if (i == 2) {
+						InputStream in = new FileInputStream(
+								new File(
+										"Three.jpg"));
+						PDJpeg img = new PDJpeg(document, in);
+						contentStream.drawXObject(img, xOffset + 7, yOffset
+								+ height - 75, 550, 70);
+					}
+					if (i > 2) {
+						InputStream in = new FileInputStream(
+								new File(
+										"Rest.jpg"));
+						PDJpeg img = new PDJpeg(document, in);
+						contentStream.drawXObject(img, xOffset + 7, yOffset
+								+ height - 75, 550, 70);
+					}
 					// Second Section
 					contentStream.addLine(
 							Float.valueOf(
@@ -740,7 +955,7 @@ public class InvoiceHeaderBean {
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset + 450 - 16,
 							yOffset + height - 93);
-					contentStream.drawString("Non Ferrous Casting");
+					contentStream.drawString(nameofexcisable);
 					contentStream.endText();
 
 					contentStream.beginText();
@@ -754,7 +969,7 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 10);
 				contentStream.moveTextPositionByAmount(xOffset + 450 - 16,
 						yOffset + height - 106);
-				contentStream.drawString("TRF HDNG NO");			// Data
+				contentStream.drawString(tariffHeading); // Data
 				contentStream.endText();
 				if (printEntirePage) {
 					contentStream.beginText();
@@ -768,7 +983,7 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 10);
 				contentStream.moveTextPositionByAmount(xOffset + 450 - 16,
 						yOffset + height - 119);
-				contentStream.drawString("ECMTPNT");				// Data
+				contentStream.drawString(excemption); // Data
 				contentStream.endText();
 				if (printEntirePage) {
 					contentStream.beginText();
@@ -782,7 +997,7 @@ public class InvoiceHeaderBean {
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset + 450 - 16,
 							yOffset + height - 132);
-					contentStream.drawString("AAKFS 2087H ST 001");		// Data
+					contentStream.drawString(serviceTax); // Data
 					contentStream.endText();
 
 					contentStream.beginText();
@@ -796,7 +1011,7 @@ public class InvoiceHeaderBean {
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset + 450 - 16,
 							yOffset + height - 145);
-					contentStream.drawString("AAKFS2087H");			// Data
+					contentStream.drawString(incomeTaxPan); // Data
 					contentStream.endText();
 
 					contentStream.beginText();
@@ -853,56 +1068,49 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 10);
 				contentStream.moveTextPositionByAmount(xOffset + 90, yOffset
 						+ height - 194);
-				contentStream.drawString("VNDR CD");					// Data
+				contentStream.drawString(selectedInvHdrVo.getCustDetails()
+						.getVendor_code());
 				contentStream.endText();
 
 				contentStream.beginText();
 				contentStream.setFont(font, 9);
 				contentStream.moveTextPositionByAmount(xOffset + 12, yOffset
 						+ height - 207);
-				contentStream.drawString("CSTMR NAME");					// Data
+				contentStream.drawString(selectedInvHdrVo.getCustDetails()
+						.getCustomer_name()); // Data
 				contentStream.endText();
 
-				contentStream.beginText();
-				contentStream.setFont(font, 9);
-				contentStream.moveTextPositionByAmount(xOffset + 12, yOffset
-						+ height - 220);
-				contentStream.drawString("CSTMR ADDR");					// Data
-				contentStream.endText();
+				int addressLineIndex = 0;
+				int addressLinePadding = -13;
+				System.out.println(selectedInvHdrVo.getCustDetails()
+						.getCustomer_address());
+				for (String addressLine : getFormattedAddress(selectedInvHdrVo
+						.getCustDetails().getCustomer_address(), 33)) {
 
-				contentStream.beginText();
-				contentStream.setFont(font, 9);
-				contentStream.moveTextPositionByAmount(xOffset + 12, yOffset
-						+ height - 233);
-				contentStream.drawString("");
-				contentStream.endText();
+					contentStream.beginText();
+					contentStream.setFont(font, 9);
+					contentStream.moveTextPositionByAmount(xOffset + 12,
+							yOffset + height - 220
+									+ (addressLineIndex * addressLinePadding));
+					contentStream.drawString(addressLine);
+					contentStream.endText();
+					addressLineIndex++;
+				}
 
-				contentStream.beginText();
-				contentStream.setFont(font, 9);
-				contentStream.moveTextPositionByAmount(xOffset + 12, yOffset
-						+ height - 246);
-				contentStream.drawString("");
-				contentStream.endText();
-
-				contentStream.beginText();
-				contentStream.setFont(font, 9);
-				contentStream.moveTextPositionByAmount(xOffset + 12, yOffset
-						+ height - 259);
-				contentStream.drawString("");
-				contentStream.endText();
 				if (printEntirePage) {
 					contentStream.beginText();
 					contentStream.setFont(font, 9);
 					contentStream.moveTextPositionByAmount(xOffset + 12,
 							yOffset + height - 272);
-					contentStream.drawString("ECC NO. :");					
+					contentStream.drawString("ECC NO. :");
 					contentStream.endText();
 				}
 				contentStream.beginText();
 				contentStream.setFont(fontBold, 9);
 				contentStream.moveTextPositionByAmount(xOffset + 63, yOffset
 						+ height - 272);
-				contentStream.drawString("ECC NMR");					// Data
+				contentStream.drawString(selectedInvHdrVo.getCustDetails()
+						.getEcc_no());
 				contentStream.endText();
 				if (printEntirePage) {
 					contentStream.beginText();
@@ -916,7 +1124,8 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 9);
 				contentStream.moveTextPositionByAmount(xOffset + 95, yOffset
 						+ height - 285);
-				contentStream.drawString("OCTR");						// Data
+				contentStream.drawString(selectedInvHdrVo.getCustDetails()
+						.getOctroi_no());
 				contentStream.endText();
 				if (printEntirePage) {
 					contentStream.beginText();
@@ -930,7 +1139,8 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 9);
 				contentStream.moveTextPositionByAmount(xOffset + 63, yOffset
 						+ height - 298);
-				contentStream.drawString("CST NOO NOO");				// Data
+				contentStream.drawString(selectedInvHdrVo.getCustDetails()
+						.getCst_no());
 				contentStream.endText();
 				if (printEntirePage) {
 					contentStream.beginText();
@@ -944,7 +1154,8 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 9);
 				contentStream.moveTextPositionByAmount(xOffset + 63, yOffset
 						+ height - 311);
-				contentStream.drawString("VATN ON O");					// Data
+				contentStream.drawString(selectedInvHdrVo.getCustDetails()
+						.getBst_no());
 				contentStream.endText();
 
 				// Second Pane - Third Section
@@ -955,42 +1166,92 @@ public class InvoiceHeaderBean {
 							yOffset + height - 194);
 					contentStream.drawString("Delivery Address & Name :");
 					contentStream.endText();
+				}
+				contentStream.beginText();
+				contentStream.setFont(font, 9);
+				contentStream.moveTextPositionByAmount(xOffset + 198, yOffset
+						+ height - 207);
+				contentStream.drawString(selectedInvHdrVo.getCustDetails()
+						.getCustomer_name());
+				contentStream.endText();
+
+				if (printEntirePage) {
+					contentStream.beginText();
+					contentStream.setFont(font, 9);
+					contentStream.moveTextPositionByAmount(xOffset + 198,
+							yOffset + height - 272);
+					contentStream.drawString("ECC NO. :");
+					contentStream.endText();
+				}
+/*				contentStream.beginText();
+				contentStream.setFont(fontBold, 9);
+				contentStream.moveTextPositionByAmount(xOffset + 249, yOffset
+						+ height - 272);
+				contentStream.drawString(selectedInvHdrVo.getCustDetails()
+						.getEcc_no());
+				contentStream.endText();
+*/				if (printEntirePage) {
+					contentStream.beginText();
+					contentStream.setFont(font, 9);
+					contentStream.moveTextPositionByAmount(xOffset + 198,
+							yOffset + height - 285);
+					contentStream.drawString("OCTROI/LBT NO. :");
+					contentStream.endText();
+				}
+/*				contentStream.beginText();
+				contentStream.setFont(fontBold, 9);
+				contentStream.moveTextPositionByAmount(xOffset + 281, yOffset
+						+ height - 285);
+				contentStream.drawString(selectedInvHdrVo.getCustDetails()
+						.getOctroi_no());
+				contentStream.endText();
+*/				if (printEntirePage) {
+					contentStream.beginText();
+					contentStream.setFont(font, 9);
+					contentStream.moveTextPositionByAmount(xOffset + 198,
+							yOffset + height - 298);
+					contentStream.drawString("CST NO. :");
+					contentStream.endText();
+				}
+/*				contentStream.beginText();
+				contentStream.setFont(fontBold, 9);
+				contentStream.moveTextPositionByAmount(xOffset + 249, yOffset
+						+ height - 298);
+				contentStream.drawString(selectedInvHdrVo.getCustDetails()
+						.getCst_no());
+				contentStream.endText();
+*/				if (printEntirePage) {
+					contentStream.beginText();
+					contentStream.setFont(font, 9);
+					contentStream.moveTextPositionByAmount(xOffset + 198,
+							yOffset + height - 311);
+					contentStream.drawString("VAT NO. :");
+					contentStream.endText();
+				}
+/*				contentStream.beginText();
+				contentStream.setFont(fontBold, 9);
+				contentStream.moveTextPositionByAmount(xOffset + 249, yOffset
+						+ height - 311);
+				contentStream.drawString(selectedInvHdrVo.getCustDetails()
+						.getBst_no());
+				contentStream.endText();
+*/
+				addressLineIndex = 0;
+				addressLinePadding = -13;
+
+				for (String addressLine : getFormattedAddress(selectedInvHdrVo
+						.getCustDetails().getCustomer_address(), 33)) {
 
 					contentStream.beginText();
 					contentStream.setFont(font, 9);
 					contentStream.moveTextPositionByAmount(xOffset + 198,
-							yOffset + height - 207);
-					contentStream.drawString("CSTMR NAME");				// Data
+							yOffset + height - 220
+									+ (addressLineIndex * addressLinePadding));
+					contentStream.drawString(addressLine);
 					contentStream.endText();
-
-					contentStream.beginText();
-					contentStream.setFont(font, 9);
-					contentStream.moveTextPositionByAmount(xOffset + 198,
-							yOffset + height - 220);
-					contentStream.drawString("CSTMR ADDR");				// Data
-					contentStream.endText();
-
-					contentStream.beginText();
-					contentStream.setFont(font, 9);
-					contentStream.moveTextPositionByAmount(xOffset + 198,
-							yOffset + height - 233);
-					contentStream.drawString("");
-					contentStream.endText();
-
-					contentStream.beginText();
-					contentStream.setFont(font, 9);
-					contentStream.moveTextPositionByAmount(xOffset + 198,
-							yOffset + height - 246);
-					contentStream.drawString("");
-					contentStream.endText();
-
-					contentStream.beginText();
-					contentStream.setFont(font, 9);
-					contentStream.moveTextPositionByAmount(xOffset + 198,
-							yOffset + height - 259);
-					contentStream.drawString("");
-					contentStream.endText();
-
+					addressLineIndex++;
+				}
+				if (printEntirePage) {
 					// Third Pane - Third Section
 					contentStream.beginText();
 					contentStream.setFont(font, 9);
@@ -1003,7 +1264,7 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 10);
 				contentStream.moveTextPositionByAmount(xOffset + 458 - 20,
 						yOffset + height - 194);
-				contentStream.drawString("12322");					// Data
+				contentStream.drawString("");
 				contentStream.endText();
 				if (printEntirePage) {
 					contentStream.beginText();
@@ -1013,11 +1274,15 @@ public class InvoiceHeaderBean {
 					contentStream.drawString("Date :");
 					contentStream.endText();
 				}
+
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				String dateInString = sdf.format(selectedInvHdrVo.getInvDate());
+
 				contentStream.beginText();
 				contentStream.setFont(fontBold, 10);
 				contentStream.moveTextPositionByAmount(xOffset + 464 - 50,
 						yOffset + height - 207);
-				contentStream.drawString((new Date()).toGMTString());		// Data
+				contentStream.drawString(dateInString); // Data
 				contentStream.endText();
 
 				// Third Section Divider 1
@@ -1040,7 +1305,7 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 10);
 				contentStream.moveTextPositionByAmount(xOffset + 505 - 80,
 						yOffset + height - 230);
-				contentStream.drawString("1111111");				// Data
+				contentStream.drawString(selectedInvHdrVo.getTcNo()); // Data
 				contentStream.endText();
 				if (printEntirePage) {
 					contentStream.beginText();
@@ -1054,7 +1319,7 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 10);
 				contentStream.moveTextPositionByAmount(xOffset + 464 - 40,
 						yOffset + height - 243);
-				contentStream.drawString("222222222222");			// Data
+				contentStream.drawString(selectedInvHdrVo.getIrNo()); // Data
 				contentStream.endText();
 
 				// Third Section Divider 2
@@ -1077,7 +1342,7 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 10);
 				contentStream.moveTextPositionByAmount(xOffset + 505 - 40,
 						yOffset + height - 266);
-				contentStream.drawString("TRK");					// Data
+				contentStream.drawString(selectedInvHdrVo.getModeOfTransport()); // Data
 				contentStream.endText();
 				if (printEntirePage) {
 					contentStream.beginText();
@@ -1091,7 +1356,7 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 10);
 				contentStream.moveTextPositionByAmount(xOffset + 464 - 25,
 						yOffset + height - 279);
-				contentStream.drawString("QWEQ");					// Data
+				contentStream.drawString(selectedInvHdrVo.getVehicleNo()); // Data
 				contentStream.endText();
 
 				// Third Section Divider 3
@@ -1114,7 +1379,7 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 10);
 				contentStream.moveTextPositionByAmount(xOffset + 505 - 75,
 						yOffset + height - 302);
-				contentStream.drawString("LR NOQWE");			// Data
+				contentStream.drawString(selectedInvHdrVo.getLrNo()); // Data
 				contentStream.endText();
 				if (printEntirePage) {
 					contentStream.beginText();
@@ -1128,7 +1393,7 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 10);
 				contentStream.moveTextPositionByAmount(xOffset + 464, yOffset
 						+ height - 315);
-				contentStream.drawString("TERMS OF PAMNT");		// Data
+				contentStream.drawString(selectedInvHdrVo.getPaymentTerms()); // Data
 				contentStream.endText();
 				if (printEntirePage) {
 					// Fourth Section
@@ -1143,22 +1408,27 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 9);
 				contentStream.moveTextPositionByAmount(xOffset + 12 + 70,
 						yOffset + height - 334);
-				contentStream
-						.drawString("OIPQWEKJKJSAD QWIEQWPO QWIQWOJEQOQWE");		// Data
+				contentStream.drawString(selectedInvHdrVo.getPurchaseOrderId()); // Data
 				contentStream.endText();
+
 				if (printEntirePage) {
 					contentStream.beginText();
 					contentStream.setFont(font, 9);
-					contentStream.moveTextPositionByAmount(width - 200, yOffset
+					contentStream.moveTextPositionByAmount(width - 80, yOffset
 							+ height - 334);
 					contentStream.drawString("Date : ");
 					contentStream.endText();
 				}
+
+				sdf = new SimpleDateFormat("dd/MM/yyyy");
+				String poDateString = sdf.format(selectedInvHdrVo
+						.getPurchaseOrderDate());
+
 				contentStream.beginText();
 				contentStream.setFont(fontBold, 9);
-				contentStream.moveTextPositionByAmount(width - 170, yOffset
+				contentStream.moveTextPositionByAmount(width - 50, yOffset
 						+ height - 334);
-				contentStream.drawString((new Date()).toGMTString());				// Data
+				contentStream.drawString(poDateString); // Data
 				contentStream.endText();
 
 				// Line below Your P.O. No.
@@ -1194,46 +1464,50 @@ public class InvoiceHeaderBean {
 					contentStream.endText();
 				}
 
-				// Line Items	// Data
-				for (int lineItemIndex = 0; lineItemIndex < 5; lineItemIndex++) {
+				// Line Items // Data
+				for (int lineItemIndex = 0; lineItemIndex < invLineItemList
+						.size(); lineItemIndex++) {
 					int lineItemPadding = -40;
+					String tempStr = invLineItemList.get(lineItemIndex)
+							.getPkgDesc().replaceAll("\\)", "\\\\)");
+					tempStr = tempStr.replaceAll("\\(", "\\\\(");
+					
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 9);
 					contentStream.moveTextPositionByAmount(xOffset + 5, yOffset
 							+ height - 395 + (lineItemIndex * lineItemPadding));
-					contentStream.drawString("1234");
+					contentStream.drawString(Integer.toString(invLineItemList
+							.get(lineItemIndex).getSerialNo()));
 					contentStream.endText();
+					getPartDetails(invLineItemList.get(lineItemIndex)
+							.getPartId());
+					List<String> partDetails = getWrappedStringList(
+							partVo.getPartName()
+									+ " "
+									+ tempStr, 40);
+					int partLineIndex = 0;
+					int partLinePadding = -13;
+					for (String str : partDetails) {
 
-					contentStream.beginText();
-					contentStream.setFont(fontBold, 9);
-					contentStream.moveTextPositionByAmount(xOffset + 40,
-							yOffset + height - 395
-									+ (lineItemIndex * lineItemPadding));
-					contentStream.drawString("Part Details");
-					contentStream.endText();
+						contentStream.beginText();
+						contentStream.setFont(fontBold, 9);
+						contentStream.moveTextPositionByAmount(xOffset + 40,
+								yOffset + height - 395
+										+ (lineItemIndex * lineItemPadding)
+										+ (partLineIndex * partLinePadding));
+						contentStream.drawString(str);
+						contentStream.endText();
+						partLineIndex++;
+					}
 
-					contentStream.beginText();
-					contentStream.setFont(fontBold, 9);
-					contentStream.moveTextPositionByAmount(xOffset + 40,
-							yOffset + height - 407
-									+ (lineItemIndex * lineItemPadding));
-					contentStream.drawString("Part Details");
-					contentStream.endText();
-
-					contentStream.beginText();
-					contentStream.setFont(fontBold, 9);
-					contentStream.moveTextPositionByAmount(xOffset + 40,
-							yOffset + height - 419
-									+ (lineItemIndex * lineItemPadding));
-					contentStream.drawString("Part Details");
-					contentStream.endText();
+					partVo = new PartMasterVO();
 
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 9);
 					contentStream.moveTextPositionByAmount(xOffset + 253 + 9,
 							yOffset + height - 395
 									+ (lineItemIndex * lineItemPadding));
-					contentStream.drawString("12");
+					contentStream.drawString(invLineItemList.get(lineItemIndex).getNoOfPkgs());
 					contentStream.endText();
 
 					contentStream.beginText();
@@ -1241,7 +1515,8 @@ public class InvoiceHeaderBean {
 					contentStream.moveTextPositionByAmount(
 							xOffset + 253 + 9 + 45, yOffset + height - 395
 									+ (lineItemIndex * lineItemPadding));
-					contentStream.drawString("12");
+					contentStream.drawString(Integer.toString(invLineItemList
+							.get(lineItemIndex).getQuantityNo()));
 					contentStream.endText();
 
 					contentStream.beginText();
@@ -1249,7 +1524,8 @@ public class InvoiceHeaderBean {
 					contentStream.moveTextPositionByAmount(
 							xOffset + 253 + 9 + 90, yOffset + height - 395
 									+ (lineItemIndex * lineItemPadding));
-					contentStream.drawString("12");
+					contentStream.drawString(Float.toString(invLineItemList
+							.get(lineItemIndex).getQuantityKgs()));
 					contentStream.endText();
 
 					contentStream.beginText();
@@ -1257,23 +1533,40 @@ public class InvoiceHeaderBean {
 					contentStream.moveTextPositionByAmount(
 							xOffset + 253 + 9 + 130, yOffset + height - 395
 									+ (lineItemIndex * lineItemPadding));
-					contentStream.drawString("12");
+					contentStream.drawString(invLineItemList.get(lineItemIndex)
+							.getUnit());
 					contentStream.endText();
+
+					String rateString = Float.toString(invLineItemList.get(
+							lineItemIndex).getAmount());
+					if (rateString.endsWith(".0")) {
+						rateString = rateString.replaceAll("\\.0", "\\.00");
+					}
+					float rateStringWidth = fontBold.getStringWidth(rateString) / 1000 * 10;
 
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 10);
-					contentStream.moveTextPositionByAmount(xOffset + width - 60
-							- 8, yOffset + height - 395
+					contentStream.moveTextPositionByAmount(xOffset + width - 15
+							- rateStringWidth, yOffset + height - 395
 							+ (lineItemIndex * lineItemPadding));
-					contentStream.drawString("17,78,789.88");
+					contentStream.drawString(rateString);
 					contentStream.endText();
+
+					String totalAmountString = Float.toString(invLineItemList
+							.get(lineItemIndex).getRate());
+					if (totalAmountString.endsWith(".0")) {
+						totalAmountString = totalAmountString.replaceAll(
+								"\\.0", "\\.00");
+					}
+					float totalAmountStringWidth = fontBold
+							.getStringWidth(totalAmountString) / 1000 * 10;
 
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 10);
-					contentStream.moveTextPositionByAmount(xOffset + width
-							- 115 - 18, yOffset + height - 395
+					contentStream.moveTextPositionByAmount(xOffset + width - 82
+							- totalAmountStringWidth, yOffset + height - 395
 							+ (lineItemIndex * lineItemPadding));
-					contentStream.drawString("17,78,789.88");
+					contentStream.drawString(totalAmountString);
 					contentStream.endText();
 				}
 
@@ -1282,7 +1575,7 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 9);
 				contentStream.moveTextPositionByAmount(xOffset + 64, yOffset
 						+ height - 365);
-				contentStream.drawString("Proof M/C Non Ferrous Casting");		// Data
+				contentStream.drawString("Proof M/C Non Ferrous Casting"); // Data
 				contentStream.endText();
 				if (printEntirePage) {
 					contentStream.addLine(xOffset + 250 + 7, yOffset + height
@@ -1430,21 +1723,64 @@ public class InvoiceHeaderBean {
 					contentStream.moveTextPositionByAmount(xOffset + 12,
 							yOffset + height - 612);
 					contentStream
-							.drawString("Total Central Excise Duy Paid (in words): ");
+							.drawString("Total Central Excise Duty Paid (in words): ");
 					contentStream.endText();
 				}
-				contentStream.beginText();																
+				Float bedAmount = round(((selectedInvHdrVo.getLiAmountTotal()
+						+ invLineItem.getAmount() + selectedInvHdrVo
+							.getPkgFrwdChg())
+						* (selectedInvHdrVo.getBedRate() / 100)),2);
+				Float edCessAmount = round((bedAmount
+						* (selectedInvHdrVo.getEdCessRate() / 100)),2);
+				Float shsCessAmount = round((bedAmount
+						* (selectedInvHdrVo.getShsCess() / 100)),2);
+
+				Float vatAmount = round(((selectedInvHdrVo.getLiAmountTotal()
+						+ invLineItem.getAmount()
+						+ selectedInvHdrVo.getPkgFrwdChg() + bedAmount
+						+ edCessAmount + shsCessAmount)
+						* (selectedInvHdrVo.getVatOrCst() / 100)),2);
+				
+				/*
+				 * int dollars = (int) Math.floor(money); double cents = money -
+				 * dollars; int centsAsInt = (int) (100 * cents);
+				 */
+				
+				int n = (int) round ((bedAmount + edCessAmount + shsCessAmount), 2);
+				float nPaise = round ((bedAmount + edCessAmount + shsCessAmount), 2) - n;
+				int paiseAsInt = (int) (100 * nPaise);
+				
+				StringBuilder exciseInWords = new StringBuilder();
+				exciseInWords.append(pw((n / 1000000000), " Hundred"));
+
+				exciseInWords.append(pw((n / 10000000) % 100, " crore"));
+
+				exciseInWords.append(pw(((n / 100000) % 100), " Lakh"));
+
+				exciseInWords.append(pw(((n / 1000) % 100), " Thousand"));
+
+				exciseInWords.append(pw(((n / 100) % 10), " Hundred"));
+
+				exciseInWords.append(pw((n % 100), " "));
+				
+				if (paiseAsInt != 0) {
+					exciseInWords.append(" Rupees And");
+					exciseInWords.append(pw((paiseAsInt % 100), " "));
+
+					exciseInWords.append(" Paise");
+				}
+				
+				contentStream.beginText();
 				contentStream.setFont(font, 8);
 				contentStream.moveTextPositionByAmount(xOffset + 160, yOffset
 						+ height - 612);
-				contentStream
-						.drawString("Seventy Thousand Seven Hundred and Seventy Seven Only");	// Data
+				contentStream.drawString(exciseInWords.toString() + " Only"); // Data
 				contentStream.endText();
 				contentStream.beginText();
 				contentStream.setFont(font, 8);
 				contentStream.moveTextPositionByAmount(xOffset + 160, yOffset
 						+ height - 622);
-				contentStream.drawString("Seven Lakhs Seven Thousand");
+				contentStream.drawString("");
 				contentStream.endText();
 				if (printEntirePage) {
 					contentStream.beginText();
@@ -1454,18 +1790,32 @@ public class InvoiceHeaderBean {
 					contentStream.drawString("Total Amount (in words): ");
 					contentStream.endText();
 				}
+				
+				n = new Integer((int) round (selectedInvHdrVo.getGrandTotal(), 0));
+				StringBuilder amountInWords = new StringBuilder();
+				amountInWords.append(pw((n / 1000000000), " Hundred"));
+
+				amountInWords.append(pw((n / 10000000) % 100, " crore"));
+
+				amountInWords.append(pw(((n / 100000) % 100), " Lakh"));
+
+				amountInWords.append(pw(((n / 1000) % 100), " Thousand"));
+
+				amountInWords.append(pw(((n / 100) % 10), " Hundred"));
+
+				amountInWords.append(pw((n % 100), " "));
+				
 				contentStream.beginText();
 				contentStream.setFont(font, 8);
 				contentStream.moveTextPositionByAmount(xOffset + 160, yOffset
 						+ height - 634);
-				contentStream
-						.drawString("Seventy Thousand Seven Hundred and Seventy Seven Only");	// Data
+				contentStream.drawString(amountInWords.toString() + " Only"); // Data
 				contentStream.endText();
 				contentStream.beginText();
 				contentStream.setFont(font, 8);
 				contentStream.moveTextPositionByAmount(xOffset + 160, yOffset
 						+ height - 644);
-				contentStream.drawString("Seven Lakhs Seven Thousand");
+				contentStream.drawString("");
 				contentStream.endText();
 
 				if (printEntirePage) {
@@ -1559,18 +1909,22 @@ public class InvoiceHeaderBean {
 					contentStream.endText();
 				}
 
-				contentStream.beginText();
-				contentStream.setFont(fontBold, 8);
-				contentStream.moveTextPositionByAmount(xOffset + 155, yOffset
-						+ height - 661);
-				contentStream.drawString((new Date()).toGMTString());				// Data
-				contentStream.endText();
+				sdf = new SimpleDateFormat("dd/MM/yyyy\t\t\t\t\t\t\thh:mm:ss");
+				dateInString = sdf.format(selectedInvHdrVo.getInvIssueDate());
 
 				contentStream.beginText();
 				contentStream.setFont(fontBold, 8);
 				contentStream.moveTextPositionByAmount(xOffset + 155, yOffset
+						+ height - 661);
+				contentStream.drawString(dateInString); // Data
+				contentStream.endText();
+
+				dateInString = sdf.format(selectedInvHdrVo.getRemovalDate());
+				contentStream.beginText();
+				contentStream.setFont(fontBold, 8);
+				contentStream.moveTextPositionByAmount(xOffset + 155, yOffset
 						+ height - 672);
-				contentStream.drawString((new Date()).toGMTString());			// Data
+				contentStream.drawString(dateInString); // Data
 				contentStream.endText();
 
 				if (printEntirePage) {
@@ -1578,56 +1932,116 @@ public class InvoiceHeaderBean {
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 8);
 					contentStream.moveTextPositionByAmount(xOffset + width
-							- 121 - 11, yOffset + height - 628);
+							- 121 - 11 - 2, yOffset + height - 628);
 					contentStream.drawString("Pkg Chg.");
 					contentStream.endText();
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 8);
 					contentStream.moveTextPositionByAmount(xOffset + width
-							- 121 - 11, yOffset + height - 650);
+							- 121 - 11 - 2, yOffset + height - 650);
 					contentStream.drawString("Assessable /");
 					contentStream.endText();
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 8);
 					contentStream.moveTextPositionByAmount(xOffset + width
-							- 121 - 11, yOffset + height - 658);
+							- 121 - 11 - 2, yOffset + height - 658);
 					contentStream.drawString("Tariff Value");
 					contentStream.endText();
 
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 8);
 					contentStream.moveTextPositionByAmount(xOffset + width
-							- 121 - 11, yOffset + height - 680);
-					contentStream.drawString("B.E.D.         %");
+							- 121 - 11 - 2, yOffset + height - 680);
+					contentStream.drawString("B.E.D.");
 					contentStream.endText();
+					
+					// Right Justifying %s.
+					String bedRateString = Float.toString(selectedInvHdrVo.getBedRate());
+					bedRateString = bedRateString.concat("%");
+					float bedRateStringWidth = fontBold
+							.getStringWidth(bedRateString) / 1000 * 8;
+
+					contentStream.beginText();
+					contentStream.setFont(fontBold, 8);
+					contentStream.moveTextPositionByAmount(xOffset + width - 75
+							- bedRateStringWidth, yOffset + height - 680);
+					contentStream.drawString(bedRateString);
+					contentStream.endText();
+					
+					
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 8);
 					contentStream.moveTextPositionByAmount(xOffset + width
-							- 121 - 11, yOffset + height - 702);
-					contentStream.drawString("Ed. Cess     %");
+							- 121 - 11 - 2, yOffset + height - 702);
+					contentStream.drawString("Ed. Cess");
 					contentStream.endText();
+
+					String edCessString = Float.toString(selectedInvHdrVo.getEdCessRate());
+					edCessString = edCessString.concat("%");
+					float edCessStringWidth = fontBold
+							.getStringWidth(edCessString) / 1000 * 8;
+
+					contentStream.beginText();
+					contentStream.setFont(fontBold, 8);
+					contentStream.moveTextPositionByAmount(xOffset + width - 75
+							- edCessStringWidth, yOffset + height - 702);
+					contentStream.drawString(edCessString);
+					contentStream.endText();
+
+					
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 8);
 					contentStream.moveTextPositionByAmount(xOffset + width
-							- 121 - 11, yOffset + height - 724);
-					contentStream.drawString("SHS Cess    %");
+							- 121 - 11 - 2, yOffset + height - 724);
+					contentStream.drawString("SHSCess");
 					contentStream.endText();
+
+
+					String shsCessString = Float.toString(selectedInvHdrVo.getShsCess());
+					shsCessString = shsCessString.concat("%");
+					float shsCessStringWidth = fontBold
+							.getStringWidth(shsCessString) / 1000 * 8;
+
+					contentStream.beginText();
+					contentStream.setFont(fontBold, 8);
+					contentStream.moveTextPositionByAmount(xOffset + width - 75
+							- shsCessStringWidth, yOffset + height - 724);
+					contentStream.drawString(shsCessString);
+					contentStream.endText();
+
+					
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 8);
 					contentStream.moveTextPositionByAmount(xOffset + width
-							- 121 - 11, yOffset + height - 746);
+							- 121 - 11 - 2, yOffset + height - 746);
 					contentStream.drawString("Sub Total");
 					contentStream.endText();
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 8);
 					contentStream.moveTextPositionByAmount(xOffset + width
-							- 121 - 11, yOffset + height - 768);
-					contentStream.drawString("VAT/CST     %");
+							- 121 - 11 - 2, yOffset + height - 768);
+					contentStream.drawString("VAT/CST");
 					contentStream.endText();
+
+					String vatCstString = Float.toString(selectedInvHdrVo.getVatOrCst());
+					vatCstString = vatCstString.concat("%");
+					float vatCstStringWidth = fontBold
+							.getStringWidth(vatCstString) / 1000 * 8;
+
+					contentStream.beginText();
+					contentStream.setFont(fontBold, 8);
+					contentStream.moveTextPositionByAmount(xOffset + width - 75
+							- vatCstStringWidth, yOffset + height - 768);
+					contentStream.drawString(vatCstString);
+					contentStream.endText();
+
+					
+
+					
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 8);
 					contentStream.moveTextPositionByAmount(xOffset + width
-							- 121 - 11, yOffset + height - 788);
+							- 121 - 11 - 2, yOffset + height - 788);
 					contentStream.drawString("Freight & Ins.");
 					contentStream.endText();
 					contentStream.beginText();
@@ -1644,67 +2058,151 @@ public class InvoiceHeaderBean {
 					contentStream.endText();
 				}
 
-				contentStream.beginText();
-				contentStream.setFont(fontBold, 10);
-				contentStream.moveTextPositionByAmount(
-						xOffset + width - 60 - 8, yOffset + height - 630);
-				contentStream.drawString("17,78,789.88");
-				contentStream.endText();
+				String pkgFrwdAmountString = Float.toString(round (selectedInvHdrVo
+						.getPkgFrwdChg(),2));
+				if (pkgFrwdAmountString.endsWith(".0")) {
+					pkgFrwdAmountString = pkgFrwdAmountString.replaceAll(
+							"\\.0", "\\.00");
+				}
+				float pkgFrwdAmountStringWidth = fontBold
+						.getStringWidth(pkgFrwdAmountString) / 1000 * 10;
 
 				contentStream.beginText();
 				contentStream.setFont(fontBold, 10);
-				contentStream.moveTextPositionByAmount(
-						xOffset + width - 60 - 8, yOffset + height - 655);
-				contentStream.drawString("17,78,789.88");
+				contentStream.moveTextPositionByAmount(xOffset + width - 15
+						- pkgFrwdAmountStringWidth, yOffset + height - 630);
+				contentStream.drawString(pkgFrwdAmountString);
 				contentStream.endText();
+
+				System.out.print("After conversion number in words is :");
+
+				Float netAssassableVal = selectedInvHdrVo.getPkgFrwdChg() + selectedInvHdrVo.getLiAmountTotal()
+						+ invLineItem.getAmount();
+
+				String assessableAmountString = Float.toString(round (netAssassableVal,2));
+				if (assessableAmountString.endsWith(".0")) {
+					assessableAmountString = assessableAmountString.replaceAll(
+							"\\.0", "\\.00");
+				}
+				float assessableAmountStringWidth = fontBold
+						.getStringWidth(assessableAmountString) / 1000 * 10;
 
 				contentStream.beginText();
 				contentStream.setFont(fontBold, 10);
-				contentStream.moveTextPositionByAmount(
-						xOffset + width - 60 - 8, yOffset + height - 680);
-				contentStream.drawString("17,78,789.88");
+				contentStream.moveTextPositionByAmount(xOffset + width - 15
+						- assessableAmountStringWidth, yOffset + height - 655);
+				contentStream.drawString(assessableAmountString);
 				contentStream.endText();
+
+				String bedAmountString = Float.toString(bedAmount);
+				if (bedAmountString.endsWith(".0")) {
+					bedAmountString = bedAmountString.replaceAll("\\.0",
+							"\\.00");
+				}
+				float bedAmountStringWidth = fontBold
+						.getStringWidth(bedAmountString) / 1000 * 10;
 
 				contentStream.beginText();
 				contentStream.setFont(fontBold, 10);
-				contentStream.moveTextPositionByAmount(
-						xOffset + width - 60 - 8, yOffset + height - 703);
-				contentStream.drawString("17,78,789.88");
+				contentStream.moveTextPositionByAmount(xOffset + width - 15
+						- bedAmountStringWidth, yOffset + height - 680);
+				contentStream.drawString(bedAmountString);
 				contentStream.endText();
+
+				String edCessAmountString = Float.toString(round (edCessAmount,2));
+				if (edCessAmountString.endsWith(".0")) {
+					edCessAmountString = edCessAmountString.replaceAll("\\.0",
+							"");
+				}
+				float edCessAmountStringWidth = fontBold
+						.getStringWidth(edCessAmountString) / 1000 * 10;
 
 				contentStream.beginText();
 				contentStream.setFont(fontBold, 10);
-				contentStream.moveTextPositionByAmount(
-						xOffset + width - 60 - 8, yOffset + height - 725);
-				contentStream.drawString("17,78,789.88");
+				contentStream.moveTextPositionByAmount(xOffset + width - 15
+						- edCessAmountStringWidth, yOffset + height - 703);
+				contentStream.drawString(edCessAmountString);
 				contentStream.endText();
+
+				String shsCessAmountString = Float.toString(round (shsCessAmount,2));
+				if (shsCessAmountString.endsWith(".0")) {
+					shsCessAmountString = shsCessAmountString.replaceAll(
+							"\\.0", "\\.00");
+				}
+				float shsCessAmountStringWidth = fontBold
+						.getStringWidth(shsCessAmountString) / 1000 * 10;
 
 				contentStream.beginText();
 				contentStream.setFont(fontBold, 10);
-				contentStream.moveTextPositionByAmount(
-						xOffset + width - 60 - 8, yOffset + height - 747);
-				contentStream.drawString("17,78,789.88");
+				contentStream.moveTextPositionByAmount(xOffset + width - 15
+						- shsCessAmountStringWidth, yOffset + height - 725);
+				contentStream.drawString(shsCessAmountString);
 				contentStream.endText();
+
+				Float subTotal = netAssassableVal + bedAmount + edCessAmount + shsCessAmount;
+
+				String subTotalAmountString = Float.toString(round(subTotal, 2));
+				if (subTotalAmountString.endsWith(".0")) {
+					subTotalAmountString = subTotalAmountString.replaceAll(
+							"\\.0", "\\.00");
+				}
+				float subTotalAmountStringWidth = fontBold
+						.getStringWidth(subTotalAmountString) / 1000 * 10;
 
 				contentStream.beginText();
 				contentStream.setFont(fontBold, 10);
-				contentStream.moveTextPositionByAmount(
-						xOffset + width - 60 - 8, yOffset + height - 768);
-				contentStream.drawString("17,78,789.88");
+				contentStream.moveTextPositionByAmount(xOffset + width - 15
+						- subTotalAmountStringWidth, yOffset + height - 747);
+				contentStream.drawString(subTotalAmountString);
 				contentStream.endText();
+
+				String vatCstAmountString = Float.toString(round (vatAmount,2));
+				if (vatCstAmountString.endsWith(".0")) {
+					vatCstAmountString = vatCstAmountString.replaceAll("\\.0",
+							"");
+				}
+				float vatCstAmountStringWidth = fontBold
+						.getStringWidth(vatCstAmountString) / 1000 * 10;
 
 				contentStream.beginText();
 				contentStream.setFont(fontBold, 10);
-				contentStream.moveTextPositionByAmount(
-						xOffset + width - 60 - 8, yOffset + height - 788);
-				contentStream.drawString("17,78,789.88");
+				contentStream.moveTextPositionByAmount(xOffset + width - 15
+						- vatCstAmountStringWidth, yOffset + height - 768);
+				contentStream.drawString(vatCstAmountString);
 				contentStream.endText();
+
+				String frtInsuranceAmountString = Float
+						.toString(round (selectedInvHdrVo.getFreightInsurance(),2));
+				if (frtInsuranceAmountString.endsWith(".0")) {
+					frtInsuranceAmountString = frtInsuranceAmountString
+							.replaceAll("\\.0", "\\.00");
+				}
+				float frtInsuranceAmountStringWidth = fontBold
+						.getStringWidth(frtInsuranceAmountString) / 1000 * 10;
 
 				contentStream.beginText();
 				contentStream.setFont(fontBold, 10);
-				contentStream.moveTextPositionByAmount(
-						xOffset + width - 60 - 8, yOffset + height - 810);
-				contentStream.drawString("17,78,789.88");
+				contentStream
+						.moveTextPositionByAmount(xOffset + width - 15
+								- frtInsuranceAmountStringWidth, yOffset
+								+ height - 788);
+				contentStream.drawString(frtInsuranceAmountString);
+				contentStream.endText();
+
+				String grandTotalAmountString = Float.toString(round (selectedInvHdrVo
+						.getGrandTotal(),0));
+				if (grandTotalAmountString.endsWith(".0")) {
+					grandTotalAmountString = grandTotalAmountString.replaceAll(
+							"\\.0", "\\.00");
+				}
+				float grandTotalAmountStringWidth = fontBold
+						.getStringWidth(grandTotalAmountString) / 1000 * 10;
+
+				contentStream.beginText();
+				contentStream.setFont(fontBold, 10);
+				contentStream.moveTextPositionByAmount(xOffset + width - 15
+						- grandTotalAmountStringWidth, yOffset + height - 810);
+				contentStream.drawString(grandTotalAmountString);
 				contentStream.endText();
 
 				if (printEntirePage) {
@@ -1866,6 +2364,38 @@ public class InvoiceHeaderBean {
 		return output;
 	}
 
+	private List<String> getFormattedAddress(String bigString, int characters) {
+		List<String> returnValue = new ArrayList<String>();
+		if (bigString.contains("\n")) {
+			// This is from a text area.
+			while (bigString.length() > characters) {
+				String temp = bigString.substring(0, characters);
+				temp = temp.substring(0, temp.indexOf("\n"));
+				bigString = bigString.replaceFirst(temp + "\n", "");
+				returnValue.add(temp);
+			}
+			returnValue.add(bigString);
+		} else {
+			if (bigString.length() < characters) {
+				returnValue.add(bigString);
+			} else {
+				while (bigString.length() > characters) {
+					String temp = bigString.substring(0, characters);
+					if (temp.lastIndexOf(" ") > 0) {
+						temp = temp.substring(0, temp.lastIndexOf(" "));
+						bigString = bigString.replaceFirst(temp + " ", "");
+					} else {
+						temp = temp.substring(0, temp.lastIndexOf(","));
+						bigString = bigString.replaceFirst(temp + ",", "");
+					}
+					returnValue.add(temp);
+				}
+				returnValue.add(bigString);
+			}
+		}
+		return returnValue;
+	}
+
 	public void print() {
 		setPrintEntirePage(true);
 		try {
@@ -1933,6 +2463,20 @@ public class InvoiceHeaderBean {
 		return result;
 	}
 
+	public List<String> partNameAutoComplete (String prefix) {
+		List<String> result = new ArrayList<String> ();
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		Session session = cpool.getSession ();
+		Query hibernateQuery = session.createQuery ("from PartMasterHBC as m where part_name like '%"
+				+ prefix + "%'");
+		List<PartMasterHBC> results = hibernateQuery.list ();
+		for (int i = 0; i < results.size (); i++) {
+			result.add (results.get(i).getPartName());
+		}
+		session.close ();
+		return result;
+	}
+ 	
 	public List<String> vendorCodeAutoComplete(String prefix) {
 		List<String> result = new ArrayList<String>();
 
@@ -1959,4 +2503,81 @@ public class InvoiceHeaderBean {
 		this.printEntirePage = printEntirePage;
 	}
 
+	public String pw(int n, String ch) {
+		String one[] = {
+
+		" ", " One", " Two", " Three", " Four", " Five", " Six", " Seven",
+				" Eight", " Nine", " Ten", " Eleven", " Twelve", " Thirteen",
+				" Fourteen", " Fifteen", " Sixteen", " Seventeen", " Eighteen",
+				" Nineteen" };
+
+		String ten[] = { " ", " ", " Twenty", " Thirty", " Forty", " Fifty",
+				" Sixty", " Seventy", " Eighty", " Ninety" };
+
+		StringBuilder returnValue = new StringBuilder();
+		if (n > 19) {
+			returnValue.append(ten[n / 10] + " " + one[n % 10]);
+		} else {
+			returnValue.append(one[n]);
+		}
+		if (n > 0)
+			returnValue.append(ch);
+
+		return returnValue.toString();
+	}
+
+	public static List<String> getWrappedStringList(String bigString,
+			int characters) {
+		List<String> returnValue = new ArrayList<String>();
+		if (bigString.length() < characters) {
+			returnValue.add(bigString);
+		} else {
+			while (bigString.length() > characters) {
+				String temp = bigString.substring(0, characters);
+				temp = temp.substring(0, temp.lastIndexOf(" "));
+				bigString = bigString.replaceFirst(temp + " ", "");
+				returnValue.add(temp);
+			}
+			returnValue.add(bigString);
+		}
+		return returnValue;
+	}
+
+	public void addTaxes() {
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		Session session = cpool.getSession();
+		selectedInvHdrVo.setCustomerId(selectedInvHdrVo.getCustDetails()
+				.getCustomer_id());
+		Transaction trans = session.beginTransaction();
+		InvoiceHeaderHBC invHeaderHBC = new InvoiceHeaderHBC(selectedInvHdrVo);
+		session.saveOrUpdate(invHeaderHBC);
+		selectedInvId = invHeaderHBC.getInvId();
+		trans.commit();
+		session.close();
+		selectedInvHdrVo.setInvId(selectedInvId);
+		headerSaved = true;
+		editFlag = true;
+	}
+
+	public String deleteLineItem() {
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		Session session = cpool.getSession();
+		Transaction trans = session.beginTransaction();
+		subtractLiAmount(invLineItem);
+		InvoiceLineItemHBC invLineItemHBC = new InvoiceLineItemHBC(invLineItem);
+		session.delete(invLineItemHBC);
+		session.flush();
+		trans.commit();
+		session.close();
+		invLineItem = new InvoiceLineItemVO();
+		return getLineItemsForInvId();
+	}
+
+	public static float round(float value, int places) {
+	    if (places < 0) throw new IllegalArgumentException();
+
+	    BigDecimal bd = new BigDecimal(value);
+	    bd = bd.setScale(places, RoundingMode.HALF_UP);
+	    return bd.floatValue();
+	}
 }

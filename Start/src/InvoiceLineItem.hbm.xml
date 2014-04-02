@@ -15,5 +15,6 @@
 		<property name="unit" column="unit"></property>
 		<property name="rate" column="rate"></property>
 		<property name="amount" column="amount"></property>
+		<property name="serialNo" column="serial_no"></property>
 	</class>
 </hibernate-mapping>  

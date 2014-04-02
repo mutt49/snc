@@ -13,6 +13,7 @@ public class InvoiceLineItemHBC {
 	private String unit;
 	private float rate;
 	private float amount;
+	private int serialNo;
 	
 	public int getInvLineItemId() {
 		return invLineItemId;
@@ -83,6 +84,8 @@ public class InvoiceLineItemHBC {
 		unit = invLineItem.getUnit();
 		rate = invLineItem.getRate();
 		amount = invLineItem.getAmount();
+		serialNo = invLineItem.getSerialNo();
+		System.out.println(serialNo);
 	}
 
 	public void update(InvoiceLineItemVO invLineItem) {
@@ -95,6 +98,14 @@ public class InvoiceLineItemHBC {
 		unit = invLineItem.getUnit();
 		rate = invLineItem.getRate();
 		amount = invLineItem.getAmount();
+		serialNo = invLineItem.getSerialNo();
+		System.out.println(serialNo);
+	}
+	public int getSerialNo() {
+		return serialNo;
+	}
+	public void setSerialNo(int serialNo) {
+		this.serialNo = serialNo;
 	}
 
 	

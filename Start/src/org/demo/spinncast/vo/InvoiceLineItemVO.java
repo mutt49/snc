@@ -15,6 +15,7 @@ public class InvoiceLineItemVO {
 	private String unit;
 	private float rate;
 	private float amount;
+	private int serialNo;
 	
 	public int getInvLineItemId() {
 		return invLineItemId;
@@ -69,6 +70,12 @@ public class InvoiceLineItemVO {
 	}
 	public void setAmount(float amount) {
 		this.amount = amount;
+	}
+	public int getSerialNo() {
+		return serialNo;
+	}
+	public void setSerialNo(int serialNo) {
+		this.serialNo = serialNo;
 	}
 	
 }
