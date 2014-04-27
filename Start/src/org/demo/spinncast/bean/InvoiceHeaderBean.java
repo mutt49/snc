@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -53,6 +54,7 @@ import org.hibernate.Transaction;
 public class InvoiceHeaderBean {
 
 	private InvoiceHeaderVO selectedInvHdrVo;
+	private InvoiceHeaderVO invoiceToBeSearched;
 	private InvoiceLineItemVO invLineItem;
 	private List<InvoiceLineItemVO> invLineItemList;
 	private PartMasterVO partVo;
@@ -292,14 +294,36 @@ public class InvoiceHeaderBean {
 
 	@SuppressWarnings("unchecked")
 	public String search() {
+		
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		if (selectedInvNo == null) {
-			selectedInvNo = 0;
+			try {
+			selectedInvNo = Integer.parseInt(selectedInvHdrVo.getInvNo());
+			} catch (NumberFormatException e) {
+				selectedInvNo = 0;
+			}
 		}
+		int customer_id = 0;
+		if (selectedInvHdrVo.getCustDetails() != null) {
+			if (selectedInvHdrVo.getCustDetails().getCustomer_id() != null)
+				customer_id = selectedInvHdrVo.getCustDetails().getCustomer_id();
+		}
+		
 		Session session = cpool.getSession();
+		StringBuilder query = new StringBuilder ("from InvoiceHeaderHBC as m where (m.invNo= :invNo and :invNo !=0 ) or (:invNo = 0) ");
+		
+		if (customer_id != 0) {
+			query.append (" and m.customerId= :custId ");
+		}
+
+		query.append(" order by m.invId");
+		
 		Query hibernateQuery = session
-				.createQuery("from InvoiceHeaderHBC as m where (m.invNo= :invNo and :invNo !=0 ) or (:invNo = 0)  order by m.invId");
+				.createQuery(query.toString());
 		hibernateQuery.setInteger("invNo", selectedInvNo);
+		if (customer_id != 0)
+			hibernateQuery.setInteger("custId", customer_id);
+		
 		java.util.List<InvoiceHeaderHBC> results = hibernateQuery.list();
 		searchList = new ArrayList<InvoiceHeaderVO>();
 		for (int i = 0; i < results.size(); i++) {
@@ -573,7 +597,7 @@ public class InvoiceHeaderBean {
 		Query hibernateQuery = session
 				.createQuery("select max(m.invId)+1 from InvoiceHeaderHBC as m");
 		List list = hibernateQuery.list();
-		if (list.size() > 1) {
+		if (!list.isEmpty()) {
 			maxInvNo = Integer.parseInt(list.get(0).toString());
 		} else {
 			maxInvNo = 1;
@@ -2437,7 +2461,7 @@ public class InvoiceHeaderBean {
 
 			response.addHeader("Content-Type", "application/force-download");
 			response.addHeader("Content-Disposition",
-					"attachment; filename=\"invoice.pdf\"");
+					"attachment; filename=\"Invoice_" + selectedInvHdrVo.getInvId() + ".pdf\"");
 			response.getOutputStream().write(output.toByteArray());
 			fc.responseComplete(); // Important! Otherwise JSF will attempt to
 									// render the response which obviously will
@@ -2462,7 +2486,7 @@ public class InvoiceHeaderBean {
 
 			response.addHeader("Content-Type", "application/force-download");
 			response.addHeader("Content-Disposition",
-					"attachment; filename=\"invoice.pdf\"");
+					"attachment; filename=\"InvoiceAttachment_" + selectedInvHdrVo.getInvId() +".pdf\"");
 			response.getOutputStream().write(output.toByteArray());
 			fc.responseComplete(); // Important! Otherwise JSF will attempt to
 									// render the response which obviously will
@@ -2641,5 +2665,13 @@ public class InvoiceHeaderBean {
 
 	public void setPrintInvoiceNumberOnPDF(boolean printInvoiceNumberOnPDF) {
 		this.printInvoiceNumberOnPDF = printInvoiceNumberOnPDF;
+	}
+
+	public InvoiceHeaderVO getInvoiceToBeSearched() {
+		return invoiceToBeSearched;
+	}
+
+	public void setInvoiceToBeSearched(InvoiceHeaderVO invoiceToBeSearched) {
+		this.invoiceToBeSearched = invoiceToBeSearched;
 	}
 }
