@@ -28,6 +28,33 @@ public class InvoiceHeaderHBC {
 	private float edCessRate;
 	private float shsCess;
 	private float vatOrCst;
+	private String invNo;
+	private String deliveryTo;
+	private String deliveryAddress;
+
+	public String getDeliveryTo() {
+		return deliveryTo;
+	}
+
+	public void setDeliveryTo(String deliveryTo) {
+		this.deliveryTo = deliveryTo;
+	}
+
+	public String getDeliveryAddress() {
+		return deliveryAddress;
+	}
+
+	public void setDeliveryAddress(String deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
+	}
+
+	public String getInvNo() {
+		return invNo;
+	}
+
+	public void setInvNo(String invNo) {
+		this.invNo = invNo;
+	}
 
 	public float getBedRate() {
 		return bedRate;
@@ -232,6 +259,9 @@ public class InvoiceHeaderHBC {
 		edCessRate = invHdr.getEdCessRate();
 		shsCess = invHdr.getShsCess();
 		vatOrCst = invHdr.getVatOrCst();
+		invNo = invHdr.getInvNo();
+		deliveryTo = invHdr.getDeliveryTo();
+		deliveryAddress = invHdr.getDeliveryAddress();
 	}
 
 	public void update(InvoiceHeaderVO invHdr) {
@@ -257,6 +287,9 @@ public class InvoiceHeaderHBC {
 		edCessRate = invHdr.getEdCessRate();
 		shsCess = invHdr.getShsCess();
 		vatOrCst = invHdr.getVatOrCst();
+		invNo = invHdr.getInvNo();
+		deliveryTo = invHdr.getDeliveryTo();
+		deliveryAddress = invHdr.getDeliveryAddress();
 	}
 
 }

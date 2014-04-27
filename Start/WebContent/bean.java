@@ -13,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
@@ -275,8 +274,6 @@ public class InvoiceHeaderBean {
 			tempInvHdr.setShsCess(results.get(i).getShsCess());
 			tempInvHdr.setVatOrCst(results.get(i).getVatOrCst());
 			tempInvHdr.setInvNo(results.get(i).getInvNo());
-			tempInvHdr.setDeliveryAddress(results.get(i).getDeliveryAddress());
-			tempInvHdr.setDeliveryTo(results.get(i).getDeliveryTo());
 			searchList.add(tempInvHdr);
 		}
 		System.out.println(getSearchList().size());
@@ -335,25 +332,17 @@ public class InvoiceHeaderBean {
 	public void add() {
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
-		Transaction trans = session.beginTransaction();
-		try{
 		selectedInvHdrVo.setCustomerId(selectedInvHdrVo.getCustDetails()
 				.getCustomer_id());
+		Transaction trans = session.beginTransaction();
 		InvoiceHeaderHBC invHeaderHBC = new InvoiceHeaderHBC(selectedInvHdrVo);
 		session.saveOrUpdate(invHeaderHBC);
 		selectedInvId = invHeaderHBC.getInvId();
+		trans.commit();
+		session.close();
 		selectedInvHdrVo.setInvId(selectedInvId);
 		headerSaved = true;
 		editFlag = true;
-		}catch(Exception e){
-			FacesContext.getCurrentInstance().addMessage(null, 
-			        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Can not save Invoice Header Please try with correct values", null));
-			e.printStackTrace();
-		}
-		finally{
-			trans.commit();
-			session.close();
-		}
 	}
 
 	public void getCustomerData(ValueChangeEvent event) {
@@ -1179,7 +1168,8 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(font, 9);
 				contentStream.moveTextPositionByAmount(xOffset + 198, yOffset
 						+ height - 207);
-				contentStream.drawString(selectedInvHdrVo.getDeliveryTo());
+				contentStream.drawString(selectedInvHdrVo.getCustDetails()
+						.getCustomer_name());
 				contentStream.endText();
 
 				if (printEntirePage) {
@@ -1190,14 +1180,14 @@ public class InvoiceHeaderBean {
 					contentStream.drawString("ECC NO. :");
 					contentStream.endText();
 				}
-/*				contentStream.beginText();
+				contentStream.beginText();
 				contentStream.setFont(fontBold, 9);
 				contentStream.moveTextPositionByAmount(xOffset + 249, yOffset
 						+ height - 272);
 				contentStream.drawString(selectedInvHdrVo.getCustDetails()
 						.getEcc_no());
 				contentStream.endText();
-*/				if (printEntirePage) {
+				if (printEntirePage) {
 					contentStream.beginText();
 					contentStream.setFont(font, 9);
 					contentStream.moveTextPositionByAmount(xOffset + 198,
@@ -1205,14 +1195,14 @@ public class InvoiceHeaderBean {
 					contentStream.drawString("OCTROI/LBT NO. :");
 					contentStream.endText();
 				}
-/*				contentStream.beginText();
+				contentStream.beginText();
 				contentStream.setFont(fontBold, 9);
 				contentStream.moveTextPositionByAmount(xOffset + 281, yOffset
 						+ height - 285);
 				contentStream.drawString(selectedInvHdrVo.getCustDetails()
 						.getOctroi_no());
 				contentStream.endText();
-*/				if (printEntirePage) {
+				if (printEntirePage) {
 					contentStream.beginText();
 					contentStream.setFont(font, 9);
 					contentStream.moveTextPositionByAmount(xOffset + 198,
@@ -1220,14 +1210,14 @@ public class InvoiceHeaderBean {
 					contentStream.drawString("CST NO. :");
 					contentStream.endText();
 				}
-/*				contentStream.beginText();
+				contentStream.beginText();
 				contentStream.setFont(fontBold, 9);
 				contentStream.moveTextPositionByAmount(xOffset + 249, yOffset
 						+ height - 298);
 				contentStream.drawString(selectedInvHdrVo.getCustDetails()
 						.getCst_no());
 				contentStream.endText();
-*/				if (printEntirePage) {
+				if (printEntirePage) {
 					contentStream.beginText();
 					contentStream.setFont(font, 9);
 					contentStream.moveTextPositionByAmount(xOffset + 198,
@@ -1235,18 +1225,19 @@ public class InvoiceHeaderBean {
 					contentStream.drawString("VAT NO. :");
 					contentStream.endText();
 				}
-/*				contentStream.beginText();
+				contentStream.beginText();
 				contentStream.setFont(fontBold, 9);
 				contentStream.moveTextPositionByAmount(xOffset + 249, yOffset
 						+ height - 311);
 				contentStream.drawString(selectedInvHdrVo.getCustDetails()
 						.getBst_no());
 				contentStream.endText();
-*/
+
 				addressLineIndex = 0;
 				addressLinePadding = -13;
 
-				for (String addressLine : getFormattedAddress(selectedInvHdrVo.getDeliveryAddress(), 33)) {
+				for (String addressLine : getFormattedAddress(selectedInvHdrVo
+						.getCustDetails().getCustomer_address(), 33)) {
 
 					contentStream.beginText();
 					contentStream.setFont(font, 9);
@@ -1475,7 +1466,9 @@ public class InvoiceHeaderBean {
 						.size(); lineItemIndex++) {
 					int lineItemPadding = -40;
 					String tempStr = invLineItemList.get(lineItemIndex)
-							.getPkgDesc();
+							.getPkgDesc().replaceAll("\\)", "\\\\)");
+					tempStr = invLineItemList.get(lineItemIndex)
+					.getPkgDesc().replaceAll("\\(", "\\\\(");
 					
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 9);
@@ -2457,20 +2450,6 @@ public class InvoiceHeaderBean {
 		return result;
 	}
 
-	public List<String> partNameAutoComplete (String prefix) {
-		List<String> result = new ArrayList<String> ();
-		ConnectionPool cpool = ConnectionPool.getInstance();
-		Session session = cpool.getSession ();
-		Query hibernateQuery = session.createQuery ("from PartMasterHBC as m where part_name like '%"
-				+ prefix + "%'");
-		List<PartMasterHBC> results = hibernateQuery.list ();
-		for (int i = 0; i < results.size (); i++) {
-			result.add (results.get(i).getPartName());
-		}
-		session.close ();
-		return result;
-	}
- 	
 	public List<String> vendorCodeAutoComplete(String prefix) {
 		List<String> result = new ArrayList<String>();
 
@@ -2529,16 +2508,10 @@ public class InvoiceHeaderBean {
 			while (bigString.length() > characters) {
 				String temp = bigString.substring(0, characters);
 				temp = temp.substring(0, temp.lastIndexOf(" "));
-				temp = temp.replaceAll("\\(", "\\\\(");
-				temp = temp.replaceAll("\\)", "\\\\)");
-				temp = temp.replaceAll("\\+", "\\\\+");
-				bigString = bigString.replaceFirst(temp, "");
-				temp = temp.replaceAll("\\\\\\(", "(");
-				temp = temp.replaceAll("\\\\\\)", ")");
-				temp = temp.replaceAll("\\\\\\+", "+");
+				bigString = bigString.replaceFirst(temp + " ", "");
 				returnValue.add(temp);
 			}
-			returnValue.add(bigString.replaceAll("\\\\\\(", "(").replaceAll("\\\\\\)", ")").replaceAll("\\\\\\+", "+"));
+			returnValue.add(bigString);
 		}
 		return returnValue;
 	}

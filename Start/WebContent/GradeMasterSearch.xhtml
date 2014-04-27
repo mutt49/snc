@@ -13,10 +13,16 @@
 
 				<rich:toolbar styleClass="toolbar">
 					<rich:dropDownMenu id="dropDownMenu" label="Masters">
+						<rich:menuItem action="CcmSearch.jsf" label="Chemical Composition Masters"
+							id="ChemMaster" styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="MpmSearch.jsf" label="Physical Properties Masters"
+							id="PhyMaster" styleClass="toolbar"></rich:menuItem>
 						<rich:menuItem action="PartMasterSearch.jsf" label="Part Masters"
 							id="partMaster" styleClass="toolbar"></rich:menuItem>
-						<rich:menuItem action="GradeMasterSearch.jsf" label="Part Masters"
-							id="GradeMaster" styleClass="toolbar"></rich:menuItem>	
+						<rich:menuItem action="GradeMasterSearch.jsf" label="Grade Masters"
+							id="GradeMaster" styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="CustomerSearch.jsf" label="Customer Masters"
+							id="CustMaster" styleClass="toolbar"></rich:menuItem>
 					</rich:dropDownMenu>
 					<h:commandLink value="Invoices" action="InvoiceHeaderSearch.jsf" styleClass="toolbar" />
 					<h:commandLink value="Test Certificates"
@@ -25,9 +31,11 @@
 						action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
 				</rich:toolbar>
 
-				<h:outputText value="Part Master" styleClass="pageTitle" />
-				<h:commandLink value="Add New" action="#{PartMasterBean.addNewPart}"
+				<h:outputText value="Grade Master" styleClass="pageTitle" />
+				<h:commandLink value="Add New" action="#{GradeMasterBean.addGradePage}"
 					styleClass="pageSubTitle">
+					<f:setPropertyActionListener value="#{false}"
+						target="#{GradeMasterBean.editFlag}" />
 				</h:commandLink>
 
 				<rich:panel>
@@ -50,78 +58,30 @@
 					<a4j:outputPanel ajaxRendered="true" id="SearchTable">
 						<h:outputText value="There are no items with the search criteria."
 							rendered="#{GradeMasterBean.searchList.size()== 0}" />
-						<rich:dataTable value="#{GradeMasterBean.searchList}" var="pm"
+						<rich:dataTable value="#{GradeMasterBean.searchList}" var="gm"
 							id="table" rows="20"
 							rendered="#{GradeMasterBean.searchList.size()!= 0}"
 							styleClass="searchResultsTable">
 							<rich:column>
 								<f:facet name="header">
-									<h:outputText value="Part Name" />
+									<h:outputText value="Grade Name" />
 								</f:facet>
-								<h:outputText value="#{pm.gradeCompId}" />
-							</rich:column>
-							<!-- <rich:column>
-								<f:facet name="header">
-									<h:outputText value="Drg. No." />
-								</f:facet>
-								<h:outputText value="#{pm.drgNo}" />
+								<h:outputText value="#{gm.gradeName}" />
 							</rich:column>
 							<rich:column>
-								<f:facet name="header">
-									<h:outputText value="Part Rate" />
-								</f:facet>
-								<h:outputText value="#{pm.partRate}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">
-									<h:outputText value="P.M. Size" />
-								</f:facet>
-								<h:outputText value="#{pm.pmSize}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">
-									<h:outputText value="U.O.M." />
-								</f:facet>
-								<h:outputText value="#{pm.partUom}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">
-									<h:outputText value="Grade" />
-								</f:facet>
-								<h:outputText value="#{pm.grade}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">
-									<h:outputText value="Cast Weight" />
-								</f:facet>
-								<h:outputText value="#{pm.castWeight}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">
-									<h:outputText value="Proof Machine Weight" />
-								</f:facet>
-								<h:outputText value="#{pm.proofMachineWeight}" />
-							</rich:column>
-							<rich:column>
-								<f:facet name="header">
-									<h:outputText value="Quantity" />
-								</f:facet>
-								<h:outputText value="#{pm.quantity}" />
-							</rich:column>
-							<rich:column>
-								<a4j:commandButton value="Edit" action="PartMasterAdd.xhtml">
+								<a4j:commandButton value="Edit" action="#{GradeMasterBean.addGradePage}">
 									<f:setPropertyActionListener
-										target="#{PartMasterBean.selectedPartMasterVO}" value="#{pm}" />
+										target="#{GradeMasterBean.selectedGradeMasterVO}" value="#{gm}" />
 									<f:setPropertyActionListener value="true"
-										target="#{PartMasterBean.editFlag}" />
+										target="#{GradeMasterBean.editFlag}" />
 								</a4j:commandButton>
 							</rich:column>
 							<rich:column>
-								<h:commandButton value="Delete" action="#{PartMasterBean.deletePart}">
+								<a4j:commandButton value="Delete" action="#{GradeMasterBean.deleteGrade}">
 									<f:setPropertyActionListener
-										target="#{PartMasterBean.selectedPartMasterVO}" value="#{pm}" />
-								</h:commandButton>
-							</rich:column> -->
+										target="#{GradeMasterBean.selectedGradeMasterVO}" value="#{gm}" />
+								</a4j:commandButton>
+							</rich:column> 
 						</rich:dataTable>
 					</a4j:outputPanel>
 				</rich:panel>

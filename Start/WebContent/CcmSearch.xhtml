@@ -12,10 +12,23 @@
 		<f:view>
 			<h:form>
 				<rich:toolbar styleClass="toolbar">
-					<h:commandLink value="Masters" styleClass="toolbar" />
+					<rich:dropDownMenu id="dropDownMenu" label="Masters">
+						<rich:menuItem action="CcmSearch.jsf" label="Chemical Composition Masters"
+							id="ChemMaster" styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="MpmSearch.jsf" label="Physical Properties Masters"
+							id="PhyMaster" styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="PartMasterSearch.jsf" label="Part Masters"
+							id="partMaster" styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="GradeMasterSearch.jsf" label="Grade Masters"
+							id="GradeMaster" styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="CustomerSearch.jsf" label="Customer Masters"
+							id="CustMaster" styleClass="toolbar"></rich:menuItem>
+					</rich:dropDownMenu>
 					<h:commandLink value="Invoices" action="InvoiceHeaderSearch.jsf" styleClass="toolbar" />
-					<h:commandLink value="Test Certificates" action="TestCertificateSearch.jsf" styleClass="toolbar" />
-					<h:commandLink value="Purchase Orders" action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Test Certificates"
+						action="TestCertificateSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Purchase Orders"
+						action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
 				</rich:toolbar>
 
 				<h:outputText value="Chemical Composition Master" styleClass="pageTitle" />

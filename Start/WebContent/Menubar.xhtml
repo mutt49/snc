@@ -1,0 +1,30 @@
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="menuContent">
+
+		<f:view>
+			<rich:toolbar styleClass="toolbar">
+					<rich:dropDownMenu id="dropDownMenu" label="Masters">
+						<rich:menuItem action="PartMasterSearch.jsf" label="Part Masters"
+							id="partMaster" styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="GradeMasterSearch.jsf" label="Grade Masters"
+							id="GradeMaster" styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="CustomerSearch.jsf" label="Customer Masters"
+							id="CustMaster" styleClass="toolbar"></rich:menuItem>
+					</rich:dropDownMenu>
+					<h:commandLink value="Invoices" action="InvoiceHeaderSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Test Certificates"
+						action="TestCertificateSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Purchase Orders"
+						action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
+				</rich:toolbar>
+		</f:view>
+
+	</ui:define>
+</ui:composition>

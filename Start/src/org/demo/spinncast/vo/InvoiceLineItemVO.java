@@ -16,7 +16,14 @@ public class InvoiceLineItemVO {
 	private float rate;
 	private float amount;
 	private int serialNo;
+	private String noOfPkgs;
 	
+	public String getNoOfPkgs() {
+		return noOfPkgs;
+	}
+	public void setNoOfPkgs(String noOfPkgs) {
+		this.noOfPkgs = noOfPkgs;
+	}
 	public int getInvLineItemId() {
 		return invLineItemId;
 	}
@@ -77,5 +84,4 @@ public class InvoiceLineItemVO {
 	public void setSerialNo(int serialNo) {
 		this.serialNo = serialNo;
 	}
-	
 }

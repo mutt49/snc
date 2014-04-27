@@ -2,7 +2,6 @@
 <!DOCTYPE hibernate-mapping SYSTEM 
 "hibernate-mapping-3.0.dtd">
 
-
 <hibernate-mapping>
 	<class name="org.demo.spinncast.hibernate.InvoiceHeaderHBC" table="inv_hdr">
 		<id name="invId" column="inv_id">
@@ -29,5 +28,8 @@
 		<property name="edCessRate" column="ed_cess_rate"></property>
 		<property name="shsCess" column="shs_cess"></property>
 		<property name="vatOrCst" column="vat_or_cst"></property>
+		<property name="invNo" column="inv_no"></property>
+		<property name="deliveryTo" column="delivery_to"></property>
+		<property name="deliveryAddress" column="delivery_address"></property>
 	</class>
 </hibernate-mapping>  

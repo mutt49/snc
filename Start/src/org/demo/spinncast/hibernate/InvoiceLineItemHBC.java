@@ -14,58 +14,84 @@ public class InvoiceLineItemHBC {
 	private float rate;
 	private float amount;
 	private int serialNo;
-	
+	private String noOfPkgs;
+
+	public String getNoOfPkgs() {
+		return noOfPkgs;
+	}
+
+	public void setNoOfPkgs(String noOfPkgs) {
+		this.noOfPkgs = noOfPkgs;
+	}
+
 	public int getInvLineItemId() {
 		return invLineItemId;
 	}
+
 	public void setInvLineItemId(int invLineItemId) {
 		this.invLineItemId = invLineItemId;
 	}
+
 	public int getPartId() {
 		return partId;
 	}
+
 	public void setPartId(int partId) {
 		this.partId = partId;
 	}
+
 	public int getInvId() {
 		return invId;
 	}
+
 	public void setInvId(int invId) {
 		this.invId = invId;
 	}
+
 	public String getPkgDesc() {
 		return pkgDesc;
 	}
+
 	public void setPkgDesc(String pkgDesc) {
 		this.pkgDesc = pkgDesc;
 	}
+
 	public int getQuantityNo() {
 		return quantityNo;
 	}
+
 	public void setQuantityNo(int quantityNo) {
 		this.quantityNo = quantityNo;
 	}
+
 	public float getQuantityKgs() {
 		return quantityKgs;
 	}
+
 	public void setQuantityKgs(float quantityKgs) {
 		this.quantityKgs = quantityKgs;
 	}
+
 	public String getUnit() {
 		return unit;
 	}
+
 	public void setUnit(String unit) {
 		this.unit = unit;
 	}
+
 	public float getRate() {
 		return rate;
 	}
+
 	public void setRate(float rate) {
 		this.rate = rate;
 	}
+
 	public float getAmount() {
 		return amount;
 	}
+
 	public void setAmount(float amount) {
 		this.amount = amount;
 	}
@@ -84,6 +110,7 @@ public class InvoiceLineItemHBC {
 		unit = invLineItem.getUnit();
 		rate = invLineItem.getRate();
 		amount = invLineItem.getAmount();
+		noOfPkgs = invLineItem.getNoOfPkgs();
 		serialNo = invLineItem.getSerialNo();
 		System.out.println(serialNo);
 	}
@@ -98,6 +125,7 @@ public class InvoiceLineItemHBC {
 		unit = invLineItem.getUnit();
 		rate = invLineItem.getRate();
 		amount = invLineItem.getAmount();
+		noOfPkgs = invLineItem.getNoOfPkgs();
 		serialNo = invLineItem.getSerialNo();
 		System.out.println(serialNo);
 	}
@@ -108,5 +136,5 @@ public class InvoiceLineItemHBC {
 		this.serialNo = serialNo;
 	}
 
-	
+
 }

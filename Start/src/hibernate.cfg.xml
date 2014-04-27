@@ -43,5 +43,7 @@
 		<mapping resource="Customer.hbm.xml"/>
 		<mapping resource="CustomerPersonnel.hbm.xml"/>
 		<mapping resource="TestCertificate.hbm.xml"/>
+		<mapping resource="Ccm.hbm.xml"/>
+		<mapping resource="Mpm.hbm.xml"/>
 	</session-factory>
 </hibernate-configuration>

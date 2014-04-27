@@ -13,8 +13,16 @@
 			<h:form>
 				<rich:toolbar styleClass="toolbar">
 					<rich:dropDownMenu id="dropDownMenu" label="Masters">
+						<rich:menuItem action="CcmSearch.jsf" label="Chemical Composition Masters"
+							id="ChemMaster" styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="MpmSearch.jsf" label="Physical Properties Masters"
+							id="PhyMaster" styleClass="toolbar"></rich:menuItem>
 						<rich:menuItem action="PartMasterSearch.jsf" label="Part Masters"
 							id="partMaster" styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="GradeMasterSearch.jsf" label="Grade Masters"
+							id="GradeMaster" styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="CustomerSearch.jsf" label="Customer Masters"
+							id="CustMaster" styleClass="toolbar"></rich:menuItem>
 					</rich:dropDownMenu>
 					<h:commandLink value="Invoices" action="InvoiceHeaderSearch.jsf" styleClass="toolbar" />
 					<h:commandLink value="Test Certificates"
@@ -23,82 +31,76 @@
 						action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
 				</rich:toolbar>
 
-				<h:outputText value="Purchase Orders" styleClass="pageTitle" />
+				<h:outputText value="Grade Master" styleClass="pageTitle" />
 				<h:outputText value="Add New" styleClass="pageSubTitleActive" />
 				<rich:panel>
-					<table class="table" cellspacing="0">
-						<tr>
-							<td class="leftColumn"><h:outputText value="Part Name " />
-							</td>
-							<td><h:inputText styleClass="searchEntry" id="partName"
-									value="#{PartMasterBean.selectedPartMasterVO.partName}"
-									label="partName" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><h:outputText value="Drg No.: " /></td>
-							<td><h:inputText styleClass="searchEntry" id="DrgNo"
-									value="#{PartMasterBean.selectedPartMasterVO.drgNo}"
-									label="drgNo" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><h:outputText value="Part Rate: " /></td>
-							<td><h:inputText styleClass="searchEntry" id="partRate"
-									value="#{PartMasterBean.selectedPartMasterVO.partRate}"
-									label="partRate" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><h:outputText value="P.M.Size: " /></td>
-							<td><h:inputText styleClass="searchEntry" id="pmSize"
-									value="#{PartMasterBean.selectedPartMasterVO.pmSize}"
-									label="pmSize" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><h:outputText value="U.O.M.: " /></td>
-							<td><h:inputText styleClass="searchEntry" id="partUom"
-									value="#{PartMasterBean.selectedPartMasterVO.partUom}"
-									label="partUom" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><h:outputText value="Grade: " /></td>
-							<td><h:inputText styleClass="searchEntry" id="grade"
-									value="#{PartMasterBean.selectedPartMasterVO.grade}"
-									label="grade" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><h:outputText value="Cast Weight: " /></td>
-							<td><h:inputText styleClass="searchEntry" id="castWeight"
-									value="#{PartMasterBean.selectedPartMasterVO.castWeight}"
-									label="castWeight" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><h:outputText
-									value="Proof Machine Weight: " /></td>
-							<td><h:inputText styleClass="searchEntry"
-									id="proofMachineWeight"
-									value="#{PartMasterBean.selectedPartMasterVO.proofMachineWeight}"
-									label="proofMachineWeight" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><h:outputText value="Quantity: " />
-							</td>
-							<td><h:inputText styleClass="searchEntry" id="quantity"
-									value="#{PartMasterBean.selectedPartMasterVO.quantity}"
-									label="Quantity" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><a4j:commandButton value="Save"
-									styleClass="searchButton"
-									rendered="#{!PartMasterBean.editFlag}"
-									action="#{PartMasterBean.add}" />
-							<a4j:commandButton value="Update"
-									styleClass="searchButton"
-									rendered="#{PartMasterBean.editFlag}"
-									action="#{PartMasterBean.edit}" /></td>
-							<td><a4j:commandButton value="Reset"
-									styleClass="searchButton" action="#{PartMasterBean.reset}"
-									rendered="#{!PartMasterBean.editFlag}" /></td>
-						</tr>
-					</table>
+
+					<h:outputText value="Grade Name " />
+					<h:inputText styleClass="searchEntry" id="gradeName"
+						value="#{GradeMasterBean.selectedGradeMasterVO.gradeName}"
+						label="gradeName" />
+
+					<a4j:commandButton value="Save" styleClass="searchButton"
+						rendered="#{!GradeMasterBean.editFlag}"
+						action="#{GradeMasterBean.addGrade}" />
+					<a4j:commandButton value="Update" styleClass="searchButton"
+						rendered="#{GradeMasterBean.editFlag}"
+						action="#{GradeMasterBean.edit}" />
+					<a4j:commandButton value="Reset" styleClass="searchButton"
+						action="#{GradeMasterBean.reset}"
+						rendered="#{!GradeMasterBean.editFlag}" />
+					<!-- <h:panelGrid id="mainGrid" columns="2">
+
+						<h:panelGroup id="leftPanel">
+							<h:outputText value="Grade Name " />
+							<h:inputText styleClass="searchEntry" id="gradeName"
+								value="#{GradeMasterBean.selectedGradeMasterVO.gradeName}"
+								label="gradeName" />
+						</h:panelGroup>
+
+						<h:panelGroup id="rightPanel">
+
+						</h:panelGroup>
+
+					</h:panelGrid> -->
+
+					<rich:dataTable
+						value="#{GradeMasterBean.selectedGradeMasterVO.gradeCompVOList}"
+						var="composition" id="table" rows="20"
+						styleClass="searchResultsTable">
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Ingrediant Type" />
+							</f:facet>
+							<h:inputText value="#{composition.ingrediantType}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Name" />
+							</f:facet>
+							<h:inputText value="#{composition.ingrediantName}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Min Value" />
+							</f:facet>
+							<h:inputText value="#{composition.minValue}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Max Value" />
+							</f:facet>
+							<h:inputText value="#{composition.maxValue}" />
+						</rich:column>
+						<rich:column>
+							<h:commandButton value="Save"
+								action="#{GradeMasterBean.saveGradeComposition}">
+								<f:setPropertyActionListener value="#{composition}"
+									target="#{GradeMasterBean.selectedGradeCompositionVO}" />
+							</h:commandButton>
+						</rich:column>
+					</rich:dataTable>
+
 				</rich:panel>
 			</h:form>
 		</f:view>

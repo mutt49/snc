@@ -85,12 +85,12 @@ public class CustomerBean {
 		searchList.set(editid, editedCustomer);
 	}
 
+	@SuppressWarnings("unchecked")
 	public String search() {
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Query hibernateQuery = session
 				.createQuery("from CustomerHBC as m order by m.customer_id");
-		@SuppressWarnings("unchecked")
 		java.util.List<CustomerHBC> results = hibernateQuery.list();
 		setSearchList(new ArrayList<CustomerVO>());
 		for (int i = 0; i < results.size(); i++) {
