@@ -1,0 +1,48 @@
+<ui:composition template="template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+	<ui:define name="content">
+
+
+		<f:view>
+			<h:form>
+
+				<h:outputText value="Login Page" styleClass="pageTitle" />
+
+				<rich:panel>
+					<table class="table" cellspacing="0">
+						<tr>
+							<td class="leftColumn"><h:outputText value="User Name: " />
+							</td>
+							<td><h:inputText styleClass="searchEntry" id="uName"
+									value="#{LoginBean.userName}" label="Name" required="true" requiredMessage="    Required"/>
+								<h:message for="uName" style="color:red;" />	</td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Password: " />
+							</td>
+							<td><h:inputSecret styleClass="searchEntry" id="pass" required="true" requiredMessage="    Required"
+									value="#{LoginBean.password}" label="Name" />
+									<h:message for="pass" style="color:red;" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:commandButton value="Login"
+									styleClass="searchButton" action="#{LoginBean.login}"/></td>
+							<td><h:commandButton value="Reset" styleClass="searchButton"
+									action="#{LoginBean.reset}" rendered="#{CcmBean.editFlag}" /></td>
+						</tr>
+						<tr>
+							<td><h:commandButton value="Forgot Password"
+									styleClass="searchButton" action="#{LoginBean.forgotPassword}" /></td>
+						</tr>
+					</table>
+				</rich:panel>
+			</h:form>
+		</f:view>
+	</ui:define>
+</ui:composition>

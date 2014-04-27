@@ -17,7 +17,14 @@ public class InvoiceLineItemVO {
 	private float amount;
 	private int serialNo;
 	private String noOfPkgs;
+	private int gradeId;
 	
+	public int getGradeId() {
+		return gradeId;
+	}
+	public void setGradeId(int gradeId) {
+		this.gradeId = gradeId;
+	}
 	public String getNoOfPkgs() {
 		return noOfPkgs;
 	}

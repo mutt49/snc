@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+<!DOCTYPE hibernate-mapping SYSTEM 
+"hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+	<class name="org.demo.spinncast.hibernate.PartGradeMappingHBC" table="part_grade_mapping">
+		<id name="partGradeId" column="part_grade_id">
+			<generator class="native"/>
+		</id>
+		<property name="partId" column="part_id">
+		</property>
+		<property name="gradeId" column="grade_id"/>
+	</class>
+</hibernate-mapping>  

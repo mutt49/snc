@@ -1,6 +1,7 @@
 package org.demo.spinncast.hibernate;
 
 import org.demo.spinncast.vo.GradeMasterVO;
+import org.demo.spinncast.vo.PartMasterVO;
 
 public class GradeMasterHBC {
 	private int gradeId;

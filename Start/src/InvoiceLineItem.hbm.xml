@@ -17,5 +17,6 @@
 		<property name="amount" column="amount"></property>
 		<property name="serialNo" column="serial_no"></property>
 		<property name="noOfPkgs" column="no_of_pkgs"></property>
+		<property name="gradeId" column="grade_id"></property>
 	</class>
 </hibernate-mapping>  

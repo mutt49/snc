@@ -1,7 +1,12 @@
 package org.demo.spinncast.vo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+
+import org.demo.spinncast.hibernate.PartMasterHBC;
 
 @ManagedBean(name = "PartMasterVO")
 @SessionScoped
@@ -12,11 +17,36 @@ public class PartMasterVO {
 	private float partRate;
 	private float pmSize;
 	private String partUom;
-	private String grade;
+	//private String grade;
 	private float castWeight;
 	private float proofMachineWeight;
 	private float quantity;
+	private List<GradeMasterVO> grades;
+	List<PartGradeMappingVO> partGradeMapping = new ArrayList<PartGradeMappingVO>();
+	
+	public PartMasterVO(){
+		
+	}
+	
+	public PartMasterVO(PartMasterHBC partMasterHbc){
+		this.castWeight = partMasterHbc.getCastWeight();
+		this.drgNo = partMasterHbc.getDrgNo();
+		this.partId = partMasterHbc.getPartId();
+		this.partName = partMasterHbc.getPartName();
+		this.partRate = partMasterHbc.getPartRate();
+		this.partUom = partMasterHbc.getPartUom();
+		this.pmSize = partMasterHbc.getPmSize();
+		this.proofMachineWeight = partMasterHbc.getProofMachineWeight();
+		this.quantity = partMasterHbc.getQuantity();
+	}
 
+	public List<PartGradeMappingVO> getPartGradeMapping() {
+		return partGradeMapping;
+	}
+
+	public void setPartGradeMapping(List<PartGradeMappingVO> partGradeMapping) {
+		this.partGradeMapping = partGradeMapping;
+	}
 	public int getPartId() {
 		return partId;
 	}
@@ -65,12 +95,12 @@ public class PartMasterVO {
 		this.partUom = partUom;
 	}
 
-	public String getGrade() {
-		return grade;
+	public List<GradeMasterVO> getGrades() {
+		return grades;
 	}
 
-	public void setGrade(String grade) {
-		this.grade = grade;
+	public void setGrades(List<GradeMasterVO> grades) {
+		this.grades = grades;
 	}
 
 	public float getCastWeight() {

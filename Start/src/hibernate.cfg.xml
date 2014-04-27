@@ -45,5 +45,6 @@
 		<mapping resource="TestCertificate.hbm.xml"/>
 		<mapping resource="Ccm.hbm.xml"/>
 		<mapping resource="Mpm.hbm.xml"/>
+		<mapping resource="PartGradeMapping.hbm.xml"/>
 	</session-factory>
 </hibernate-configuration>

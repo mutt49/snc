@@ -10,8 +10,8 @@ public class GradeCompositionVO {
 	private int gradeId;
 	private String ingrediantType;
 	private String ingrediantName;
-	private float minValue;
-	private float maxValue;
+	private String minValue;
+	private String maxValue;
 	
 	public int getGradeCompositionId() {
 		return gradeCompositionId;
@@ -37,16 +37,16 @@ public class GradeCompositionVO {
 	public void setIngrediantName(String ingrediantName) {
 		this.ingrediantName = ingrediantName;
 	}
-	public float getMinValue() {
+	public String getMinValue() {
 		return minValue;
 	}
-	public void setMinValue(float minValue) {
+	public void setMinValue(String minValue) {
 		this.minValue = minValue;
 	}
-	public float getMaxValue() {
+	public String getMaxValue() {
 		return maxValue;
 	}
-	public void setMaxValue(float maxValue) {
+	public void setMaxValue(String maxValue) {
 		this.maxValue = maxValue;
 	}
 		

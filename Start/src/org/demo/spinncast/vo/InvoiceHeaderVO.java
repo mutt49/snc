@@ -6,6 +6,8 @@ import java.util.Date;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.demo.spinncast.hibernate.InvoiceHeaderHBC;
+
 @ManagedBean(name = "InvoiceHeaderVO")
 @SessionScoped
 public class InvoiceHeaderVO {
@@ -51,6 +53,34 @@ public class InvoiceHeaderVO {
 
 	public void setDeliveryAddress(String deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
+	}
+	
+	public InvoiceHeaderVO(InvoiceHeaderHBC invHeaderHbc){
+		this.customerId = invHeaderHbc.getCustomerId();
+		this.invId = invHeaderHbc.getInvId();
+		this.invDate = invHeaderHbc.getInvDate();
+		this.purchaseOrderId = invHeaderHbc.getPurchaseOrderId();
+		this.purchaseOrderDate = invHeaderHbc.getPurchaseOrderDate();
+		this.modeOfTransport = invHeaderHbc.getModeOfTransport();
+		this.vehicleNo = invHeaderHbc.getVehicleNo();
+		this.netTotalAmount = invHeaderHbc.getNetTotalAmount();
+		this.freightInsurance = invHeaderHbc.getFreightInsurance();
+		this.grandTotal = invHeaderHbc.getGrandTotal();
+		this.tcNo = invHeaderHbc.getTcNo();
+		this.lrNo = invHeaderHbc.getLrNo();
+		this.irNo = invHeaderHbc.getIrNo();
+		this.paymentTerms = invHeaderHbc.getPaymentTerms();
+		this.pkgFrwdChg = invHeaderHbc.getPkgFrwdChg();
+		this.invIssueDate = invHeaderHbc.getInvIssueDate();
+		this.removalDate = invHeaderHbc.getRemovalDate();
+		this.liAmountTotal = invHeaderHbc.getLiAmountTotal();
+		this.bedRate = invHeaderHbc.getBedRate();
+		this.edCessRate = invHeaderHbc.getEdCessRate();
+		this.shsCess = invHeaderHbc.getShsCess();
+		this.vatOrCst = invHeaderHbc.getVatOrCst();
+		this.invNo = invHeaderHbc.getInvNo();
+		this.deliveryAddress = invHeaderHbc.getDeliveryAddress();
+		this.deliveryTo = invHeaderHbc.getDeliveryTo();
 	}
 
 	public InvoiceHeaderVO() {
