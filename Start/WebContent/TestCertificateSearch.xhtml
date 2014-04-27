@@ -29,6 +29,8 @@
 						action="TestCertificateSearch.jsf" styleClass="toolbar" />
 					<h:commandLink value="Purchase Orders"
 						action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Logout"
+						action="#{LoginBean.logout}" styleClass="toolbar" />	
 				</rich:toolbar>
 
 				<h:outputText value="Test Certificates" styleClass="pageTitle" />
@@ -115,6 +117,9 @@
 										target="#{TestCertificateBean.editFlag}" />
 								</h:commandButton>
 							</rich:column>
+							     <f:facet name="footer">
+                						<rich:dataScroller id="ds" renderIfSinglePage="true"></rich:dataScroller>
+            					</f:facet>
 						</rich:dataTable>
 					</a4j:outputPanel>
 				</rich:panel>

@@ -45,10 +45,10 @@
 				<rich:panel>
 					<table class="table" cellspacing="0">
 						<tr>
-							<td class="leftColumn"><h:outputText value="Invoice Id: " />
+							<td class="leftColumn"><h:outputText value="Invoice No: " />
 							</td>
 							<td><h:inputText styleClass="searchEntry" id="invId"
-									value="#{InvoiceHeaderBean.selectedInvId}" label="invId" /></td>
+									value="#{InvoiceHeaderBean.selectedInvNo}" label="invId" /></td>
 						</tr>
 
 						<tr>
@@ -109,6 +109,9 @@
 										target="#{InvoiceHeaderBean.selectedInvHdrVo}" value="#{ih}" />
 								</h:commandButton>
 							</rich:column>
+							     <f:facet name="footer">
+                						<rich:dataScroller id="ds" renderIfSinglePage="false"></rich:dataScroller>
+            					</f:facet>
 						</rich:dataTable>
 					</a4j:outputPanel>
 				</rich:panel>

@@ -83,6 +83,9 @@
 										target="#{LineItemBean.selectedPurchaseOrderId}" />
 								</a4j:commandButton>
 							</rich:column>
+							     <f:facet name="footer">
+                						<rich:dataScroller id="ds" renderIfSinglePage="true"></rich:dataScroller>
+            					</f:facet>
 						</rich:dataTable>
 					</a4j:outputPanel>
 				</rich:panel>

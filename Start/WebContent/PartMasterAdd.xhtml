@@ -13,18 +13,21 @@
 			<h:form>
 				<rich:toolbar styleClass="toolbar">
 					<rich:dropDownMenu id="dropDownMenu" label="Masters">
-						<rich:menuItem action="CcmSearch.jsf" label="Chemical Composition Masters"
-							id="ChemMaster" styleClass="toolbar"></rich:menuItem>
-						<rich:menuItem action="MpmSearch.jsf" label="Physical Properties Masters"
-							id="PhyMaster" styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="CcmSearch.jsf"
+							label="Chemical Composition Masters" id="ChemMaster"
+							styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="MpmSearch.jsf"
+							label="Physical Properties Masters" id="PhyMaster"
+							styleClass="toolbar"></rich:menuItem>
 						<rich:menuItem action="PartMasterSearch.jsf" label="Part Masters"
 							id="partMaster" styleClass="toolbar"></rich:menuItem>
-						<rich:menuItem action="GradeMasterSearch.jsf" label="Grade Masters"
-							id="GradeMaster" styleClass="toolbar"></rich:menuItem>
-						<rich:menuItem action="CustomerSearch.jsf" label="Customer Masters"
-							id="CustMaster" styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="GradeMasterSearch.jsf"
+							label="Grade Masters" id="GradeMaster" styleClass="toolbar"></rich:menuItem>
+						<rich:menuItem action="CustomerSearch.jsf"
+							label="Customer Masters" id="CustMaster" styleClass="toolbar"></rich:menuItem>
 					</rich:dropDownMenu>
-					<h:commandLink value="Invoices" action="InvoiceHeaderSearch.jsf" styleClass="toolbar" />
+					<h:commandLink value="Invoices" action="InvoiceHeaderSearch.jsf"
+						styleClass="toolbar" />
 					<h:commandLink value="Test Certificates"
 						action="TestCertificateSearch.jsf" styleClass="toolbar" />
 					<h:commandLink value="Purchase Orders"
@@ -48,12 +51,14 @@
 									value="#{PartMasterBean.selectedPartMasterVO.drgNo}"
 									label="drgNo" /></td>
 						</tr>
-						<tr>
-							<td class="leftColumn"><h:outputText value="Part Rate: " /></td>
-							<td><h:inputText styleClass="searchEntry" id="partRate"
-									value="#{PartMasterBean.selectedPartMasterVO.partRate}"
-									label="partRate" /></td>
-						</tr>
+						<ui:remove>
+							<tr>
+								<td class="leftColumn"><h:outputText value="Part Rate: " /></td>
+								<td><h:inputText styleClass="searchEntry" id="partRate"
+										value="#{PartMasterBean.selectedPartMasterVO.partRate}"
+										label="partRate" /></td>
+							</tr>
+						</ui:remove>
 						<tr>
 							<td class="leftColumn"><h:outputText value="P.M.Size: " /></td>
 							<td><h:inputText styleClass="searchEntry" id="pmSize"
@@ -66,12 +71,28 @@
 									value="#{PartMasterBean.selectedPartMasterVO.partUom}"
 									label="partUom" /></td>
 						</tr>
-						<tr>
-							<td class="leftColumn"><h:outputText value="Grade: " /></td>
-							<td><h:inputText styleClass="searchEntry" id="grade"
-									value="#{PartMasterBean.selectedPartMasterVO.grade}"
-									label="grade" /></td>
+						<ui:remove>
+							<tr>
+								<td class="leftColumn"><h:outputText value="Grade: " /></td>
+								<td><rich:autocomplete mode="cachedAjax" minChars="2"
+										autocompleteMethod="#{PartMasterBean.gradeAutoComplete}"
+										value="#{PartMasterBean.selectedPartMasterVO.grade}">
+									</rich:autocomplete></td>
+							</tr>
+						</ui:remove>
+						<tr><td class="leftColumn"><h:outputText value="Grades: " /></td>
+							<td>
+							<!-- <h:selectManyListbox value="#{PartMasterBean.selectedPartMasterVO.partGradeMapping}">
+								<f:selectItems value="#{PartMasterBean.partGradeMapping}" var="f"
+									itemLabel="#{f.gradeName}" itemValue="#{f.gradeId}" />
+							</h:selectManyListbox> -->
+							
+							<rich:pickList id="gradeList" value="#{PartMasterBean.gradeList}">
+							<f:selectItems value="#{PartMasterBean.partGradeMapping}" var="f"
+									itemLabel="#{f.gradeName}" itemValue="#{f.gradeId}"/>
+							</rich:pickList></td>
 						</tr>
+						
 						<tr>
 							<td class="leftColumn"><h:outputText value="Cast Weight: " /></td>
 							<td><h:inputText styleClass="searchEntry" id="castWeight"
@@ -97,9 +118,8 @@
 							<td class="leftColumn"><a4j:commandButton value="Save"
 									styleClass="searchButton"
 									rendered="#{!PartMasterBean.editFlag}"
-									action="#{PartMasterBean.add}" />
-							<a4j:commandButton value="Update"
-									styleClass="searchButton"
+									action="#{PartMasterBean.add}" /> <a4j:commandButton
+									value="Update" styleClass="searchButton"
 									rendered="#{PartMasterBean.editFlag}"
 									action="#{PartMasterBean.edit}" /></td>
 							<td><a4j:commandButton value="Reset"

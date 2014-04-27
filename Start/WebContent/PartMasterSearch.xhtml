@@ -11,7 +11,6 @@
 		<f:view>
 			<h:form>
 			
-			
 				<rich:popupPanel id="editPartMaster" autosized="true"
 					styleClass="popupPanelRegular">
 					<f:facet name="Header">
@@ -64,6 +63,7 @@
 									<h:inputText
 										value="#{PartMasterBean.selectedPartMasterVO.partUom}" />
 								</rich:column>
+								<ui:remove>
 								<rich:column>
 									<f:facet name="header">
 										<h:outputText value="Grade" />
@@ -71,6 +71,7 @@
 									<h:inputText
 										value="#{PartMasterBean.selectedPartMasterVO.grade}" />
 								</rich:column>
+								</ui:remove>
 								<rich:column>
 									<f:facet name="header">
 										<h:outputText value="Cast Weight" />
@@ -178,12 +179,14 @@
 								</f:facet>
 								<h:outputText value="#{pm.partUom}" />
 							</rich:column>
+							<ui:remove>
 							<rich:column>
 								<f:facet name="header">
 									<h:outputText value="Grade" />
 								</f:facet>
 								<h:outputText value="#{pm.grade}" />
 							</rich:column>
+							</ui:remove>
 							<rich:column>
 								<f:facet name="header">
 									<h:outputText value="Cast Weight" />
@@ -206,6 +209,8 @@
 								<a4j:commandButton value="Edit" action="PartMasterAdd.xhtml">
 									<f:setPropertyActionListener
 										target="#{PartMasterBean.selectedPartMasterVO}" value="#{pm}" />
+										<f:setPropertyActionListener
+										target="#{PartMasterBean.gradeList}" value="#{PartMasterBean.grades}" />
 									<f:setPropertyActionListener value="true"
 										target="#{PartMasterBean.editFlag}" />
 								</a4j:commandButton>
@@ -216,6 +221,9 @@
 										target="#{PartMasterBean.selectedPartMasterVO}" value="#{pm}" />
 								</h:commandButton>
 							</rich:column>
+							     <f:facet name="footer">
+                						<rich:dataScroller id="ds" renderIfSinglePage="true"></rich:dataScroller>
+            					</f:facet>
 						</rich:dataTable>
 					</a4j:outputPanel>
 				</rich:panel>

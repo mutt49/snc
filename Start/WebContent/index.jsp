@@ -2,6 +2,6 @@
 <html>
 <head></head>
 	<body>
-		<jsp:forward page="/TestCertificateSearch.jsf" />
+		<jsp:forward page="/LoginPage.jsf" />
 	</body>
 </html>

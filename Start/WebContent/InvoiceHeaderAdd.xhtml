@@ -17,17 +17,25 @@
 				<h:form>
 					<h:panelGrid id="addLineItemPanel" columns="2">
 						<h:outputText value="Serial No" />
-						<h:inputText value="#{InvoiceHeaderBean.invLineItem.serialNo}" />
+						<h:inputText value="#{InvoiceHeaderBean.invLineItem.serialNo}" /> 
+
 
 						<h:outputText value="Part Name" />
-				<!--    <h:inputText value="#{InvoiceHeaderBean.partVo.partName}" /> -->
-
-						<rich:autocomplete mode="cachedAjax" minChars="2" 
-							autocompleteMethod="#{InvoiceHeaderBean.partNameAutoComplete}" 
-							value="#{InvoiceHeaderBean.partVo.partName}"
-							>
-						</rich:autocomplete>
-
+						<!--    <h:inputText value="#{InvoiceHeaderBean.partVo.partName}" /> -->
+						<h:panelGroup>
+							<rich:autocomplete mode="cachedAjax" minChars="2" required="true" id="pName"
+								autocompleteMethod="#{InvoiceHeaderBean.partNameAutoComplete}"
+								value="#{InvoiceHeaderBean.partVo.partName}">
+								<a4j:ajax event="change" listener="#{InvoiceHeaderBean.getGradesForPart}"
+									render="selectGrade" />
+							</rich:autocomplete>
+						</h:panelGroup>
+	
+						<h:outputText value="Grade" />
+						<h:selectOneMenu value="#{InvoiceHeaderBean.invLineItem.gradeId}" id="selectGrade">
+							<f:selectItems id="LinePartgradeId" value="#{InvoiceHeaderBean.selectedPartGradeMapping}" var="GradeList" itemLabel="#{GradeList.gradeName}" 
+							itemValue="#{GradeList.gradeId}"></f:selectItems>
+						</h:selectOneMenu>
 
 						<h:outputText value="Package Desc" />
 						<h:inputText value="#{InvoiceHeaderBean.invLineItem.pkgDesc}" />
@@ -42,11 +50,26 @@
 						<h:inputText value="#{InvoiceHeaderBean.invLineItem.quantityKgs}" />
 
 						<h:outputText value="Unit" />
-						<h:inputText value="#{InvoiceHeaderBean.invLineItem.unit}" />
+						<h:panelGroup>
+							<!-- <h:inputText value="#{InvoiceHeaderBean.invLineItem.unit}"
+								id="unit" required="true" requiredMessage="    Required" /> -->
+
+							<h:selectOneRadio value="#{InvoiceHeaderBean.invLineItem.unit}"
+								id="unit" required="true" requiredMessage="    Required">
+								<f:selectItem itemValue="kg" itemLabel="KG" id="kg"/>
+								<f:selectItem itemValue="no" itemLabel="NO." id="no"/>
+								<f:selectItem itemValue="kg" itemLabel="SET" id="set"/>
+							</h:selectOneRadio>
+							<h:message for="unit" style="color:red;" />
+						</h:panelGroup>
 
 						<h:outputText value="Rate" />
-						<h:inputText id="liRate"
-							value="#{InvoiceHeaderBean.invLineItem.rate}" />
+						<h:panelGroup>
+							<h:inputText id="liRate"
+								value="#{InvoiceHeaderBean.invLineItem.rate}" required="true"
+								requiredMessage="    Required" />
+							<h:message for="liRate" style="color:red;" />
+						</h:panelGroup>
 
 						<h:outputText value="Amount" />
 						<h:inputText id="liAmount"
@@ -71,18 +94,36 @@
 				<h:form>
 					<h:panelGrid id="addTaxesPanel" columns="2">
 						<h:outputText value="B.E.D. Rate" />
-						<h:inputText value="#{InvoiceHeaderBean.selectedInvHdrVo.bedRate}" />
+						<h:panelGroup>
+							<h:inputText
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.bedRate}"
+								id="bedRate" required="true" requiredMessage="    Required" />
+							<h:message for="bedRate" style="color:red;" />
+						</h:panelGroup>
 
 						<h:outputText value="E.D. Cess Rate" />
-						<h:inputText
-							value="#{InvoiceHeaderBean.selectedInvHdrVo.edCessRate}" />
+						<h:panelGroup>
+							<h:inputText
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.edCessRate}"
+								id="edRate" required="true" requiredMessage="    Required" />
+							<h:message for="edRate" style="color:red;" />
+						</h:panelGroup>
 
 						<h:outputText value="S.H.S Cess" />
-						<h:inputText value="#{InvoiceHeaderBean.selectedInvHdrVo.shsCess}" />
+						<h:panelGroup>
+							<h:inputText
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.shsCess}"
+								id="shsCess" required="true" requiredMessage="    Required" />
+							<h:message for="shsCess" style="color:red;" />
+						</h:panelGroup>
 
 						<h:outputText value="VAT/CST" />
-						<h:inputText
-							value="#{InvoiceHeaderBean.selectedInvHdrVo.vatOrCst}" />
+						<h:panelGroup>
+							<h:inputText id="vat"
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.vatOrCst}"
+								required="true" requiredMessage="    Required" />
+							<h:message for="vat" style="color:red;" />
+						</h:panelGroup>
 
 						<h:commandButton value="Save" styleClass="searchButton"
 							action="#{InvoiceHeaderBean.addTaxes}">
@@ -119,8 +160,8 @@
 				</rich:toolbar>
 
 				<h:outputText value="Invoice Header" styleClass="pageTitle" />
-				
-				<h:messages globalOnly="true"/>
+
+				<h:messages globalOnly="true" />
 
 				<h:panelGrid columns="2">
 					<ui:remove>
@@ -138,6 +179,10 @@
 						<rich:calendar id="invDate"
 							value="#{InvoiceHeaderBean.selectedInvHdrVo.invDate}" />
 					</h:panelGroup>
+						<h:panelGroup>
+						<h:outputText value="Print Invoice Number on PDF:" />
+						<h:selectBooleanCheckbox value="#{InvoiceHeaderBean.printInvoiceNumberOnPDF}"></h:selectBooleanCheckbox>
+						</h:panelGroup>
 				</h:panelGrid>
 
 				<h:panelGrid id="mainPanel" columns="2">
@@ -146,16 +191,18 @@
 							<h:outputText value="Code No./Central Excise" />
 							<h:inputText id="CodeNo" value="#{InvoiceHeaderBean.exciseCode}" />
 							<h:outputText value="Registration Certificate No." />
-							<h:inputText id="RegCertNo"
+								<h:inputText id="RegCertNo"
 								value="#{InvoiceHeaderBean.regCertNo}" />
 							<h:outputText value="P.L.A. NO." />
 							<h:inputText id="PLANo" value="#{InvoiceHeaderBean.plaNo}" />
 							<h:outputText value="Address Of Range" />
-							<h:inputTextarea id="rangeAddress"
+								<h:inputTextarea id="rangeAddress"
 								value="#{InvoiceHeaderBean.rangeAddress}" rows="4" cols="30" />
 							<h:outputText value="Division" />
-							<h:inputTextarea id="division"
-								value="#{InvoiceHeaderBean.division}" rows="4" cols="30" />
+								<h:inputTextarea id="division"
+									value="#{InvoiceHeaderBean.division}" rows="4" cols="30"
+									required="true" requiredMessage="    Required" />
+								<h:message for="division" style="color:red;" />
 						</h:panelGrid>
 						<h:panelGrid id="leftPanle2" columns="2">
 							<h:outputText value="Your P.O. No." />
@@ -163,7 +210,7 @@
 								value="#{InvoiceHeaderBean.selectedInvHdrVo.purchaseOrderId}" />
 							<h:outputText value="Date" />
 							<rich:calendar id="poDate"
-								value="#{InvoiceHeaderBean.selectedInvHdrVo.purchaseOrderDate}" />
+										value="#{InvoiceHeaderBean.selectedInvHdrVo.purchaseOrderDate}" />
 						</h:panelGrid>
 						<h:panelGrid id="leftPanle4" columns="2">
 							<h:outputText value="Mode Of Transport" />
@@ -185,7 +232,7 @@
 						<h:panelGrid id="RightPanel1" columns="2">
 							<h:outputText value="Name of Excisable Commodity" />
 							<h:inputText id="nEc"
-								value="#{InvoiceHeaderBean.nameofexcisable}" />
+									value="#{InvoiceHeaderBean.nameofexcisable}" />
 							<h:outputText value="Tariff Handling No." />
 							<h:inputText id="tHNo" value="#{InvoiceHeaderBean.tariffHeading}" />
 							<h:outputText value="Exemption Notif. No." />
@@ -194,18 +241,18 @@
 							<h:inputText id="rDuty" value="#{InvoiceHeaderBean.serviceTax}" />
 							<h:outputText value="Income Tax P.A.N./G.I.R. No. " />
 							<h:inputText id="panGirNo"
-								value="#{InvoiceHeaderBean.incomeTaxPan}" />
+									value="#{InvoiceHeaderBean.incomeTaxPan}" />
 						</h:panelGrid>
 
 						<h:panelGrid id="RightPanel2" columns="2">
 							<h:outputText value="Vendor/Supplier Code No." />
-							<rich:autocomplete mode="cachedAjax" minChars="2"
-								valueChangeListener="#{InvoiceHeaderBean.getCustomerDataUsingVendorCode}"
-								autocompleteMethod="#{InvoiceHeaderBean.vendorCodeAutoComplete}"
-								value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.vendor_code}">
-								<a4j:ajax event="change"
-									render="cAddress,dTo,dAddress,ecCode,octroiNo,cstNo,bstNo,cName" />
-							</rich:autocomplete>
+								<rich:autocomplete mode="cachedAjax" minChars="2"
+									valueChangeListener="#{InvoiceHeaderBean.getCustomerDataUsingVendorCode}"
+									autocompleteMethod="#{InvoiceHeaderBean.vendorCodeAutoComplete}"
+									value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.vendor_code}">
+									<a4j:ajax event="change"
+										render="cAddress,dTo,dAddress,ecCode,octroiNo,cstNo,bstNo,cName" />
+								</rich:autocomplete>
 							<h:outputText value="Customer Name" />
 
 
@@ -216,18 +263,18 @@
 								<a4j:ajax event="change"
 									render="cAddress,dTo,dAddress,ecCode,octroiNo,cstNo,bstNo,vendorCode" />
 							</h:inputText>  -->
-							<rich:autocomplete mode="cachedAjax" minChars="2" id="cName"
-								valueChangeListener="#{InvoiceHeaderBean.getCustomerData}"
-								autocompleteMethod="#{InvoiceHeaderBean.customerNameAutoComplete}"
-								value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.customer_name}">
-								<a4j:ajax event="change"
-									render="cAddress,dTo,dAddress,ecCode,octroiNo,cstNo,bstNo,vendorCode" />
-							</rich:autocomplete>
+								<rich:autocomplete mode="cachedAjax" minChars="2" id="cName"
+									valueChangeListener="#{InvoiceHeaderBean.getCustomerData}"
+									autocompleteMethod="#{InvoiceHeaderBean.customerNameAutoComplete}"
+									value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.customer_name}">
+									<a4j:ajax event="change" 
+										render="cAddress,dTo,dAddress,ecCode,octroiNo,cstNo,bstNo,vendorCode" />
+								</rich:autocomplete>
 
 							<h:outputText value="Customer Address" />
 							<h:inputTextarea id="cAddress"
-								styleClass="searchEntryPreformatted"
-								value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.customer_address}" />
+									styleClass="searchEntryPreformatted"
+									value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.customer_address}" />
 						</h:panelGrid>
 
 						<h:panelGrid id="RightPanel3" columns="2">
@@ -256,7 +303,7 @@
 								value="#{InvoiceHeaderBean.selectedInvHdrVo.lrNo}" />
 							<h:outputText value="Terms of Payment" />
 							<h:inputText id="payTerms"
-								value="#{InvoiceHeaderBean.selectedInvHdrVo.paymentTerms}" />
+									value="#{InvoiceHeaderBean.selectedInvHdrVo.paymentTerms}" />
 						</h:panelGrid>
 					</h:panelGroup>
 
@@ -266,13 +313,13 @@
 							value="#{InvoiceHeaderBean.selectedInvHdrVo.liAmountTotal}" />
 						<h:outputText value="Packing and Forwarding Charges" />
 						<h:inputText id="pkgFrwd"
-							value="#{InvoiceHeaderBean.selectedInvHdrVo.pkgFrwdChg}" />
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.pkgFrwdChg}" />
 						<h:outputText value="Net Total" />
 						<h:inputText id="netTotal" disabled="true"
 							value="#{InvoiceHeaderBean.selectedInvHdrVo.netTotalAmount}" />
 						<h:outputText value="Freight and Insurance" />
 						<h:inputText id="frtIns"
-							value="#{InvoiceHeaderBean.selectedInvHdrVo.freightInsurance}" />
+								value="#{InvoiceHeaderBean.selectedInvHdrVo.freightInsurance}" />
 						<h:outputText value="Grand Total" />
 						<h:inputText id="grndTotal" disabled="true"
 							value="#{InvoiceHeaderBean.selectedInvHdrVo.grandTotal}" />
@@ -281,13 +328,13 @@
 					<h:panelGrid columns="2">
 						<h:panelGroup>
 							<h:outputText value="Date &amp; Time of Issue of Invoice" />
-							<rich:calendar id="invIssueDate" datePattern="dd/M/yyyy HH:mm"
-								value="#{InvoiceHeaderBean.selectedInvHdrVo.invIssueDate}" />
-						</h:panelGroup>
+								<rich:calendar id="invIssueDate" datePattern="dd/M/yyyy HH:mm"
+									value="#{InvoiceHeaderBean.selectedInvHdrVo.invIssueDate}" />
+							</h:panelGroup>
 						<h:panelGroup>
 							<h:outputText value="Date &amp; Time of Removal" />
-							<rich:calendar id="remDate" datePattern="dd/M/yyyy HH:mm"
-								value="#{InvoiceHeaderBean.selectedInvHdrVo.removalDate}" />
+								<rich:calendar id="remDate" datePattern="dd/M/yyyy HH:mm"
+									value="#{InvoiceHeaderBean.selectedInvHdrVo.removalDate}" />
 						</h:panelGroup>
 					</h:panelGrid>
 
@@ -310,7 +357,7 @@
 					<a4j:commandButton value="Add Line Item" styleClass="searchButton"
 						id="addLI" oncomplete="#{rich:component('addLineItem')}.show()}"
 						rendered="#{InvoiceHeaderBean.headerSaved}" render="totAmount"
-						onclick="if (! confirm('Check whether you have added taxes?') ) { return false;}; return true; "  >
+						onclick="if (! confirm('Check whether you have added taxes?') ) { return false;}; return true; ">
 						<rich:componentControl target="addLineItem" operation="show"
 							event="click" />
 					</a4j:commandButton>
@@ -326,9 +373,9 @@
 					<h:commandButton value="Print Bill" styleClass="searchButton"
 						action="#{InvoiceHeaderBean.printBill}"
 						rendered="#{InvoiceHeaderBean.headerSaved}" />
-					<a4j:commandButton value="Back" styleClass="searchButton"
-						action="#{InvoiceHeaderBean.clearHeader}">
-					</a4j:commandButton>
+					<h:commandButton value="Back" styleClass="searchButton"
+						immediate="true" action="#{InvoiceHeaderBean.reset}">
+					</h:commandButton>
 				</h:panelGrid>
 
 

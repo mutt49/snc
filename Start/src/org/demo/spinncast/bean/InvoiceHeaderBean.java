@@ -9,16 +9,16 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIOutput;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.pdfbox.exceptions.COSVisitorException;
@@ -28,24 +28,25 @@ import org.apache.pdfbox.pdmodel.edit.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.xobject.PDJpeg;
+import org.demo.spinncast.applicationHelper.ApplicationHepler;
 import org.demo.spinncast.connections.ConnectionPool;
+import org.demo.spinncast.handler.CustomerHandler;
+import org.demo.spinncast.handler.PartMasterHandler;
 import org.demo.spinncast.hibernate.CustomerHBC;
+import org.demo.spinncast.hibernate.GradeMasterHBC;
 import org.demo.spinncast.hibernate.InvoiceHeaderHBC;
 import org.demo.spinncast.hibernate.InvoiceLineItemHBC;
-import org.demo.spinncast.hibernate.LineItemHBC;
+import org.demo.spinncast.hibernate.PartGradeMappingHBC;
 import org.demo.spinncast.hibernate.PartMasterHBC;
-import org.demo.spinncast.hibernate.PurchaseOrderHBC;
 import org.demo.spinncast.vo.CustomerVO;
+import org.demo.spinncast.vo.GradeMasterVO;
 import org.demo.spinncast.vo.InvoiceHeaderVO;
 import org.demo.spinncast.vo.InvoiceLineItemVO;
-import org.demo.spinncast.vo.LineItemVO;
+import org.demo.spinncast.vo.PartGradeMappingVO;
 import org.demo.spinncast.vo.PartMasterVO;
-import org.demo.spinncast.vo.PurchaseOrderVO;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
-import com.sun.nio.sctp.SctpStandardSocketOptions.InitMaxStreams;
 
 @ManagedBean(name = "InvoiceHeaderBean")
 @SessionScoped
@@ -57,8 +58,10 @@ public class InvoiceHeaderBean {
 	private PartMasterVO partVo;
 	private List<InvoiceHeaderVO> searchList;
 	private Boolean editFlag = false;
-	private Integer selectedInvId;
-
+	private Integer selectedInvNo = 0;
+	private Integer selectedInvId = 0;
+	private List<PartGradeMappingVO> selectedPartGradeMapping = new ArrayList<PartGradeMappingVO>();
+	private boolean printInvoiceNumberOnPDF;
 	// Data read from properties file
 	private String vendorCode;
 	private String exciseCode;
@@ -68,6 +71,36 @@ public class InvoiceHeaderBean {
 	private String division;
 	private String tariffHeading;
 	private String excemption;
+
+	private boolean headerSaved = false;
+	private String retPage;
+	private Integer maxInvNo;
+	private Boolean printEntirePage;
+	private String nameofexcisable;
+	private String serviceTax;
+	private String incomeTaxPan;
+	private String searchCustomer;
+
+	public String getSearchCustomer() {
+		return searchCustomer;
+	}
+
+	public void setSearchCustomer(String searchCustomer) {
+		this.searchCustomer = searchCustomer;
+	}
+
+	public void setMaxInvNo(Integer maxInvNo) {
+		this.maxInvNo = maxInvNo;
+	}
+
+	public List<PartGradeMappingVO> getSelectedPartGradeMapping() {
+		return selectedPartGradeMapping;
+	}
+
+	public void setSelectedPartGradeMapping(
+			List<PartGradeMappingVO> selectedPartGradeMapping) {
+		this.selectedPartGradeMapping = selectedPartGradeMapping;
+	}
 
 	public String getTariffHeading() {
 		return tariffHeading;
@@ -84,14 +117,6 @@ public class InvoiceHeaderBean {
 	public void setExcemption(String excemption) {
 		this.excemption = excemption;
 	}
-
-	private boolean headerSaved = false;
-	private String retPage;
-	private Integer maxInvNo;
-	private Boolean printEntirePage;
-	private String nameofexcisable;
-	private String serviceTax;
-	private String incomeTaxPan;
 
 	public int getMaxInvNo() {
 		return maxInvNo;
@@ -209,8 +234,16 @@ public class InvoiceHeaderBean {
 		return selectedInvId;
 	}
 
-	public void setSelectedInvId(Integer selectedInvId) {
-		this.selectedInvId = selectedInvId;
+	public Integer getSelectedInvNo() {
+		return selectedInvNo;
+	}
+
+	public void setSelectedInvNo(Integer selectedInvNo) {
+		this.selectedInvNo = selectedInvNo;
+	}
+
+	public void setSelectedInvId(Integer selectedInvNo) {
+		this.selectedInvNo = selectedInvNo;
 	}
 
 	public Boolean getEditFlag() {
@@ -226,57 +259,79 @@ public class InvoiceHeaderBean {
 		searchList = new ArrayList<InvoiceHeaderVO>();
 		invLineItem = new InvoiceLineItemVO();
 		partVo = new PartMasterVO();
-		readProperties();
+		//readProperties();
+		readProps();
+	}
+	
+	public void readProps(){
+		ApplicationHepler.readProperties();
+		vendorCode = ApplicationHepler.getVendorCode();
+		exciseCode = ApplicationHepler.getExciseCode();
+		regCertNo = ApplicationHepler.getRegCertNo();
+		plaNo = ApplicationHepler.getPlaNo();
+		rangeAddress = ApplicationHepler.getRangeAddress();
+		division = ApplicationHepler.getDivision();
+		nameofexcisable = ApplicationHepler.getNameofexcisable();
+		tariffHeading = ApplicationHepler.getTariffHeading();
+		excemption = ApplicationHepler.getExcemption();
+		serviceTax = ApplicationHepler.getServiceTax();
+		incomeTaxPan = ApplicationHepler.getIncomeTaxPan();
 	}
 
 	public String reset() {
+		selectedInvHdrVo = new InvoiceHeaderVO();
+		invLineItem = new InvoiceLineItemVO();
+		invLineItemList = new ArrayList<InvoiceLineItemVO>();
 		getSearchList().clear();
-		selectedInvId = null;
+		partVo = new PartMasterVO();
+		editFlag = false;
+		selectedInvNo = 0;
+		selectedInvId = 0;
 		return "InvoiceHeaderSearch";
 	}
 
 	@SuppressWarnings("unchecked")
 	public String search() {
 		ConnectionPool cpool = ConnectionPool.getInstance();
+		if (selectedInvNo == null) {
+			selectedInvNo = 0;
+		}
 		Session session = cpool.getSession();
 		Query hibernateQuery = session
-				.createQuery("from InvoiceHeaderHBC as m where (m.invId= :invId and :invId !=0 ) or (:invId = 0)  order by m.invId");
-		hibernateQuery.setInteger("invId", selectedInvId);
+				.createQuery("from InvoiceHeaderHBC as m where (m.invNo= :invNo and :invNo !=0 ) or (:invNo = 0)  order by m.invId");
+		hibernateQuery.setInteger("invNo", selectedInvNo);
 		java.util.List<InvoiceHeaderHBC> results = hibernateQuery.list();
 		searchList = new ArrayList<InvoiceHeaderVO>();
 		for (int i = 0; i < results.size(); i++) {
-			InvoiceHeaderVO tempInvHdr = new InvoiceHeaderVO();
-			tempInvHdr.setCustomerId(results.get(i).getCustomerId());
+			InvoiceHeaderVO tempInvHdr = new InvoiceHeaderVO(results.get(i));
 			tempInvHdr.setCustDetails(populateCustomerDetails(results.get(i)
 					.getCustomerId()));
-			tempInvHdr.setInvId(results.get(i).getInvId());
-			tempInvHdr.setInvDate(results.get(i).getInvDate());
+			searchList.add(tempInvHdr);
+		}
+		System.out.println(getSearchList().size());
+		session.close();
+		return "InvoiceHeaderSearch";
+	}
+
+	@SuppressWarnings("unchecked")
+	public String search(int invId) {
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		selectedInvId = selectedInvHdrVo.getInvId();
+		Session session = cpool.getSession();
+		/*
+		 * Query hibernateQuery = session .createQuery(
+		 * "from InvoiceHeaderHBC as m where (m.invId = :invId) and ((m.invNo= :invNo and :invNo !=0 ) or (:invNo = 0))  order by m.invId"
+		 * );
+		 */
+		Query hibernateQuery = session
+				.createQuery("from InvoiceHeaderHBC as m where (m.invId = :invId) order by m.invId");
+		hibernateQuery.setInteger("invId", selectedInvHdrVo.getInvId());
+		java.util.List<InvoiceHeaderHBC> results = hibernateQuery.list();
+		searchList = new ArrayList<InvoiceHeaderVO>();
+		for (int i = 0; i < results.size(); i++) {
+			InvoiceHeaderVO tempInvHdr = new InvoiceHeaderVO(results.get(i));
 			tempInvHdr.setCustDetails(populateCustomerDetails(results.get(i)
 					.getCustomerId()));
-			tempInvHdr.setPurchaseOrderId(results.get(i).getPurchaseOrderId());
-			tempInvHdr.setPurchaseOrderDate(results.get(i)
-					.getPurchaseOrderDate());
-			tempInvHdr.setModeOfTransport(results.get(i).getModeOfTransport());
-			tempInvHdr.setVehicleNo(results.get(i).getVehicleNo());
-			tempInvHdr.setNetTotalAmount(results.get(i).getNetTotalAmount());
-			tempInvHdr
-					.setFreightInsurance(results.get(i).getFreightInsurance());
-			tempInvHdr.setGrandTotal(results.get(i).getGrandTotal());
-			tempInvHdr.setTcNo(results.get(i).getTcNo());
-			tempInvHdr.setLrNo(results.get(i).getLrNo());
-			tempInvHdr.setIrNo(results.get(i).getIrNo());
-			tempInvHdr.setPaymentTerms(results.get(i).getPaymentTerms());
-			tempInvHdr.setPkgFrwdChg(results.get(i).getPkgFrwdChg());
-			tempInvHdr.setInvIssueDate(results.get(i).getInvIssueDate());
-			tempInvHdr.setRemovalDate(results.get(i).getRemovalDate());
-			tempInvHdr.setLiAmountTotal(results.get(i).getLiAmountTotal());
-			tempInvHdr.setBedRate(results.get(i).getBedRate());
-			tempInvHdr.setEdCessRate(results.get(i).getEdCessRate());
-			tempInvHdr.setShsCess(results.get(i).getShsCess());
-			tempInvHdr.setVatOrCst(results.get(i).getVatOrCst());
-			tempInvHdr.setInvNo(results.get(i).getInvNo());
-			tempInvHdr.setDeliveryAddress(results.get(i).getDeliveryAddress());
-			tempInvHdr.setDeliveryTo(results.get(i).getDeliveryTo());
 			searchList.add(tempInvHdr);
 		}
 		System.out.println(getSearchList().size());
@@ -336,22 +391,28 @@ public class InvoiceHeaderBean {
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Transaction trans = session.beginTransaction();
-		try{
-		selectedInvHdrVo.setCustomerId(selectedInvHdrVo.getCustDetails()
-				.getCustomer_id());
-		InvoiceHeaderHBC invHeaderHBC = new InvoiceHeaderHBC(selectedInvHdrVo);
-		session.saveOrUpdate(invHeaderHBC);
-		selectedInvId = invHeaderHBC.getInvId();
-		selectedInvHdrVo.setInvId(selectedInvId);
-		headerSaved = true;
-		editFlag = true;
-		}catch(Exception e){
-			FacesContext.getCurrentInstance().addMessage(null, 
-			        new FacesMessage(FacesMessage.SEVERITY_ERROR, "Can not save Invoice Header Please try with correct values", null));
-			e.printStackTrace();
-		}
-		finally{
+		try {
+			selectedInvHdrVo.setCustomerId(selectedInvHdrVo.getCustDetails()
+					.getCustomer_id());
+			InvoiceHeaderHBC invHeaderHBC = new InvoiceHeaderHBC(
+					selectedInvHdrVo);
+			session.saveOrUpdate(invHeaderHBC);
 			trans.commit();
+			// selectedInvId = invHeaderHBC.getInvId();
+			selectedInvHdrVo.setInvId(invHeaderHBC.getInvId());
+			headerSaved = true;
+			editFlag = true;
+		} catch (Exception e) {
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
+									"Can not save Invoice Header Please try with correct values",
+									null));
+			e.printStackTrace();
+		} finally {
 			session.close();
 		}
 	}
@@ -363,69 +424,11 @@ public class InvoiceHeaderBean {
 	}
 
 	public void getCustomerDataUsingVendorCode(ValueChangeEvent event) {
+		CustomerHandler custHandler = new CustomerHandler();
 		String vendorCode = (String) event.getNewValue();
-		CustomerVO tempCustVo = populateCustomerDetailsUsingVendorCode(vendorCode);
+		//CustomerVO tempCustVo = populateCustomerDetailsUsingVendorCode(vendorCode);
+		CustomerVO tempCustVo = custHandler.populateCustomerDetailsUsingVendorCode(vendorCode);
 		selectedInvHdrVo.setCustDetails(tempCustVo);
-	}
-
-	// Move this function to session Level - JK
-	private CustomerVO populateCustomerDetailsUsingVendorCode(String vendorCode2) {
-		ConnectionPool cpool = ConnectionPool.getInstance();
-		Session session = cpool.getSession();
-		Query hibernateQuery = session
-				.createQuery("from CustomerHBC as m where vendor_code =:vendorCode");
-		hibernateQuery.setString("vendorCode", vendorCode2);
-		java.util.List<CustomerHBC> results = hibernateQuery.list();
-
-		CustomerVO tempCustVo = new CustomerVO();
-		if (results.size() > 0) {
-			tempCustVo.setCustomer_id(results.get(0).getCustomer_id());
-			tempCustVo.setCustomer_name(results.get(0).getCustomer_name());
-			tempCustVo
-					.setCustomer_address(results.get(0).getCustomer_address());
-			tempCustVo.setBst_no(results.get(0).getBst_no());
-			tempCustVo.setCst_no(results.get(0).getCst_no());
-			tempCustVo.setEcc_no(results.get(0).getEcc_no());
-			tempCustVo.setOctroi_no(results.get(0).getOctroi_no());
-			tempCustVo.setVendor_code(results.get(0).getVendor_code());
-		}
-		session.close();
-		return tempCustVo;
-	}
-
-	public void readProperties() {
-		Properties prop = new Properties();
-		InputStream input = null;
-		// InputStream configStream =
-		// ctx.getResourceAsStream("/WEB-INF/config.properties");
-		try {
-			input = new FileInputStream("config.properties");
-			// load a properties file
-			prop.load(input);
-			// get the property value and print it out
-			vendorCode = prop.getProperty("vendorCode");
-			exciseCode = prop.getProperty("exciseCode");
-			regCertNo = prop.getProperty("regCertNo");
-			plaNo = prop.getProperty("PLANO");
-			rangeAddress = prop.getProperty("rangeAddress");
-			division = prop.getProperty("division");
-			nameofexcisable = prop.getProperty("nameofexcisablecommdity");
-			tariffHeading = prop.getProperty("tariffheadingnumber");
-			excemption = prop.getProperty("excemptionnotiff");
-			serviceTax = prop.getProperty("servicetax");
-			incomeTaxPan = prop.getProperty("incometaxpan");
-			System.out.println("inc" + incomeTaxPan);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		} finally {
-			if (input != null) {
-				try {
-					input.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
-		}
 	}
 
 	public String getNameofexcisable() {
@@ -452,7 +455,7 @@ public class InvoiceHeaderBean {
 		this.incomeTaxPan = incomeTaxPan;
 	}
 
-	public PartMasterVO populatePartMaster(String partName) {
+	/*public PartMasterVO populatePartMaster(String partName) {
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Query hibernateQuery = session
@@ -460,19 +463,9 @@ public class InvoiceHeaderBean {
 		hibernateQuery.setString("part_name", partName);
 		java.util.List<PartMasterHBC> results = hibernateQuery.list();
 
-		PartMasterVO tempPartVo = new PartMasterVO();
-		if (results.size() > 0) {
-			tempPartVo.setCastWeight(results.get(0).getCastWeight());
-			tempPartVo.setDrgNo(results.get(0).getDrgNo());
-			tempPartVo.setGrade(results.get(0).getGrade());
-			tempPartVo.setPartId(results.get(0).getPartId());
-			tempPartVo.setPartName(results.get(0).getPartName());
-			tempPartVo.setPartRate(results.get(0).getPartRate());
-			tempPartVo.setPartUom(results.get(0).getPartUom());
-			tempPartVo.setPmSize(results.get(0).getPmSize());
-			tempPartVo.setProofMachineWeight(results.get(0)
-					.getProofMachineWeight());
-			tempPartVo.setQuantity(results.get(0).getQuantity());
+		PartMasterVO tempPartVo = null;
+		if (results.size() > 0 && results.size() < 2) {
+			tempPartVo = new PartMasterVO(results.get(0));
 		}
 		session.close();
 		return tempPartVo;
@@ -486,30 +479,22 @@ public class InvoiceHeaderBean {
 		hibernateQuery.setInteger("part_id", partId);
 		java.util.List<PartMasterHBC> results = hibernateQuery.list();
 
-		PartMasterVO tempPartVo = new PartMasterVO();
-		if (results.size() > 0) {
-			tempPartVo.setCastWeight(results.get(0).getCastWeight());
-			tempPartVo.setDrgNo(results.get(0).getDrgNo());
-			tempPartVo.setGrade(results.get(0).getGrade());
-			tempPartVo.setPartId(results.get(0).getPartId());
-			tempPartVo.setPartName(results.get(0).getPartName());
-			tempPartVo.setPartRate(results.get(0).getPartRate());
-			tempPartVo.setPartUom(results.get(0).getPartUom());
-			tempPartVo.setPmSize(results.get(0).getPmSize());
-			tempPartVo.setProofMachineWeight(results.get(0)
-					.getProofMachineWeight());
-			tempPartVo.setQuantity(results.get(0).getQuantity());
+		PartMasterVO tempPartVo = null;
+		if (results.size() > 0 && results.size() < 2) {
+			tempPartVo = new PartMasterVO(results.get(0));
 		}
 		session.close();
 		return tempPartVo;
 	}
-
+*/
 	public void getPartDetails(String partName) {
-		partVo = populatePartMaster(partName);
+		PartMasterHandler partMasterHanlder = new PartMasterHandler();
+		partVo = partMasterHanlder.populatePartMaster(partName);
 	}
 
 	public void getPartDetails(int partId) {
-		partVo = populatePartMaster(partId);
+		PartMasterHandler partMasterHanlder = new PartMasterHandler();
+		partVo = partMasterHanlder.populatePartMaster(partId);
 	}
 
 	public String addLineItem() {
@@ -518,7 +503,7 @@ public class InvoiceHeaderBean {
 		Transaction trans = session.beginTransaction();
 		getPartDetails(partVo.getPartName());
 		invLineItem.setPartId(partVo.getPartId());
-		invLineItem.setInvId(selectedInvId);
+		invLineItem.setInvId(selectedInvHdrVo.getInvId());
 
 		if (invLineItem.getUnit().equalsIgnoreCase("KG")) {
 			invLineItem.setAmount(invLineItem.getQuantityKgs()
@@ -531,9 +516,13 @@ public class InvoiceHeaderBean {
 		InvoiceLineItemHBC invLineItemHBC = new InvoiceLineItemHBC(invLineItem);
 		session.saveOrUpdate(invLineItemHBC);
 		trans.commit();
+		session.flush();
 		session.close();
-		amountAggregation(invLineItem);
+		selectedInvId = invLineItemHBC.getInvId();
+		addLIamountAggregation(invLineItem);
 		invLineItem = new InvoiceLineItemVO();
+		partVo = new PartMasterVO();
+		selectedPartGradeMapping = new ArrayList<PartGradeMappingVO>();
 		return getLineItemsForInvId();
 	}
 
@@ -559,6 +548,7 @@ public class InvoiceHeaderBean {
 			tempInvLI.setUnit(results.get(i).getUnit());
 			tempInvLI.setSerialNo(results.get(i).getSerialNo());
 			tempInvLI.setNoOfPkgs(results.get(i).getNoOfPkgs());
+			tempInvLI.setGradeId(results.get(i).getGradeId());
 			invLineItemList.add(tempInvLI);
 		}
 		System.out.println(getSearchList().size());
@@ -567,36 +557,29 @@ public class InvoiceHeaderBean {
 	}
 
 	public String viewInvoice() {
-		selectedInvId = selectedInvHdrVo.getInvId();
 		headerSaved = true;
 		editFlag = true;
-		search();
+		search(selectedInvHdrVo.getInvId());
 		selectedInvHdrVo = searchList.get(0);
-		selectedInvId = selectedInvHdrVo.getInvId();
-		// selectedInvHdrVo.setNetTotalAmount(selectedInvHdrVo.getLiAmountTotal()
-		// + selectedInvHdrVo.getFreightInsurance());
 		retPage = "invoiceHeaderSearch";
 		return getLineItemsForInvId();
 	}
 
 	public String clearHeader() {
-		selectedInvHdrVo = new InvoiceHeaderVO();
-		selectedInvId = null;
-		editFlag = false;
-		headerSaved = false;
-		searchList = new ArrayList<InvoiceHeaderVO>();
-		invLineItemList = new ArrayList<InvoiceLineItemVO>();
 
+		reset();
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Query hibernateQuery = session
 				.createQuery("select max(m.invId)+1 from InvoiceHeaderHBC as m");
 		List list = hibernateQuery.list();
-
-		maxInvNo = Integer.parseInt(list.get(0).toString());
+		if (list.size() > 1) {
+			maxInvNo = Integer.parseInt(list.get(0).toString());
+		} else {
+			maxInvNo = 1;
+		}
 		selectedInvHdrVo.setInvNo(maxInvNo.toString());
 		session.close();
-
 		if (retPage.equalsIgnoreCase("InvoiceHeaderAdd")) {
 			return "InvoiceHeaderAdd";
 		} else {
@@ -604,7 +587,7 @@ public class InvoiceHeaderBean {
 		}
 	}
 
-	public void amountAggregation(InvoiceLineItemVO invLine) {
+	public void addLIamountAggregation(InvoiceLineItemVO invLine) {
 		float liTotalAmount = invLine.getAmount();
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
@@ -615,6 +598,7 @@ public class InvoiceHeaderBean {
 		query.setInteger("inv_id", invLineItem.getInvId());
 		int result = query.executeUpdate();
 		trans.commit();
+		session.flush();
 		session.close();
 		session = cpool.getSession();
 		trans = session.beginTransaction();
@@ -623,46 +607,33 @@ public class InvoiceHeaderBean {
 		query.setInteger("inv_id", invLineItem.getInvId());
 		result = query.executeUpdate();
 		trans.commit();
+		session.flush();
 		session.close();
-
-		Float bedAmount = round(
-				((selectedInvHdrVo.getLiAmountTotal() + invLineItem.getAmount() + selectedInvHdrVo
-						.getPkgFrwdChg()) * (selectedInvHdrVo.getBedRate() / 100)),
-				2);
-		Float edCessAmount = round(
-				(bedAmount * (selectedInvHdrVo.getEdCessRate() / 100)), 2);
-		Float shsCessAmount = round(
-				(bedAmount * (selectedInvHdrVo.getShsCess() / 100)), 2);
-
-		Float vatAmount = round(
-				((selectedInvHdrVo.getLiAmountTotal() + invLineItem.getAmount()
-						+ selectedInvHdrVo.getPkgFrwdChg() + bedAmount
-						+ edCessAmount + shsCessAmount) * (selectedInvHdrVo
-						.getVatOrCst() / 100)),
-				2);
+		
+		search(invLineItem.getInvId());
+		selectedInvHdrVo = searchList.get(0);
+		
+		Float taxTotal = taxCalculation();
 
 		session = cpool.getSession();
 		trans = session.beginTransaction();
-		hql = "update InvoiceHeaderHBC set grand_total = net_total_amount + :bedAmount + :edCessAmount + :shsCessAmount + :vatAmount + freight_insurance where invId = :inv_id ";
+		hql = "update InvoiceHeaderHBC set grand_total = net_total_amount + :taxTotal + freight_insurance where invId = :inv_id ";
 		query = session.createQuery(hql);
 		query.setInteger("inv_id", invLineItem.getInvId());
-		query.setFloat("bedAmount", bedAmount);
-		query.setFloat("edCessAmount", edCessAmount);
-		query.setFloat("shsCessAmount", shsCessAmount);
-		query.setFloat("vatAmount", vatAmount);
-
+		query.setFloat("taxTotal", taxTotal);
+		
 		result = query.executeUpdate();
 		trans.commit();
+		session.flush();
 		session.close();
 
 		System.out.println("No of rows updated" + result);
-		selectedInvId = selectedInvHdrVo.getInvId();
 		// remove this call
 		viewInvoice();
 	}
 
-	public void subtractLiAmount(InvoiceLineItemVO invLine) {
-		float liTotalAmount = invLine.getAmount();
+	public void subtractLiAmount() {
+		float liTotalAmount = invLineItem.getAmount();
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Transaction trans = session.beginTransaction();
@@ -672,6 +643,7 @@ public class InvoiceHeaderBean {
 		query.setInteger("inv_id", invLineItem.getInvId());
 		int result = query.executeUpdate();
 		trans.commit();
+		session.flush();
 		session.close();
 		session = cpool.getSession();
 		trans = session.beginTransaction();
@@ -680,43 +652,47 @@ public class InvoiceHeaderBean {
 		query.setInteger("inv_id", invLineItem.getInvId());
 		result = query.executeUpdate();
 		trans.commit();
+		session.flush();
 		session.close();
+		selectedInvId = invLineItem.getInvId();
+		search(selectedInvId);
 
-		search();
 		selectedInvHdrVo = searchList.get(0);
 
-		Float bedAmount = round(((selectedInvHdrVo.getLiAmountTotal() + selectedInvHdrVo
-				.getPkgFrwdChg()) * (selectedInvHdrVo.getBedRate() / 100)), 2);
-		Float edCessAmount = round((bedAmount
-				* (selectedInvHdrVo.getEdCessRate() / 100)),2);
-		Float shsCessAmount = round((bedAmount * (selectedInvHdrVo.getShsCess() / 100)),2);
-
-		Float vatAmount = round(((selectedInvHdrVo.getLiAmountTotal()
-				+ selectedInvHdrVo.getPkgFrwdChg() + bedAmount + edCessAmount + shsCessAmount)
-				* (selectedInvHdrVo.getVatOrCst() / 100)),2);
+		Float taxTotal = taxCalculation();
 
 		session = cpool.getSession();
 		trans = session.beginTransaction();
-		hql = "update InvoiceHeaderHBC set grand_total = net_total_amount + :bedAmount + :edCessAmount + :shsCessAmount + :vatAmount + freight_insurance where invId = :inv_id ";
+		hql = "update InvoiceHeaderHBC set grand_total = net_total_amount + :totalTax + freight_insurance where invId = :inv_id ";
 		query = session.createQuery(hql);
 		query.setInteger("inv_id", invLineItem.getInvId());
-		query.setFloat("bedAmount", bedAmount);
-		query.setFloat("edCessAmount", edCessAmount);
-		query.setFloat("shsCessAmount", shsCessAmount);
-		query.setFloat("vatAmount", vatAmount);
-
+		query.setFloat("totalTax", taxTotal);		
 		result = query.executeUpdate();
 		trans.commit();
+		session.flush();
 		session.close();
-
 		System.out.println("No of rows updated" + result);
-		selectedInvId = selectedInvHdrVo.getInvId();
 		// remove this call
 		viewInvoice();
 	}
 
-	public void taxCalculation() {
+	public Float taxCalculation() {
+		Float bedAmount = round(
+				((selectedInvHdrVo.getLiAmountTotal() + selectedInvHdrVo.getPkgFrwdChg()) * (selectedInvHdrVo
+						.getBedRate() / 100)), 2);
+		Float edCessAmount = round(
+				(bedAmount * (selectedInvHdrVo.getEdCessRate() / 100)), 2);
+		Float shsCessAmount = round(
+				(bedAmount * (selectedInvHdrVo.getShsCess() / 100)), 2);
 
+		Float vatAmount = round(
+				((selectedInvHdrVo.getLiAmountTotal()
+						+ selectedInvHdrVo.getPkgFrwdChg() + bedAmount
+						+ edCessAmount + shsCessAmount) * (selectedInvHdrVo
+						.getVatOrCst() / 100)),
+				2);
+		Float taxTotal = bedAmount + edCessAmount + shsCessAmount + vatAmount;
+		return taxTotal;
 	}
 
 	/*
@@ -749,7 +725,7 @@ public class InvoiceHeaderBean {
 				0 + PDPage.PAGE_SIZE_A4.getHeight() - index);
 	}
 
-	public ByteArrayOutputStream createPDF() throws IOException,
+	public ByteArrayOutputStream createPDF(boolean bill) throws IOException,
 			COSVisitorException {
 
 		PDDocument document;
@@ -764,11 +740,19 @@ public class InvoiceHeaderBean {
 		int yOffset = 0;
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
 
+		int pageCount;
 		// Creating Document
 		try {
+
+			if (bill) {
+				pageCount = 1;
+			} else {
+				pageCount = 6;
+			}
+
 			document = new PDDocument();
 			// Creating Pages
-			for (int i = 0; i < 6; i++) {
+			for (int i = 0; i < pageCount; i++) {
 
 				page = new PDPage(PDPage.PAGE_SIZE_A4);
 
@@ -801,32 +785,28 @@ public class InvoiceHeaderBean {
 							xOffset + width - 2, yOffset + height - 80);
 					if (i == 0) {
 						InputStream in = new FileInputStream(
-								new File(
-										"Uno.jpg"));
+								new File("Uno.jpg"));
 						PDJpeg img = new PDJpeg(document, in);
 						contentStream.drawXObject(img, xOffset + 7, yOffset
 								+ height - 75, 550, 70);
 					}
 					if (i == 1) {
 						InputStream in = new FileInputStream(
-								new File(
-										"Two.jpg"));
+								new File("Two.jpg"));
 						PDJpeg img = new PDJpeg(document, in);
 						contentStream.drawXObject(img, xOffset + 7, yOffset
 								+ height - 75, 550, 70);
 					}
 					if (i == 2) {
-						InputStream in = new FileInputStream(
-								new File(
-										"Three.jpg"));
+						InputStream in = new FileInputStream(new File(
+								"Three.jpg"));
 						PDJpeg img = new PDJpeg(document, in);
 						contentStream.drawXObject(img, xOffset + 7, yOffset
 								+ height - 75, 550, 70);
 					}
 					if (i > 2) {
-						InputStream in = new FileInputStream(
-								new File(
-										"Rest.jpg"));
+						InputStream in = new FileInputStream(new File(
+								"Rest.jpg"));
 						PDJpeg img = new PDJpeg(document, in);
 						contentStream.drawXObject(img, xOffset + 7, yOffset
 								+ height - 75, 550, 70);
@@ -1190,14 +1170,13 @@ public class InvoiceHeaderBean {
 					contentStream.drawString("ECC NO. :");
 					contentStream.endText();
 				}
-/*				contentStream.beginText();
-				contentStream.setFont(fontBold, 9);
-				contentStream.moveTextPositionByAmount(xOffset + 249, yOffset
-						+ height - 272);
-				contentStream.drawString(selectedInvHdrVo.getCustDetails()
-						.getEcc_no());
-				contentStream.endText();
-*/				if (printEntirePage) {
+				/*
+				 * contentStream.beginText(); contentStream.setFont(fontBold,
+				 * 9); contentStream.moveTextPositionByAmount(xOffset + 249,
+				 * yOffset + height - 272);
+				 * contentStream.drawString(selectedInvHdrVo.getCustDetails()
+				 * .getEcc_no()); contentStream.endText();
+				 */if (printEntirePage) {
 					contentStream.beginText();
 					contentStream.setFont(font, 9);
 					contentStream.moveTextPositionByAmount(xOffset + 198,
@@ -1205,14 +1184,13 @@ public class InvoiceHeaderBean {
 					contentStream.drawString("OCTROI/LBT NO. :");
 					contentStream.endText();
 				}
-/*				contentStream.beginText();
-				contentStream.setFont(fontBold, 9);
-				contentStream.moveTextPositionByAmount(xOffset + 281, yOffset
-						+ height - 285);
-				contentStream.drawString(selectedInvHdrVo.getCustDetails()
-						.getOctroi_no());
-				contentStream.endText();
-*/				if (printEntirePage) {
+				/*
+				 * contentStream.beginText(); contentStream.setFont(fontBold,
+				 * 9); contentStream.moveTextPositionByAmount(xOffset + 281,
+				 * yOffset + height - 285);
+				 * contentStream.drawString(selectedInvHdrVo.getCustDetails()
+				 * .getOctroi_no()); contentStream.endText();
+				 */if (printEntirePage) {
 					contentStream.beginText();
 					contentStream.setFont(font, 9);
 					contentStream.moveTextPositionByAmount(xOffset + 198,
@@ -1220,14 +1198,13 @@ public class InvoiceHeaderBean {
 					contentStream.drawString("CST NO. :");
 					contentStream.endText();
 				}
-/*				contentStream.beginText();
-				contentStream.setFont(fontBold, 9);
-				contentStream.moveTextPositionByAmount(xOffset + 249, yOffset
-						+ height - 298);
-				contentStream.drawString(selectedInvHdrVo.getCustDetails()
-						.getCst_no());
-				contentStream.endText();
-*/				if (printEntirePage) {
+				/*
+				 * contentStream.beginText(); contentStream.setFont(fontBold,
+				 * 9); contentStream.moveTextPositionByAmount(xOffset + 249,
+				 * yOffset + height - 298);
+				 * contentStream.drawString(selectedInvHdrVo.getCustDetails()
+				 * .getCst_no()); contentStream.endText();
+				 */if (printEntirePage) {
 					contentStream.beginText();
 					contentStream.setFont(font, 9);
 					contentStream.moveTextPositionByAmount(xOffset + 198,
@@ -1235,18 +1212,18 @@ public class InvoiceHeaderBean {
 					contentStream.drawString("VAT NO. :");
 					contentStream.endText();
 				}
-/*				contentStream.beginText();
-				contentStream.setFont(fontBold, 9);
-				contentStream.moveTextPositionByAmount(xOffset + 249, yOffset
-						+ height - 311);
-				contentStream.drawString(selectedInvHdrVo.getCustDetails()
-						.getBst_no());
-				contentStream.endText();
-*/
+				/*
+				 * contentStream.beginText(); contentStream.setFont(fontBold,
+				 * 9); contentStream.moveTextPositionByAmount(xOffset + 249,
+				 * yOffset + height - 311);
+				 * contentStream.drawString(selectedInvHdrVo.getCustDetails()
+				 * .getBst_no()); contentStream.endText();
+				 */
 				addressLineIndex = 0;
 				addressLinePadding = -13;
 
-				for (String addressLine : getFormattedAddress(selectedInvHdrVo.getDeliveryAddress(), 33)) {
+				for (String addressLine : getFormattedAddress(
+						selectedInvHdrVo.getDeliveryAddress(), 33)) {
 
 					contentStream.beginText();
 					contentStream.setFont(font, 9);
@@ -1270,7 +1247,11 @@ public class InvoiceHeaderBean {
 				contentStream.setFont(fontBold, 10);
 				contentStream.moveTextPositionByAmount(xOffset + 458 - 20,
 						yOffset + height - 194);
-				contentStream.drawString("");
+
+				if (printInvoiceNumberOnPDF)
+					contentStream.drawString(selectedInvHdrVo.getInvNo());
+				else
+					contentStream.drawString("");
 				contentStream.endText();
 				if (printEntirePage) {
 					contentStream.beginText();
@@ -1476,7 +1457,7 @@ public class InvoiceHeaderBean {
 					int lineItemPadding = -40;
 					String tempStr = invLineItemList.get(lineItemIndex)
 							.getPkgDesc();
-					
+
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 9);
 					contentStream.moveTextPositionByAmount(xOffset + 5, yOffset
@@ -1487,12 +1468,10 @@ public class InvoiceHeaderBean {
 					getPartDetails(invLineItemList.get(lineItemIndex)
 							.getPartId());
 					List<String> partDetails = getWrappedStringList(
-							partVo.getPartName()
-									+ " "
-									+ tempStr, 40);
+							partVo.getPartName() + " " + tempStr, 40);
 					int partLineIndex = 0;
 					int partLinePadding = -13;
-					for (String str : partDetails) {	
+					for (String str : partDetails) {
 
 						contentStream.beginText();
 						contentStream.setFont(fontBold, 9);
@@ -1505,15 +1484,38 @@ public class InvoiceHeaderBean {
 						partLineIndex++;
 					}
 
+					List<String> noOfPartsLines = getWrappedStringList(
+							invLineItemList.get(lineItemIndex).getNoOfPkgs(), 7);
+					int noOfPackagesIndex = 0;
+					int noOfPackagesPadding = -13;
+					for (String str : noOfPartsLines) {
+
+						contentStream.beginText();
+						contentStream.setFont(fontBold, 9);
+						int woodenPadding = 0;
+						if (noOfPackagesIndex == 0)
+							woodenPadding = 9;
+						else
+							woodenPadding = 4;
+						contentStream.moveTextPositionByAmount(xOffset + 253
+								+ woodenPadding, yOffset + height - 395
+								+ (lineItemIndex * lineItemPadding)
+								+ (noOfPackagesIndex * noOfPackagesPadding));
+						contentStream.drawString(str);
+						contentStream.endText();
+						noOfPackagesIndex++;
+					}
+
 					partVo = new PartMasterVO();
 
-					contentStream.beginText();
-					contentStream.setFont(fontBold, 9);
-					contentStream.moveTextPositionByAmount(xOffset + 253 + 9,
-							yOffset + height - 395
-									+ (lineItemIndex * lineItemPadding));
-					contentStream.drawString(invLineItemList.get(lineItemIndex).getNoOfPkgs());
-					contentStream.endText();
+					// contentStream.beginText();
+					// contentStream.setFont(fontBold, 9);
+					// contentStream.moveTextPositionByAmount(xOffset + 253 + 9,
+					// yOffset + height - 395
+					// + (lineItemIndex * lineItemPadding));
+					// contentStream.drawString(invLineItemList.get(lineItemIndex)
+					// .getNoOfPkgs());
+					// contentStream.endText();
 
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 9);
@@ -1731,27 +1733,31 @@ public class InvoiceHeaderBean {
 							.drawString("Total Central Excise Duty Paid (in words): ");
 					contentStream.endText();
 				}
-				Float bedAmount = round(((selectedInvHdrVo.getLiAmountTotal()
-						+ invLineItem.getAmount() + selectedInvHdrVo
-							.getPkgFrwdChg())
-						* (selectedInvHdrVo.getBedRate() / 100)),2);
-				Float edCessAmount = round((bedAmount
-						* (selectedInvHdrVo.getEdCessRate() / 100)),2);
-				Float shsCessAmount = round((bedAmount
-						* (selectedInvHdrVo.getShsCess() / 100)),2);
+				Float bedAmount = round(
+						((selectedInvHdrVo.getLiAmountTotal()
+								+ invLineItem.getAmount() + selectedInvHdrVo.getPkgFrwdChg()) * (selectedInvHdrVo
+								.getBedRate() / 100)), 2);
+				Float edCessAmount = round(
+						(bedAmount * (selectedInvHdrVo.getEdCessRate() / 100)),
+						2);
+				Float shsCessAmount = round(
+						(bedAmount * (selectedInvHdrVo.getShsCess() / 100)), 2);
 
-				Float vatAmount = round(((selectedInvHdrVo.getLiAmountTotal()
-						+ invLineItem.getAmount()
-						+ selectedInvHdrVo.getPkgFrwdChg() + bedAmount
-						+ edCessAmount + shsCessAmount)
-						* (selectedInvHdrVo.getVatOrCst() / 100)),2);
+				Float vatAmount = round(
+						((selectedInvHdrVo.getLiAmountTotal()
+								+ invLineItem.getAmount()
+								+ selectedInvHdrVo.getPkgFrwdChg() + bedAmount
+								+ edCessAmount + shsCessAmount) * (selectedInvHdrVo
+								.getVatOrCst() / 100)), 2);
 
 				/*
 				 * int dollars = (int) Math.floor(money); double cents = money -
 				 * dollars; int centsAsInt = (int) (100 * cents);
 				 */
-				int n = (int) round ((bedAmount + edCessAmount + shsCessAmount), 2);
-				float nPaise = round ((bedAmount + edCessAmount + shsCessAmount), 2) - n;
+				int n = (int) round((bedAmount + edCessAmount + shsCessAmount),
+						2);
+				float nPaise = round(
+						(bedAmount + edCessAmount + shsCessAmount), 2) - n;
 				int paiseAsInt = (int) (100 * nPaise);
 
 				StringBuilder exciseInWords = new StringBuilder();
@@ -1774,18 +1780,37 @@ public class InvoiceHeaderBean {
 					exciseInWords.append(" Paise");
 				}
 
-				contentStream.beginText();
-				contentStream.setFont(font, 8);
-				contentStream.moveTextPositionByAmount(xOffset + 160, yOffset
-						+ height - 612);
-				contentStream.drawString(exciseInWords.toString() + " Only"); // Data
-				contentStream.endText();
-				contentStream.beginText();
-				contentStream.setFont(font, 8);
-				contentStream.moveTextPositionByAmount(xOffset + 160, yOffset
-						+ height - 622);
-				contentStream.drawString("");
-				contentStream.endText();
+				exciseInWords.append(" Only");
+
+				List<String> exciseLines = getWrappedStringList(
+						exciseInWords.toString(), 70);
+				int exciseIndex = 0;
+				int excisePadding = -10;
+				for (String str : exciseLines) {
+
+					contentStream.beginText();
+					contentStream.setFont(font, 8);
+					contentStream.moveTextPositionByAmount(xOffset + 160,
+							yOffset + height - 612
+									+ (exciseIndex * excisePadding));
+					contentStream.drawString(str);
+					contentStream.endText();
+					exciseIndex++;
+				}
+
+				// contentStream.beginText();
+				// contentStream.setFont(font, 8);
+				// contentStream.moveTextPositionByAmount(xOffset + 160, yOffset
+				// + height - 612);
+				// contentStream.drawString(exciseInWords.toString() + " Only");
+				// // Data
+				// contentStream.endText();
+				// contentStream.beginText();
+				// contentStream.setFont(font, 8);
+				// contentStream.moveTextPositionByAmount(xOffset + 160, yOffset
+				// + height - 622);
+				// contentStream.drawString("");
+				// contentStream.endText();
 				if (printEntirePage) {
 					contentStream.beginText();
 					contentStream.setFont(font, 8);
@@ -1795,7 +1820,8 @@ public class InvoiceHeaderBean {
 					contentStream.endText();
 				}
 
-				n = new Integer((int) round (selectedInvHdrVo.getGrandTotal(), 0));
+				n = new Integer(
+						(int) round(selectedInvHdrVo.getGrandTotal(), 0));
 				StringBuilder amountInWords = new StringBuilder();
 				amountInWords.append(pw((n / 1000000000), " Hundred"));
 
@@ -1811,7 +1837,7 @@ public class InvoiceHeaderBean {
 
 				contentStream.beginText();
 				contentStream.setFont(font, 8);
-				contentStream.moveTextPositionByAmount(xOffset + 160, yOffset
+				contentStream.moveTextPositionByAmount(xOffset + 100, yOffset
 						+ height - 634);
 				contentStream.drawString(amountInWords.toString() + " Only"); // Data
 				contentStream.endText();
@@ -1958,9 +1984,10 @@ public class InvoiceHeaderBean {
 							- 121 - 11 - 2, yOffset + height - 680);
 					contentStream.drawString("B.E.D.");
 					contentStream.endText();
-					
+
 					// Right Justifying %s.
-					String bedRateString = Float.toString(selectedInvHdrVo.getBedRate());
+					String bedRateString = Float.toString(selectedInvHdrVo
+							.getBedRate());
 					bedRateString = bedRateString.concat("%");
 					float bedRateStringWidth = fontBold
 							.getStringWidth(bedRateString) / 1000 * 8;
@@ -1978,7 +2005,8 @@ public class InvoiceHeaderBean {
 					contentStream.drawString("Ed. Cess");
 					contentStream.endText();
 
-					String edCessString = Float.toString(selectedInvHdrVo.getEdCessRate());
+					String edCessString = Float.toString(selectedInvHdrVo
+							.getEdCessRate());
 					edCessString = edCessString.concat("%");
 					float edCessStringWidth = fontBold
 							.getStringWidth(edCessString) / 1000 * 8;
@@ -1996,8 +2024,8 @@ public class InvoiceHeaderBean {
 					contentStream.drawString("SHSCess");
 					contentStream.endText();
 
-
-					String shsCessString = Float.toString(selectedInvHdrVo.getShsCess());
+					String shsCessString = Float.toString(selectedInvHdrVo
+							.getShsCess());
 					shsCessString = shsCessString.concat("%");
 					float shsCessStringWidth = fontBold
 							.getStringWidth(shsCessString) / 1000 * 8;
@@ -2021,7 +2049,8 @@ public class InvoiceHeaderBean {
 					contentStream.drawString("VAT/CST");
 					contentStream.endText();
 
-					String vatCstString = Float.toString(selectedInvHdrVo.getVatOrCst());
+					String vatCstString = Float.toString(selectedInvHdrVo
+							.getVatOrCst());
 					vatCstString = vatCstString.concat("%");
 					float vatCstStringWidth = fontBold
 							.getStringWidth(vatCstString) / 1000 * 8;
@@ -2052,8 +2081,8 @@ public class InvoiceHeaderBean {
 					contentStream.endText();
 				}
 
-				String pkgFrwdAmountString = Float.toString(round (selectedInvHdrVo
-						.getPkgFrwdChg(),2));
+				String pkgFrwdAmountString = Float.toString(round(
+						selectedInvHdrVo.getPkgFrwdChg(), 2));
 				if (pkgFrwdAmountString.endsWith(".0")) {
 					pkgFrwdAmountString = pkgFrwdAmountString.replaceAll(
 							"\\.0", "\\.00");
@@ -2070,10 +2099,12 @@ public class InvoiceHeaderBean {
 
 				System.out.print("After conversion number in words is :");
 
-				Float netAssassableVal = selectedInvHdrVo.getPkgFrwdChg() + selectedInvHdrVo.getLiAmountTotal()
+				Float netAssassableVal = selectedInvHdrVo.getPkgFrwdChg()
+						+ selectedInvHdrVo.getLiAmountTotal()
 						+ invLineItem.getAmount();
 
-				String assessableAmountString = Float.toString(round (netAssassableVal,2));
+				String assessableAmountString = Float.toString(round(
+						netAssassableVal, 2));
 				if (assessableAmountString.endsWith(".0")) {
 					assessableAmountString = assessableAmountString.replaceAll(
 							"\\.0", "\\.00");
@@ -2103,7 +2134,8 @@ public class InvoiceHeaderBean {
 				contentStream.drawString(bedAmountString);
 				contentStream.endText();
 
-				String edCessAmountString = Float.toString(round (edCessAmount,2));
+				String edCessAmountString = Float.toString(round(edCessAmount,
+						2));
 				if (edCessAmountString.endsWith(".0")) {
 					edCessAmountString = edCessAmountString.replaceAll("\\.0",
 							"");
@@ -2118,7 +2150,8 @@ public class InvoiceHeaderBean {
 				contentStream.drawString(edCessAmountString);
 				contentStream.endText();
 
-				String shsCessAmountString = Float.toString(round (shsCessAmount,2));
+				String shsCessAmountString = Float.toString(round(
+						shsCessAmount, 2));
 				if (shsCessAmountString.endsWith(".0")) {
 					shsCessAmountString = shsCessAmountString.replaceAll(
 							"\\.0", "\\.00");
@@ -2132,10 +2165,12 @@ public class InvoiceHeaderBean {
 						- shsCessAmountStringWidth, yOffset + height - 725);
 				contentStream.drawString(shsCessAmountString);
 				contentStream.endText();
-				
-				Float subTotal = netAssassableVal + bedAmount + edCessAmount + shsCessAmount;
 
-				String subTotalAmountString = Float.toString(round(subTotal, 2));
+				Float subTotal = netAssassableVal + bedAmount + edCessAmount
+						+ shsCessAmount;
+
+				String subTotalAmountString = Float
+						.toString(round(subTotal, 2));
 				if (subTotalAmountString.endsWith(".0")) {
 					subTotalAmountString = subTotalAmountString.replaceAll(
 							"\\.0", "\\.00");
@@ -2165,8 +2200,8 @@ public class InvoiceHeaderBean {
 				contentStream.drawString(vatCstAmountString);
 				contentStream.endText();
 
-				String frtInsuranceAmountString = Float
-						.toString(round (selectedInvHdrVo.getFreightInsurance(),2));
+				String frtInsuranceAmountString = Float.toString(round(
+						selectedInvHdrVo.getFreightInsurance(), 2));
 				if (frtInsuranceAmountString.endsWith(".0")) {
 					frtInsuranceAmountString = frtInsuranceAmountString
 							.replaceAll("\\.0", "\\.00");
@@ -2183,8 +2218,8 @@ public class InvoiceHeaderBean {
 				contentStream.drawString(frtInsuranceAmountString);
 				contentStream.endText();
 
-				String grandTotalAmountString = Float.toString(round (selectedInvHdrVo
-						.getGrandTotal(),0));
+				String grandTotalAmountString = Float.toString(round(
+						selectedInvHdrVo.getGrandTotal(), 0));
 				if (grandTotalAmountString.endsWith(".0")) {
 					grandTotalAmountString = grandTotalAmountString.replaceAll(
 							"\\.0", "\\.00");
@@ -2395,7 +2430,7 @@ public class InvoiceHeaderBean {
 		try {
 
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			output = createPDF();
+			output = createPDF(false);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			HttpServletResponse response = (HttpServletResponse) fc
 					.getExternalContext().getResponse();
@@ -2416,11 +2451,11 @@ public class InvoiceHeaderBean {
 	}
 
 	public void printBill() {
-		setPrintEntirePage(false);
+		setPrintEntirePage(true);
 		try {
 
 			ByteArrayOutputStream output = new ByteArrayOutputStream();
-			output = createPDF();
+			output = createPDF(true);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			HttpServletResponse response = (HttpServletResponse) fc
 					.getExternalContext().getResponse();
@@ -2457,20 +2492,21 @@ public class InvoiceHeaderBean {
 		return result;
 	}
 
-	public List<String> partNameAutoComplete (String prefix) {
-		List<String> result = new ArrayList<String> ();
+	public List<String> partNameAutoComplete(String prefix) {
+		List<String> result = new ArrayList<String>();
 		ConnectionPool cpool = ConnectionPool.getInstance();
-		Session session = cpool.getSession ();
-		Query hibernateQuery = session.createQuery ("from PartMasterHBC as m where part_name like '%"
-				+ prefix + "%'");
-		List<PartMasterHBC> results = hibernateQuery.list ();
-		for (int i = 0; i < results.size (); i++) {
-			result.add (results.get(i).getPartName());
+		Session session = cpool.getSession();
+		Query hibernateQuery = session
+				.createQuery("from PartMasterHBC as m where part_name like '%"
+						+ prefix + "%'");
+		List<PartMasterHBC> results = hibernateQuery.list();
+		for (int i = 0; i < results.size(); i++) {
+			result.add(results.get(i).getPartName());
 		}
-		session.close ();
+		session.close();
 		return result;
 	}
- 	
+
 	public List<String> vendorCodeAutoComplete(String prefix) {
 		List<String> result = new ArrayList<String>();
 
@@ -2528,7 +2564,8 @@ public class InvoiceHeaderBean {
 		} else {
 			while (bigString.length() > characters) {
 				String temp = bigString.substring(0, characters);
-				temp = temp.substring(0, temp.lastIndexOf(" "));
+				if (temp.indexOf(" ") > 0)
+					temp = temp.substring(0, temp.lastIndexOf(" "));
 				temp = temp.replaceAll("\\(", "\\\\(");
 				temp = temp.replaceAll("\\)", "\\\\)");
 				temp = temp.replaceAll("\\+", "\\\\+");
@@ -2538,7 +2575,8 @@ public class InvoiceHeaderBean {
 				temp = temp.replaceAll("\\\\\\+", "+");
 				returnValue.add(temp);
 			}
-			returnValue.add(bigString.replaceAll("\\\\\\(", "(").replaceAll("\\\\\\)", ")").replaceAll("\\\\\\+", "+"));
+			returnValue.add(bigString.replaceAll("\\\\\\(", "(")
+					.replaceAll("\\\\\\)", ")").replaceAll("\\\\\\+", "+"));
 		}
 		return returnValue;
 	}
@@ -2551,10 +2589,11 @@ public class InvoiceHeaderBean {
 		Transaction trans = session.beginTransaction();
 		InvoiceHeaderHBC invHeaderHBC = new InvoiceHeaderHBC(selectedInvHdrVo);
 		session.saveOrUpdate(invHeaderHBC);
-		selectedInvId = invHeaderHBC.getInvId();
+		// selectedInvId = invHeaderHBC.getInvId();
 		trans.commit();
+		session.flush();
 		session.close();
-		selectedInvHdrVo.setInvId(selectedInvId);
+		selectedInvHdrVo.setInvId(invHeaderHBC.getInvId());
 		headerSaved = true;
 		editFlag = true;
 	}
@@ -2563,21 +2602,44 @@ public class InvoiceHeaderBean {
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Transaction trans = session.beginTransaction();
-		subtractLiAmount(invLineItem);
+		subtractLiAmount();
 		InvoiceLineItemHBC invLineItemHBC = new InvoiceLineItemHBC(invLineItem);
 		session.delete(invLineItemHBC);
 		session.flush();
 		trans.commit();
+		session.flush();
 		session.close();
 		invLineItem = new InvoiceLineItemVO();
 		return getLineItemsForInvId();
 	}
 
 	public static float round(float value, int places) {
-	    if (places < 0) throw new IllegalArgumentException();
+		if (places < 0)
+			throw new IllegalArgumentException();
 
 		BigDecimal bd = new BigDecimal(value);
 		bd = bd.setScale(places, RoundingMode.HALF_UP);
 		return bd.floatValue();
+	}
+
+	public void getGradesForPart(AjaxBehaviorEvent event) {
+		PartMasterHandler partMasterHandler = new PartMasterHandler();
+		selectedPartGradeMapping = new ArrayList<PartGradeMappingVO>();
+		String partName = (String) ((UIOutput) event.getSource()).getValue();
+		int partId = partMasterHandler.getPartIdByName(partName);
+		partVo = new PartMasterVO();
+		partVo.setPartId(partId);
+		partVo.setPartName(partName);
+		partMasterHandler.getGradesForPart(partVo);
+		// incorrect grades are coming for part
+		selectedPartGradeMapping = partVo.getPartGradeMapping();
+	}
+
+	public boolean isPrintInvoiceNumberOnPDF() {
+		return printInvoiceNumberOnPDF;
+	}
+
+	public void setPrintInvoiceNumberOnPDF(boolean printInvoiceNumberOnPDF) {
+		this.printInvoiceNumberOnPDF = printInvoiceNumberOnPDF;
 	}
 }
