@@ -296,13 +296,11 @@ public class InvoiceHeaderBean {
 	public String search() {
 		
 		ConnectionPool cpool = ConnectionPool.getInstance();
-		if (selectedInvNo == null) {
 			try {
-			selectedInvNo = Integer.parseInt(selectedInvHdrVo.getInvNo());
+				selectedInvNo = Integer.parseInt(selectedInvHdrVo.getInvNo());
 			} catch (NumberFormatException e) {
 				selectedInvNo = 0;
 			}
-		}
 		int customer_id = 0;
 		if (selectedInvHdrVo.getCustDetails() != null) {
 			if (selectedInvHdrVo.getCustDetails().getCustomer_id() != null)
@@ -443,6 +441,9 @@ public class InvoiceHeaderBean {
 
 	public void getCustomerData(ValueChangeEvent event) {
 		String custName = (String) event.getNewValue();
+		if (custName.isEmpty()){
+			return;
+		}
 		CustomerVO tempCustVo = populateCustomerDetails(custName);
 		selectedInvHdrVo.setCustDetails(tempCustVo);
 	}
@@ -450,6 +451,9 @@ public class InvoiceHeaderBean {
 	public void getCustomerDataUsingVendorCode(ValueChangeEvent event) {
 		CustomerHandler custHandler = new CustomerHandler();
 		String vendorCode = (String) event.getNewValue();
+		if (vendorCode.isEmpty()) {
+			return;
+		}
 		//CustomerVO tempCustVo = populateCustomerDetailsUsingVendorCode(vendorCode);
 		CustomerVO tempCustVo = custHandler.populateCustomerDetailsUsingVendorCode(vendorCode);
 		selectedInvHdrVo.setCustDetails(tempCustVo);
