@@ -1,0 +1,6 @@
+# Initialized empty grades to 0
+# Initialized empty invoice numbers to 0
+
+update inv_line_item set grade_id = 0 where grade_id is NULL;
+update inv_hdr set inv_no = 9999 where inv_no is null;
+commit;
