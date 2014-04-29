@@ -83,6 +83,8 @@ public class InvoiceHeaderBean {
 	private String incomeTaxPan;
 	private String searchCustomer;
 
+	static final Integer lineLimitOnPdf = 16;
+
 	public String getSearchCustomer() {
 		return searchCustomer;
 	}
@@ -261,11 +263,11 @@ public class InvoiceHeaderBean {
 		searchList = new ArrayList<InvoiceHeaderVO>();
 		invLineItem = new InvoiceLineItemVO();
 		partVo = new PartMasterVO();
-		//readProperties();
+		// readProperties();
 		readProps();
 	}
-	
-	public void readProps(){
+
+	public void readProps() {
 		ApplicationHepler.readProperties();
 		vendorCode = ApplicationHepler.getVendorCode();
 		exciseCode = ApplicationHepler.getExciseCode();
@@ -294,34 +296,35 @@ public class InvoiceHeaderBean {
 
 	@SuppressWarnings("unchecked")
 	public String search() {
-		
+
 		ConnectionPool cpool = ConnectionPool.getInstance();
-			try {
-				selectedInvNo = Integer.parseInt(selectedInvHdrVo.getInvNo());
-			} catch (NumberFormatException e) {
-				selectedInvNo = 0;
-			}
+		try {
+			selectedInvNo = Integer.parseInt(selectedInvHdrVo.getInvNo());
+		} catch (NumberFormatException e) {
+			selectedInvNo = 0;
+		}
 		int customer_id = 0;
 		if (selectedInvHdrVo.getCustDetails() != null) {
 			if (selectedInvHdrVo.getCustDetails().getCustomer_id() != null)
-				customer_id = selectedInvHdrVo.getCustDetails().getCustomer_id();
+				customer_id = selectedInvHdrVo.getCustDetails()
+						.getCustomer_id();
 		}
-		
+
 		Session session = cpool.getSession();
-		StringBuilder query = new StringBuilder ("from InvoiceHeaderHBC as m where (m.invNo= :invNo and :invNo !=0 ) or (:invNo = 0) ");
-		
+		StringBuilder query = new StringBuilder(
+				"from InvoiceHeaderHBC as m where (m.invNo= :invNo and :invNo !=0 ) or (:invNo = 0) ");
+
 		if (customer_id != 0) {
-			query.append (" and m.customerId= :custId ");
+			query.append(" and m.customerId= :custId ");
 		}
 
 		query.append(" order by m.invId");
-		
-		Query hibernateQuery = session
-				.createQuery(query.toString());
+
+		Query hibernateQuery = session.createQuery(query.toString());
 		hibernateQuery.setInteger("invNo", selectedInvNo);
 		if (customer_id != 0)
 			hibernateQuery.setInteger("custId", customer_id);
-		
+
 		java.util.List<InvoiceHeaderHBC> results = hibernateQuery.list();
 		searchList = new ArrayList<InvoiceHeaderVO>();
 		for (int i = 0; i < results.size(); i++) {
@@ -441,7 +444,7 @@ public class InvoiceHeaderBean {
 
 	public void getCustomerData(ValueChangeEvent event) {
 		String custName = (String) event.getNewValue();
-		if (custName.isEmpty()){
+		if (custName.isEmpty()) {
 			return;
 		}
 		CustomerVO tempCustVo = populateCustomerDetails(custName);
@@ -454,8 +457,10 @@ public class InvoiceHeaderBean {
 		if (vendorCode.isEmpty()) {
 			return;
 		}
-		//CustomerVO tempCustVo = populateCustomerDetailsUsingVendorCode(vendorCode);
-		CustomerVO tempCustVo = custHandler.populateCustomerDetailsUsingVendorCode(vendorCode);
+		// CustomerVO tempCustVo =
+		// populateCustomerDetailsUsingVendorCode(vendorCode);
+		CustomerVO tempCustVo = custHandler
+				.populateCustomerDetailsUsingVendorCode(vendorCode);
 		selectedInvHdrVo.setCustDetails(tempCustVo);
 	}
 
@@ -483,38 +488,29 @@ public class InvoiceHeaderBean {
 		this.incomeTaxPan = incomeTaxPan;
 	}
 
-	/*public PartMasterVO populatePartMaster(String partName) {
-		ConnectionPool cpool = ConnectionPool.getInstance();
-		Session session = cpool.getSession();
-		Query hibernateQuery = session
-				.createQuery("from PartMasterHBC as m where part_name =:part_name");
-		hibernateQuery.setString("part_name", partName);
-		java.util.List<PartMasterHBC> results = hibernateQuery.list();
-
-		PartMasterVO tempPartVo = null;
-		if (results.size() > 0 && results.size() < 2) {
-			tempPartVo = new PartMasterVO(results.get(0));
-		}
-		session.close();
-		return tempPartVo;
-	}
-
-	public PartMasterVO populatePartMaster(int partId) {
-		ConnectionPool cpool = ConnectionPool.getInstance();
-		Session session = cpool.getSession();
-		Query hibernateQuery = session
-				.createQuery("from PartMasterHBC as m where part_id =:part_id");
-		hibernateQuery.setInteger("part_id", partId);
-		java.util.List<PartMasterHBC> results = hibernateQuery.list();
-
-		PartMasterVO tempPartVo = null;
-		if (results.size() > 0 && results.size() < 2) {
-			tempPartVo = new PartMasterVO(results.get(0));
-		}
-		session.close();
-		return tempPartVo;
-	}
-*/
+	/*
+	 * public PartMasterVO populatePartMaster(String partName) { ConnectionPool
+	 * cpool = ConnectionPool.getInstance(); Session session =
+	 * cpool.getSession(); Query hibernateQuery = session
+	 * .createQuery("from PartMasterHBC as m where part_name =:part_name");
+	 * hibernateQuery.setString("part_name", partName);
+	 * java.util.List<PartMasterHBC> results = hibernateQuery.list();
+	 * 
+	 * PartMasterVO tempPartVo = null; if (results.size() > 0 && results.size()
+	 * < 2) { tempPartVo = new PartMasterVO(results.get(0)); } session.close();
+	 * return tempPartVo; }
+	 * 
+	 * public PartMasterVO populatePartMaster(int partId) { ConnectionPool cpool
+	 * = ConnectionPool.getInstance(); Session session = cpool.getSession();
+	 * Query hibernateQuery = session
+	 * .createQuery("from PartMasterHBC as m where part_id =:part_id");
+	 * hibernateQuery.setInteger("part_id", partId);
+	 * java.util.List<PartMasterHBC> results = hibernateQuery.list();
+	 * 
+	 * PartMasterVO tempPartVo = null; if (results.size() > 0 && results.size()
+	 * < 2) { tempPartVo = new PartMasterVO(results.get(0)); } session.close();
+	 * return tempPartVo; }
+	 */
 	public void getPartDetails(String partName) {
 		PartMasterHandler partMasterHanlder = new PartMasterHandler();
 		partVo = partMasterHanlder.populatePartMaster(partName);
@@ -526,6 +522,25 @@ public class InvoiceHeaderBean {
 	}
 
 	public String addLineItem() {
+
+		/*
+		 * We check whether this line item will fit on the PDF or not! If not we
+		 * will not add it and return back.
+		 */
+		List<String> partDetails = getWrappedStringList(partVo.getPartName()
+				+ " " + invLineItem.getPkgDesc(), 40);
+
+		if (selectedInvHdrVo.getLinesOfLineItem() + partDetails.size() > lineLimitOnPdf) {
+			/*
+			 * Add error msg on page.
+			 */
+			System.out.println("ERROR: LINEITEM WILL NOT FIT ON PDF.");
+			return getLineItemsForInvId();
+		}
+
+		selectedInvHdrVo.setLinesOfLineItem(selectedInvHdrVo
+				.getLinesOfLineItem() + partDetails.size());
+
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Transaction trans = session.beginTransaction();
@@ -577,6 +592,15 @@ public class InvoiceHeaderBean {
 			tempInvLI.setSerialNo(results.get(i).getSerialNo());
 			tempInvLI.setNoOfPkgs(results.get(i).getNoOfPkgs());
 			tempInvLI.setGradeId(results.get(i).getGradeId());
+
+			getPartDetails(tempInvLI.getPartId());
+
+			List<String> partDetails = getWrappedStringList(
+					partVo.getPartName() + " " + tempInvLI.getPkgDesc(), 40);
+
+			selectedInvHdrVo.setLinesOfLineItem(selectedInvHdrVo
+					.getLinesOfLineItem() + partDetails.size());
+
 			invLineItemList.add(tempInvLI);
 		}
 		System.out.println(getSearchList().size());
@@ -637,10 +661,10 @@ public class InvoiceHeaderBean {
 		trans.commit();
 		session.flush();
 		session.close();
-		
+
 		search(invLineItem.getInvId());
 		selectedInvHdrVo = searchList.get(0);
-		
+
 		Float taxTotal = taxCalculation();
 
 		session = cpool.getSession();
@@ -649,7 +673,7 @@ public class InvoiceHeaderBean {
 		query = session.createQuery(hql);
 		query.setInteger("inv_id", invLineItem.getInvId());
 		query.setFloat("taxTotal", taxTotal);
-		
+
 		result = query.executeUpdate();
 		trans.commit();
 		session.flush();
@@ -694,7 +718,7 @@ public class InvoiceHeaderBean {
 		hql = "update InvoiceHeaderHBC set grand_total = net_total_amount + :totalTax + freight_insurance where invId = :inv_id ";
 		query = session.createQuery(hql);
 		query.setInteger("inv_id", invLineItem.getInvId());
-		query.setFloat("totalTax", taxTotal);		
+		query.setFloat("totalTax", taxTotal);
 		result = query.executeUpdate();
 		trans.commit();
 		session.flush();
@@ -1480,16 +1504,21 @@ public class InvoiceHeaderBean {
 				}
 
 				// Line Items // Data
+				float currentLineOnPdf = 0;
+				float topLineOfCurrentLineItemOnPdf = 0;
+				int lineItemPadding = -13;
+				float yOffsetForLineItemText = yOffset + height - 395;
 				for (int lineItemIndex = 0; lineItemIndex < invLineItemList
 						.size(); lineItemIndex++) {
-					int lineItemPadding = -40;
+					
+					
+					
 					String tempStr = invLineItemList.get(lineItemIndex)
 							.getPkgDesc();
 
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 9);
-					contentStream.moveTextPositionByAmount(xOffset + 5, yOffset
-							+ height - 395 + (lineItemIndex * lineItemPadding));
+					contentStream.moveTextPositionByAmount(xOffset + 5,  (yOffsetForLineItemText + topLineOfCurrentLineItemOnPdf * lineItemPadding));
 					contentStream.drawString(Integer.toString(invLineItemList
 							.get(lineItemIndex).getSerialNo()));
 					contentStream.endText();
@@ -1504,9 +1533,7 @@ public class InvoiceHeaderBean {
 						contentStream.beginText();
 						contentStream.setFont(fontBold, 9);
 						contentStream.moveTextPositionByAmount(xOffset + 40,
-								yOffset + height - 395
-										+ (lineItemIndex * lineItemPadding)
-										+ (partLineIndex * partLinePadding));
+								yOffsetForLineItemText + ((currentLineOnPdf + partLineIndex) * lineItemPadding));
 						contentStream.drawString(str);
 						contentStream.endText();
 						partLineIndex++;
@@ -1526,12 +1553,16 @@ public class InvoiceHeaderBean {
 						else
 							woodenPadding = 4;
 						contentStream.moveTextPositionByAmount(xOffset + 253
-								+ woodenPadding, yOffset + height - 395
-								+ (lineItemIndex * lineItemPadding)
-								+ (noOfPackagesIndex * noOfPackagesPadding));
+								+ woodenPadding, yOffsetForLineItemText + ((currentLineOnPdf + noOfPackagesIndex) * lineItemPadding));
 						contentStream.drawString(str);
 						contentStream.endText();
 						noOfPackagesIndex++;
+					}
+					
+					if (partLineIndex > noOfPackagesIndex) {
+						currentLineOnPdf += partLineIndex;
+					} else {
+						currentLineOnPdf += noOfPackagesIndex;
 					}
 
 					partVo = new PartMasterVO();
@@ -1548,8 +1579,7 @@ public class InvoiceHeaderBean {
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 9);
 					contentStream.moveTextPositionByAmount(
-							xOffset + 253 + 9 + 45, yOffset + height - 395
-									+ (lineItemIndex * lineItemPadding));
+							xOffset + 253 + 9 + 45, yOffsetForLineItemText + topLineOfCurrentLineItemOnPdf * lineItemPadding);
 					contentStream.drawString(Integer.toString(invLineItemList
 							.get(lineItemIndex).getQuantityNo()));
 					contentStream.endText();
@@ -1557,8 +1587,7 @@ public class InvoiceHeaderBean {
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 9);
 					contentStream.moveTextPositionByAmount(
-							xOffset + 253 + 9 + 90, yOffset + height - 395
-									+ (lineItemIndex * lineItemPadding));
+							xOffset + 253 + 9 + 90, yOffsetForLineItemText + topLineOfCurrentLineItemOnPdf * lineItemPadding);
 					contentStream.drawString(Float.toString(invLineItemList
 							.get(lineItemIndex).getQuantityKgs()));
 					contentStream.endText();
@@ -1566,8 +1595,7 @@ public class InvoiceHeaderBean {
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 9);
 					contentStream.moveTextPositionByAmount(
-							xOffset + 253 + 9 + 130, yOffset + height - 395
-									+ (lineItemIndex * lineItemPadding));
+							xOffset + 253 + 9 + 130, yOffsetForLineItemText + topLineOfCurrentLineItemOnPdf * lineItemPadding);
 					contentStream.drawString(invLineItemList.get(lineItemIndex)
 							.getUnit());
 					contentStream.endText();
@@ -1582,8 +1610,7 @@ public class InvoiceHeaderBean {
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset + width - 15
-							- rateStringWidth, yOffset + height - 395
-							+ (lineItemIndex * lineItemPadding));
+							- rateStringWidth, yOffsetForLineItemText + topLineOfCurrentLineItemOnPdf * lineItemPadding);
 					contentStream.drawString(rateString);
 					contentStream.endText();
 
@@ -1599,10 +1626,11 @@ public class InvoiceHeaderBean {
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset + width - 82
-							- totalAmountStringWidth, yOffset + height - 395
-							+ (lineItemIndex * lineItemPadding));
+							- totalAmountStringWidth, yOffsetForLineItemText + topLineOfCurrentLineItemOnPdf * lineItemPadding);
 					contentStream.drawString(totalAmountString);
 					contentStream.endText();
+					
+					topLineOfCurrentLineItemOnPdf = currentLineOnPdf;
 				}
 
 				// Line Items Over.
@@ -2464,8 +2492,10 @@ public class InvoiceHeaderBean {
 					.getExternalContext().getResponse();
 
 			response.addHeader("Content-Type", "application/force-download");
-			response.addHeader("Content-Disposition",
-					"attachment; filename=\"Invoice_" + selectedInvHdrVo.getInvId() + ".pdf\"");
+			response.addHeader(
+					"Content-Disposition",
+					"attachment; filename=\"Invoice_"
+							+ selectedInvHdrVo.getInvId() + ".pdf\"");
 			response.getOutputStream().write(output.toByteArray());
 			fc.responseComplete(); // Important! Otherwise JSF will attempt to
 									// render the response which obviously will
@@ -2490,7 +2520,8 @@ public class InvoiceHeaderBean {
 
 			response.addHeader("Content-Type", "application/force-download");
 			response.addHeader("Content-Disposition",
-					"attachment; filename=\"InvoiceAttachment_" + selectedInvHdrVo.getInvId() +".pdf\"");
+					"attachment; filename=\"InvoiceAttachment_"
+							+ selectedInvHdrVo.getInvId() + ".pdf\"");
 			response.getOutputStream().write(output.toByteArray());
 			fc.responseComplete(); // Important! Otherwise JSF will attempt to
 									// render the response which obviously will
@@ -2588,11 +2619,15 @@ public class InvoiceHeaderBean {
 			int characters) {
 		List<String> returnValue = new ArrayList<String>();
 		if (bigString.length() < characters) {
+			bigString = bigString.trim();
+			
 			returnValue.add(bigString);
 		} else {
 			while (bigString.length() > characters) {
+				bigString = bigString.trim();
 				String temp = bigString.substring(0, characters);
-				if (temp.indexOf(" ") > 0)
+				
+				if (temp.indexOf(" ") != -1)
 					temp = temp.substring(0, temp.lastIndexOf(" "));
 				temp = temp.replaceAll("\\(", "\\\\(");
 				temp = temp.replaceAll("\\)", "\\\\)");

@@ -39,6 +39,11 @@ public class InvoiceHeaderVO {
 	private String deliveryTo;
 	private String deliveryAddress;
 	
+	/**
+	 * This member contains the number of lines this invoice will generate in the pdf.
+	 */
+	private Integer linesOfLineItem;
+	
 	public String getDeliveryTo() {
 		return deliveryTo;
 	}
@@ -81,12 +86,14 @@ public class InvoiceHeaderVO {
 		this.invNo = invHeaderHbc.getInvNo();
 		this.deliveryAddress = invHeaderHbc.getDeliveryAddress();
 		this.deliveryTo = invHeaderHbc.getDeliveryTo();
+		this.linesOfLineItem = 0;
 	}
 
 	public InvoiceHeaderVO() {
 		invIssueDate = Calendar.getInstance().getTime();
 		removalDate = Calendar.getInstance().getTime();
 		invDate = Calendar.getInstance().getTime();
+		this.linesOfLineItem = 0;
 	}
 
 	// tariff & exemption notiff
@@ -299,6 +306,14 @@ public class InvoiceHeaderVO {
 
 	public void setGrandTotal(float grandTotal) {
 		this.grandTotal = grandTotal;
+	}
+
+	public Integer getLinesOfLineItem() {
+		return linesOfLineItem;
+	}
+
+	public void setLinesOfLineItem(Integer linesOfLineItem) {
+		this.linesOfLineItem = linesOfLineItem;
 	}
 
 }
