@@ -280,3 +280,6 @@ body {
 .rf-cal-popup {
 	background-color:white;
 }
+.pageErrorMessage {
+	color:red;
+}
