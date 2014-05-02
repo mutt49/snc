@@ -1,78 +1,82 @@
 package org.demo.spinncast.vo;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.demo.spinncast.misc.Size;
+import org.demo.spinncast.hibernate.PurchaseOrderHBC;
+
 
 @ManagedBean(name = "PurchaseOrderVO")
 @SessionScoped
 public class PurchaseOrderVO {
-	private Integer order_id;
-	private String description;
-	private Float quantity;
-	private Float gross_price;
+	private int purchaseOrderId;
+	private int purchaseOrderNo;
+	private int customerId;
+	private Date purchaseOrderDate;
+	private String customerName;
+	private List<PurchaseOrderLinesVO> poLines = new ArrayList<PurchaseOrderLinesVO>();
+ 
+	public List<PurchaseOrderLinesVO> getPoLines() {
+		return poLines;
+	}
 
-	private Float net_value;
-	private Integer customer_id = 0;
+	public void setPoLines(List<PurchaseOrderLinesVO> poLines) {
+		this.poLines = poLines;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public int getPurchaseOrderId() {
+		return purchaseOrderId;
+	}
+
+	public void setPurchaseOrderId(int purchaseOrderId) {
+		this.purchaseOrderId = purchaseOrderId;
+	}
+
+	public int getPurchaseOrderNo() {
+		return purchaseOrderNo;
+	}
+
+	public void setPurchaseOrderNo(int purchaseOrderNo) {
+		this.purchaseOrderNo = purchaseOrderNo;
+	}
+
+	public int getCustomerId() {
+		return customerId;
+	}
+
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
+	}
+
+	public Date getPurchaseOrderDate() {
+		return purchaseOrderDate;
+	}
+
+	public void setPurchaseOrderDate(Date purchaseOrderDate) {
+		this.purchaseOrderDate = purchaseOrderDate;
+	}
 	
-	List<LineItemVO> lineItemList;
-	public Integer getOrder_id() {
-		return order_id;
+	public PurchaseOrderVO(){
+		
 	}
-
-	public void setOrder_id(Integer order_id) {
-		this.order_id = order_id;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Float getQuantity() {
-		return quantity;
-	}
-
-	public void setQuantity(Float quantity) {
-		this.quantity = quantity;
-	}
-
-	public Float getGross_price() {
-		return gross_price;
-	}
-
-	public void setGross_price(Float gross_price) {
-		this.gross_price = gross_price;
-	}
-
-	public Float getNet_value() {
-		return net_value;
-	}
-
-	public void setNet_value(Float net_value) {
-		this.net_value = net_value;
-	}
-
-	public Integer getCustomer_id() {
-		return customer_id;
-	}
-
-	public void setCustomer_id(Integer customer_id) {
-		this.customer_id = customer_id;
-	}
-
-	public List<LineItemVO> getLineItemList() {
-		return lineItemList;
-	}
-
-	public void setLineItemList(List<LineItemVO> lineItemList) {
-		this.lineItemList = lineItemList;
+	
+	public PurchaseOrderVO(PurchaseOrderHBC purchaseOrderHbc){
+		this.purchaseOrderId = purchaseOrderHbc.getPurchaseOrderId();
+		this.purchaseOrderNo = purchaseOrderHbc.getPurchaseOrderNo();
+		this.purchaseOrderDate = purchaseOrderHbc.getPurchaseOrderDate();
+		this.customerId = purchaseOrderHbc.getCustomerId();
 	}
 
 }

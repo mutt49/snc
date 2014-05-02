@@ -1,16 +1,6 @@
 package org.demo.spinncast.hibernate;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.demo.spinncast.connections.ConnectionPool;
-import org.demo.spinncast.vo.GradeMasterVO;
-import org.demo.spinncast.vo.InvoiceLineItemVO;
-import org.demo.spinncast.vo.PartGradeMappingVO;
 import org.demo.spinncast.vo.PartMasterVO;
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 public class PartMasterHBC {
 	private int partId;

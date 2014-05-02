@@ -46,5 +46,6 @@
 		<mapping resource="Ccm.hbm.xml"/>
 		<mapping resource="Mpm.hbm.xml"/>
 		<mapping resource="PartGradeMapping.hbm.xml"/>
+		<mapping resource="PurchaseOrderLines.hbm.xml"/>
 	</session-factory>
 </hibernate-configuration>

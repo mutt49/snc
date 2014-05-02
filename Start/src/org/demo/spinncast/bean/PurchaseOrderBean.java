@@ -7,43 +7,31 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import org.demo.spinncast.connections.ConnectionPool;
-import org.demo.spinncast.hibernate.LineItemHBC;
+import org.demo.spinncast.handler.CustomerHandler;
 import org.demo.spinncast.hibernate.PurchaseOrderHBC;
-import org.demo.spinncast.vo.LineItemVO;
+import org.demo.spinncast.vo.CustomerVO;
 import org.demo.spinncast.vo.PurchaseOrderVO;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import com.sun.nio.sctp.SctpStandardSocketOptions.InitMaxStreams;
-
 @ManagedBean(name = "PurchaseOrderBean")
 @SessionScoped
 public class PurchaseOrderBean {
 
-	private Transaction trans;
-	private PurchaseOrderVO selectedPurchaseOrderVO;
+	private PurchaseOrderVO searchPurchaseOrderVO;
 
 	private List<PurchaseOrderVO> searchList;
 
-	private Boolean editFlag = true;
+	private Boolean editFlag = false;
 	private Integer selectedId;
 
-	public Transaction getTrans() {
-		return trans;
+	public PurchaseOrderVO getSearchPurchaseOrderVO() {
+		return searchPurchaseOrderVO;
 	}
 
-	public void setTrans(Transaction trans) {
-		this.trans = trans;
-	}
-
-	public PurchaseOrderVO getSelectedPurchaseOrderVO() {
-		return selectedPurchaseOrderVO;
-	}
-
-	public void setSelectedPurchaseOrderVO(
-			PurchaseOrderVO selectedPurchaseOrderVO) {
-		this.selectedPurchaseOrderVO = selectedPurchaseOrderVO;
+	public void setSearchPurchaseOrderVO(PurchaseOrderVO searchPurchaseOrderVO) {
+		this.searchPurchaseOrderVO = searchPurchaseOrderVO;
 	}
 
 	public List<PurchaseOrderVO> getSearchList() {
@@ -71,7 +59,7 @@ public class PurchaseOrderBean {
 	}
 
 	public PurchaseOrderBean() {
-		selectedPurchaseOrderVO = new PurchaseOrderVO();
+		searchPurchaseOrderVO = new PurchaseOrderVO();
 		searchList = new ArrayList<PurchaseOrderVO>();
 	}
 
@@ -80,26 +68,25 @@ public class PurchaseOrderBean {
 		selectedId = null;
 		return "PurchaseOrderSearch";
 	}
-
+	@SuppressWarnings("unchecked")
 	public String search() {
+		CustomerHandler custHandler = new CustomerHandler();
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Query hibernateQuery = session
-				.createQuery("from PurchaseOrderHBC as m order by m.id");
-		@SuppressWarnings("unchecked")
+				.createQuery("from PurchaseOrderHBC as m where purchaseOrderNo = :poNo");
+		hibernateQuery.setInteger("poNo", searchPurchaseOrderVO.getPurchaseOrderNo());
 		java.util.List<PurchaseOrderHBC> results = hibernateQuery.list();
 		setSearchList(new ArrayList<PurchaseOrderVO>());
 		for (int i = 0; i < results.size(); i++) {
-			PurchaseOrderVO poItem = new PurchaseOrderVO();
-			poItem.setOrder_id(results.get(i).getOrder_id());
-			poItem.setCustomer_id(results.get(i).getCustomer_id());
-			poItem.setDescription(results.get(i).getDescription());
-			poItem.setGross_price(results.get(i).getGross_price());
-			poItem.setNet_value(results.get(i).getNet_value());
+			PurchaseOrderVO po = new PurchaseOrderVO(results.get(i));
+			CustomerVO custVo = new CustomerVO();
+			custVo = custHandler.populateCustomerDetailsUsingCustomerId(results.get(i).getCustomerId());
+			po.setCustomerName(custVo.getCustomer_name());
 			/*
 			 * Get Line Items for this specific Purchase Order.
 			 */
-			getSearchList().add(poItem);
+			getSearchList().add(po);
 		}
 		System.out.println(getSearchList().size());
 		Transaction trans = session.beginTransaction();
@@ -114,14 +101,14 @@ public class PurchaseOrderBean {
 		Session session = cpool.getSession();
 		Transaction trans = session.beginTransaction();
 		PurchaseOrderHBC purchaseOrderHBC = new PurchaseOrderHBC(
-				selectedPurchaseOrderVO);
+				searchPurchaseOrderVO);
 		session.saveOrUpdate(purchaseOrderHBC);
 		trans.commit();
 		session.close();
 		/*
 		 * Also save Line Items
 		 */
-		selectedPurchaseOrderVO = new PurchaseOrderVO();
+		searchPurchaseOrderVO = new PurchaseOrderVO();
 		return search();
 	}
 
@@ -131,11 +118,11 @@ public class PurchaseOrderBean {
 		Session session = cpool.getSession();
 		Transaction trans = session.beginTransaction();
 		PurchaseOrderHBC testcertificatehbc = new PurchaseOrderHBC(
-				selectedPurchaseOrderVO);
+				searchPurchaseOrderVO);
 		session.update(testcertificatehbc);
 		trans.commit();
 		session.close();
-		selectedPurchaseOrderVO = new PurchaseOrderVO();
+		searchPurchaseOrderVO = new PurchaseOrderVO();
 		return search();
 	}
 

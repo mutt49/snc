@@ -1,77 +1,60 @@
 package org.demo.spinncast.hibernate;
 
+import java.util.Date;
+
 import org.demo.spinncast.vo.PurchaseOrderVO;
 
 public class PurchaseOrderHBC {
 
-	private Integer order_id = 0;
-	private String description;
-	private Float gross_price;
-	private Float net_value;
-	private Integer customer_id = 0;
-	
-	public PurchaseOrderHBC () {
-		
-	}
-	
-	public PurchaseOrderHBC (PurchaseOrderVO purchaseOrderVO) {
-		order_id = purchaseOrderVO.getOrder_id();
-		description = purchaseOrderVO.getDescription();
-		gross_price = purchaseOrderVO.getGross_price();
-		net_value = purchaseOrderVO.getNet_value();
-		customer_id = purchaseOrderVO.getCustomer_id();
+	private int purchaseOrderId;
+	private int purchaseOrderNo;
+	private int customerId;
+	private Date purchaseOrderDate;
+
+	public int getPurchaseOrderId() {
+		return purchaseOrderId;
 	}
 
-	public void update (PurchaseOrderVO purchaseOrderVO) {
-		description = purchaseOrderVO.getDescription();
-/*		gross_price = purchaseOrderVO.getGross_price();
-		net_value = purchaseOrderVO.getNet_value();
-		customer_id = purchaseOrderVO.getCustomer_id();
-*/
-		gross_price = new Float (1.0);
-		net_value = new Float (2.0);
-		// Delete this JK
-		customer_id = 3;
-	}
-	
-
-	public Integer getOrder_id() {
-		return order_id;
+	public void setPurchaseOrderId(int purchaseOrderId) {
+		this.purchaseOrderId = purchaseOrderId;
 	}
 
-	public void setOrder_id(Integer order_id) {
-		this.order_id = order_id;
+	public int getPurchaseOrderNo() {
+		return purchaseOrderNo;
 	}
 
-	public String getDescription() {
-		return description;
+	public void setPurchaseOrderNo(int purchaseOrderNo) {
+		this.purchaseOrderNo = purchaseOrderNo;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
+	public int getCustomerId() {
+		return customerId;
 	}
 
-	public Float getGross_price() {
-		return gross_price;
+	public void setCustomerId(int customerId) {
+		this.customerId = customerId;
 	}
 
-	public void setGross_price(Float gross_price) {
-		this.gross_price = gross_price;
+	public Date getPurchaseOrderDate() {
+		return purchaseOrderDate;
 	}
 
-	public Float getNet_value() {
-		return net_value;
+	public void setPurchaseOrderDate(Date purchaseOrderDate) {
+		this.purchaseOrderDate = purchaseOrderDate;
 	}
 
-	public void setNet_value(Float net_value) {
-		this.net_value = net_value;
+	public PurchaseOrderHBC() {
+
 	}
 
-	public Integer getCustomer_id() {
-		return customer_id;
+	public PurchaseOrderHBC(PurchaseOrderVO purchaseOrderVO) {
+		this.purchaseOrderId = purchaseOrderVO.getPurchaseOrderId();
+		this.purchaseOrderNo = purchaseOrderVO.getPurchaseOrderNo();
+		this.customerId = purchaseOrderVO.getCustomerId();
+		this.purchaseOrderDate = purchaseOrderVO.getPurchaseOrderDate();
 	}
 
-	public void setCustomer_id(Integer customer_id) {
-		this.customer_id = customer_id;
+	public void update(PurchaseOrderVO purchaseOrderVO) {
+
 	}
 }

@@ -3,12 +3,13 @@
 "hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="org.demo.spinncast.hibernate.PurchaseOrderHBC" table="purchase_order">
-		<id name="order_id" column="order_id">
+	<class name="org.demo.spinncast.hibernate.PurchaseOrderHBC" table="purchase_order_new2">
+		<id name="purchaseOrderId" column="purchase_order_id">
 			<generator class="native"/>
 		</id>
-		<property name="description" column="description"></property>
-		<property name="gross_price" column="gross_price"></property>
-		<property name="net_value" column="net_value"></property>
+		<property name="purchaseOrderNo" column="purchase_order_no"></property>
+		<property name="customerId" column="customer_id"></property>
+		<property name="purchaseOrderDate" column="purchase_order_date"></property>
 	</class>
 </hibernate-mapping>  
+
