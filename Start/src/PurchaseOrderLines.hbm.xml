@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+<!DOCTYPE hibernate-mapping SYSTEM 
+"hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.demo.spinncast.hibernate.PurchaseOrderLinesHBC" table="purchase_order_lines">
+		<id name="poLineId" column="po_line_id">
+			<generator class="native"/>
+		</id>
+		<property name="serialNo" column="serial_no"></property>
+		<property name="partId" column="part_id"></property>
+		<property name="quantity" column="quantity"></property>
+		<property name="rate" column="rate"></property>
+		<property name="pendingQuantity" column="pending_quantity"></property>
+	</class>
+</hibernate-mapping>  
+
