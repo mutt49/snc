@@ -10,6 +10,7 @@ public class PurchaseOrderLinesHBC {
 	private int poLineId;
 	private int serialNo;
 	private int partId;
+	private int purchaseOrderId;
 	private double quantity;
 	private double rate;
 	private double pendingQuantity;
@@ -73,9 +74,18 @@ public class PurchaseOrderLinesHBC {
 		this.quantity = purchaseOrderLinesVO.getQuantity();
 		this.rate = purchaseOrderLinesVO.getRate();
 		this.pendingQuantity = purchaseOrderLinesVO.getPendingQuantity();
+		this.purchaseOrderId = purchaseOrderLinesVO.getPurchaseOrderId ();
 	}
 
 	public void update(PurchaseOrderVO purchaseOrderVO) {
 
+	}
+
+	public int getPurchaseOrderId() {
+		return purchaseOrderId;
+	}
+
+	public void setPurchaseOrderId(int purchaseOrderId) {
+		this.purchaseOrderId = purchaseOrderId;
 	}
 }

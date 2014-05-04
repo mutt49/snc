@@ -12,7 +12,7 @@
 		<f:view>
 			<h:form>
 				<h:outputText value="Purchase Orders" styleClass="pageTitle" />
-				<h:commandLink value="Add New" action="PurchaseOrderAdd.jsf"
+				<h:commandLink value="Add New" action="#{PurchaseOrderBean.resetBeforeAdd}"
 					styleClass="pageSubTitle">
 					<f:setPropertyActionListener value="#{false}"
 						target="#{PurchaseOrderBean.editFlag}" />
@@ -44,7 +44,7 @@
 							styleClass="searchResultsTable">
 							<rich:column>
 								<f:facet name="header">
-									<h:outputText value="Description" />
+									<h:outputText value="Purchase Order No." />
 								</f:facet>
 								<h:outputText value="#{po.purchaseOrderNo}" />
 							</rich:column>
@@ -61,18 +61,11 @@
 								<h:outputText value="#{po.customerName}" />
 							</rich:column>
 							<rich:column>
-								<h:commandButton value="Edit" action="PurchaseOrderAdd.xhtml">
-									<f:setPropertyActionListener target="#{PurchaseOrderBean.selectedPurchaseOrderVO}" value="#{po}"/>
-									<f:setPropertyActionListener value="#{po.order_id}"
+								<a4j:commandButton value="View" action="#{PurchaseOrderBean.view}">
+									<f:setPropertyActionListener value="#{po.purchaseOrderId}"
 										target="#{PurchaseOrderBean.selectedId}" />
 									<f:setPropertyActionListener value="#{true}"
 										target="#{PurchaseOrderBean.editFlag}" />
-								</h:commandButton>
-							</rich:column>
-							<rich:column>
-								<a4j:commandButton value="View" action="#{LineItemBean.fetchLineItems}">
-									<f:setPropertyActionListener value="#{po.order_id}"
-										target="#{LineItemBean.selectedPurchaseOrderId}" />
 								</a4j:commandButton>
 							</rich:column>
 							     <f:facet name="footer">

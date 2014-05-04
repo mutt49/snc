@@ -13,13 +13,14 @@ import org.demo.spinncast.hibernate.PurchaseOrderHBC;
 @ManagedBean(name = "PurchaseOrderVO")
 @SessionScoped
 public class PurchaseOrderVO {
-	private int purchaseOrderId;
-	private int purchaseOrderNo;
-	private int customerId;
+	private Integer purchaseOrderId;
+	private Integer purchaseOrderNo;
+	private Integer customerId;
 	private Date purchaseOrderDate;
 	private String customerName;
 	private List<PurchaseOrderLinesVO> poLines = new ArrayList<PurchaseOrderLinesVO>();
- 
+	private CustomerVO custDetails;
+	
 	public List<PurchaseOrderLinesVO> getPoLines() {
 		return poLines;
 	}
@@ -36,27 +37,27 @@ public class PurchaseOrderVO {
 		this.customerName = customerName;
 	}
 
-	public int getPurchaseOrderId() {
+	public Integer getPurchaseOrderId() {
 		return purchaseOrderId;
 	}
 
-	public void setPurchaseOrderId(int purchaseOrderId) {
+	public void setPurchaseOrderId(Integer purchaseOrderId) {
 		this.purchaseOrderId = purchaseOrderId;
 	}
 
-	public int getPurchaseOrderNo() {
+	public Integer getPurchaseOrderNo() {
 		return purchaseOrderNo;
 	}
 
-	public void setPurchaseOrderNo(int purchaseOrderNo) {
+	public void setPurchaseOrderNo(Integer purchaseOrderNo) {
 		this.purchaseOrderNo = purchaseOrderNo;
 	}
 
-	public int getCustomerId() {
+	public Integer getCustomerId() {
 		return customerId;
 	}
 
-	public void setCustomerId(int customerId) {
+	public void setCustomerId(Integer customerId) {
 		this.customerId = customerId;
 	}
 
@@ -77,6 +78,14 @@ public class PurchaseOrderVO {
 		this.purchaseOrderNo = purchaseOrderHbc.getPurchaseOrderNo();
 		this.purchaseOrderDate = purchaseOrderHbc.getPurchaseOrderDate();
 		this.customerId = purchaseOrderHbc.getCustomerId();
+	}
+
+	public CustomerVO getCustDetails() {
+		return custDetails;
+	}
+
+	public void setCustDetails(CustomerVO custDetails) {
+		this.custDetails = custDetails;
 	}
 
 }

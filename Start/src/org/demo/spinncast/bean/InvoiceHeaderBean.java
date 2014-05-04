@@ -434,7 +434,7 @@ public class InvoiceHeaderBean {
 							null,
 							new FacesMessage(
 									FacesMessage.SEVERITY_ERROR,
-									"Can not save Invoice Header Please try with correct values",
+									"Can not save Invoice Header. Please try with correct values",
 									null));
 			e.printStackTrace();
 		} finally {

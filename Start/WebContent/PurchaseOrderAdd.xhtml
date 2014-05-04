@@ -7,6 +7,82 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<ui:define name="content">
+	<rich:popupPanel id="addLineItem" autosized="true">
+			<f:facet name="Header">
+				<h:outputText value="Add Line Item" />
+			</f:facet>
+			<a onclick="#{rich:component('addLineItem')}.hide()" href="#">Hide
+				ModalPanel</a>
+			<rich:panel>
+				<h:form>
+					<h:panelGrid id="addLineItemPanel" columns="2">
+						<h:outputText value="Serial No" />
+						<h:inputText value="#{PurchaseOrderVO.invLineItem.serialNo}" /> 
+
+
+						<h:outputText value="Part Name" />
+						<!--    <h:inputText value="#{InvoiceHeaderBean.partVo.partName}" /> -->
+						<h:panelGroup>
+							<rich:autocomplete mode="cachedAjax" minChars="2" required="true" id="pName"
+								autocompleteMethod="#{InvoiceHeaderBean.partNameAutoComplete}"
+								value="#{InvoiceHeaderBean.partVo.partName}">
+								<a4j:ajax event="change" listener="#{InvoiceHeaderBean.getGradesForPart}"
+									render="selectGrade" />
+							</rich:autocomplete>
+						</h:panelGroup>
+	
+						<h:outputText value="Grade" />
+						<h:selectOneMenu value="#{InvoiceHeaderBean.invLineItem.gradeId}" id="selectGrade">
+							<f:selectItems id="LinePartgradeId" value="#{InvoiceHeaderBean.selectedPartGradeMapping}" var="GradeList" itemLabel="#{GradeList.gradeName}" 
+							itemValue="#{GradeList.gradeId}"></f:selectItems>
+						</h:selectOneMenu>
+
+						<h:outputText value="Package Desc" />
+						<h:inputText value="#{InvoiceHeaderBean.invLineItem.pkgDesc}" />
+
+						<h:outputText value="No of Packages" />
+						<h:inputText value="#{InvoiceHeaderBean.invLineItem.noOfPkgs}" />
+
+						<h:outputText value="Quantity Nos." />
+						<h:inputText value="#{InvoiceHeaderBean.invLineItem.quantityNo}" />
+
+						<h:outputText value="Quantity Kgs." />
+						<h:inputText value="#{InvoiceHeaderBean.invLineItem.quantityKgs}" />
+
+						<h:outputText value="Unit" />
+						<h:panelGroup>
+							<!-- <h:inputText value="#{InvoiceHeaderBean.invLineItem.unit}"
+								id="unit" required="true" requiredMessage="    Required" /> -->
+
+							<h:selectOneRadio value="#{InvoiceHeaderBean.invLineItem.unit}"
+								id="unit" required="true" requiredMessage="    Required">
+								<f:selectItem itemValue="kg" itemLabel="KG" id="kg"/>
+								<f:selectItem itemValue="no" itemLabel="NO." id="no"/>
+								<f:selectItem itemValue="kg" itemLabel="SET" id="set"/>
+							</h:selectOneRadio>
+							<h:message for="unit" style="color:red;" />
+						</h:panelGroup>
+
+						<h:outputText value="Rate" />
+						<h:panelGroup>
+							<h:inputText id="liRate"
+								value="#{InvoiceHeaderBean.invLineItem.rate}" required="true"
+								requiredMessage="    Required" />
+							<h:message for="liRate" style="color:red;" />
+						</h:panelGroup>
+
+						<h:outputText value="Amount" />
+						<h:inputText id="liAmount"
+							value="#{InvoiceHeaderBean.invLineItem.amount}" disabled="true" />
+
+						<h:commandButton value="Save" styleClass="searchButton"
+							action="#{InvoiceHeaderBean.addLineItem}">
+						</h:commandButton>
+
+					</h:panelGrid>
+				</h:form>
+			</rich:panel>
+		</rich:popupPanel>
 
 
 		<f:view>
@@ -20,7 +96,7 @@
 							<td class="leftColumn"><h:outputText value="Description: " />
 							</td>
 							<td><h:inputText styleClass="searchEntry" id="description"
-									value="#{PurchaseOrderBean.selectedPurchaseOrderVO.description}"
+									value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.customer_name}"
 									label="Description" /></td>
 						</tr>
 						<tr>
@@ -30,9 +106,42 @@
 							<td><a4j:commandButton value="Edit"
 									styleClass="searchButton" action="#{PurchaseOrderBean.edit}"
 									rendered="#{PurchaseOrderBean.editFlag}" /></td>
+							<td><a4j:commandButton value="Add Line Item"
+									styleClass="searchButton" id="addLI"
+									oncomplete="#{rich:component('addLineItem')}.show()}"
+									rendered="#{PurchaseOrderBean.headerSaved}" render="totAmount">
+									<rich:componentControl target="addLineItem" operation="show"
+										event="click" />
+								</a4j:commandButton></td>
 						</tr>
 					</table>
 				</rich:panel>
+
+				<a4j:outputPanel ajaxRendered="true" id="SearchTable">
+					<h:outputText
+						value="There are no line items for this Purchase Order."
+						rendered="#{PurchaseOrderBean.selectedPurchaseOrderVO.poLines.size()== 0}" />
+					<rich:dataTable
+						value="#{PurchaseOrderBean.selectedPurchaseOrderVO.poLines}"
+						var="pol" id="table" rows="20"
+						rendered="#{PurchaseOrderBean.selectedPurchaseOrderVO.poLines.size()!= 0 || PurchaseOrderBean.selectedPurchaseOrderVO.poLines == null}"
+						styleClass="searchResultsTable">
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Quantity" />
+							</f:facet>
+							<h:outputText value="#{pol.quantity}" />
+						</rich:column>
+						<rich:column>
+							<h:commandButton value="Delete"
+								action="#{PurchaseOrderBean.deleteLineItem}">
+								<f:setPropertyActionListener
+									target="#{PurchaseOrderBean.poLineItem}" value="#{pol}" />
+							</h:commandButton>
+						</rich:column>
+					</rich:dataTable>
+				</a4j:outputPanel>
+
 			</h:form>
 		</f:view>
 

@@ -9,6 +9,7 @@
 		</id>
 		<property name="serialNo" column="serial_no"></property>
 		<property name="partId" column="part_id"></property>
+		<property name="purchaseOrderId" column="po_id"></property>
 		<property name="quantity" column="quantity"></property>
 		<property name="rate" column="rate"></property>
 		<property name="pendingQuantity" column="pending_quantity"></property>

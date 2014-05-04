@@ -3,7 +3,7 @@
 "hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="org.demo.spinncast.hibernate.PurchaseOrderHBC" table="purchase_order_new2">
+	<class name="org.demo.spinncast.hibernate.PurchaseOrderHBC" table="purchase_order">
 		<id name="purchaseOrderId" column="purchase_order_id">
 			<generator class="native"/>
 		</id>
