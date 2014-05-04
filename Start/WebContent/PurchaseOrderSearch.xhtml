@@ -20,11 +20,11 @@
 				<rich:panel>
 					<table class="table" cellspacing="0">
 						<tr>
-							<td class="leftColumn"><h:outputText value="Description: " />
+							<td class="leftColumn"><h:outputText value="PO No.: " />
 							</td>
-							<td><h:inputText styleClass="searchEntry" id="description"
-									value="#{PurchaseOrderBean.selectedPurchaseOrderVO.description}"
-									label="Description" /></td>
+							<td><h:inputText styleClass="searchEntry" id="poNo"
+									value="#{PurchaseOrderBean.searchPurchaseOrderVO.purchaseOrderNo}"
+									label="poNo" /></td>
 						</tr>
 						<tr>
 							<td class="leftColumn"><a4j:commandButton
@@ -46,7 +46,19 @@
 								<f:facet name="header">
 									<h:outputText value="Description" />
 								</f:facet>
-								<h:outputText value="#{po.description}" />
+								<h:outputText value="#{po.purchaseOrderNo}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Purchase Order Date" />
+								</f:facet>
+								<h:outputText value="#{po.purchaseOrderDate}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Customer Name" />
+								</f:facet>
+								<h:outputText value="#{po.customerName}" />
 							</rich:column>
 							<rich:column>
 								<h:commandButton value="Edit" action="PurchaseOrderAdd.xhtml">
