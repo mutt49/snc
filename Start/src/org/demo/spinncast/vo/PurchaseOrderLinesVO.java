@@ -16,6 +16,10 @@ public class PurchaseOrderLinesVO {
 	private double rate;
 	private double pendingQuantity;
 	private String partName;
+	private double quantityKg;
+	private String partDescription;
+	private int gradeId;
+	private String unit;
 
 	public PurchaseOrderLinesVO(PurchaseOrderLinesHBC result) {
 		poLineId = result.getPoLineId ();
@@ -26,6 +30,14 @@ public class PurchaseOrderLinesVO {
 		rate = result.getRate ();
 		pendingQuantity = result.getPendingQuantity ();
 		partName = "";
+		partDescription = "";
+		quantityKg = result.getQuantityKg();
+		gradeId = result.getGradeId();
+		unit = result.getUnit ();
+	}
+
+	public PurchaseOrderLinesVO() {
+		// TODO Auto-generated constructor stub
 	}
 
 	public String getPartName() {
@@ -90,6 +102,38 @@ public class PurchaseOrderLinesVO {
 
 	public void setPurchaseOrderId(Integer purchaseOrderId) {
 		this.purchaseOrderId = purchaseOrderId;
+	}
+
+	public double getQuantityKg() {
+		return quantityKg;
+	}
+
+	public void setQuantityKg(double quantityKg) {
+		this.quantityKg = quantityKg;
+	}
+
+	public String getPartDescription() {
+		return partDescription;
+	}
+
+	public void setPartDescription(String partDescription) {
+		this.partDescription = partDescription;
+	}
+
+	public int getGradeId() {
+		return gradeId;
+	}
+
+	public void setGradeId(int gradeId) {
+		this.gradeId = gradeId;
+	}
+
+	public String getUnit() {
+		return unit;
+	}
+
+	public void setUnit(String unit) {
+		this.unit = unit;
 	}
 
 }

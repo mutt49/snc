@@ -13,6 +13,10 @@
 		<property name="quantity" column="quantity"></property>
 		<property name="rate" column="rate"></property>
 		<property name="pendingQuantity" column="pending_quantity"></property>
+		<property name="quantityKg" column="quantity_kg"></property>
+		<property name="partDescription" column="part_description"></property>
+		<property name="gradeId" column="grade_id"></property>	
+		<property name="unit" column="unit"></property>
 	</class>
 </hibernate-mapping>  
 

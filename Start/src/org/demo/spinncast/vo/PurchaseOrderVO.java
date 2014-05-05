@@ -70,6 +70,7 @@ public class PurchaseOrderVO {
 	}
 	
 	public PurchaseOrderVO(){
+		custDetails = new CustomerVO();
 		
 	}
 	

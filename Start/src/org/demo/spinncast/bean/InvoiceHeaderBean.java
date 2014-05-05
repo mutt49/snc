@@ -548,7 +548,7 @@ public class InvoiceHeaderBean {
 		invLineItem.setPartId(partVo.getPartId());
 		invLineItem.setInvId(selectedInvHdrVo.getInvId());
 
-		if (invLineItem.getUnit().equalsIgnoreCase("KG")) {
+		if (invLineItem.getUnit().equalsIgnoreCase("KG") || invLineItem.getUnit().equalsIgnoreCase("set")) {
 			invLineItem.setAmount(invLineItem.getQuantityKgs()
 					* invLineItem.getRate());
 		} else {

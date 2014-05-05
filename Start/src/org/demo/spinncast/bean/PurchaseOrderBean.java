@@ -5,15 +5,23 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIOutput;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import org.demo.spinncast.connections.ConnectionPool;
 import org.demo.spinncast.handler.CustomerHandler;
+import org.demo.spinncast.handler.PartMasterHandler;
 import org.demo.spinncast.hibernate.CustomerHBC;
 import org.demo.spinncast.hibernate.InvoiceHeaderHBC;
+import org.demo.spinncast.hibernate.InvoiceLineItemHBC;
+import org.demo.spinncast.hibernate.PartMasterHBC;
 import org.demo.spinncast.hibernate.PurchaseOrderHBC;
 import org.demo.spinncast.hibernate.PurchaseOrderLinesHBC;
 import org.demo.spinncast.vo.CustomerVO;
 import org.demo.spinncast.vo.InvoiceHeaderVO;
+import org.demo.spinncast.vo.InvoiceLineItemVO;
+import org.demo.spinncast.vo.PartGradeMappingVO;
+import org.demo.spinncast.vo.PartMasterVO;
 import org.demo.spinncast.vo.PurchaseOrderLinesVO;
 import org.demo.spinncast.vo.PurchaseOrderVO;
 import org.hibernate.Query;
@@ -26,11 +34,13 @@ public class PurchaseOrderBean {
 
 	private PurchaseOrderVO searchPurchaseOrderVO;
 	private PurchaseOrderVO selectedPurchaseOrderVO;
-	private PurchaseOrderLinesVO poLineItem;
+	private PurchaseOrderLinesVO poLineItem = new PurchaseOrderLinesVO();
+	private PartMasterVO partVo = new PartMasterVO();
 	private List<PurchaseOrderVO> searchList;
 	private Boolean headerSaved = false;
 	private Boolean editFlag = false;
 	private Integer selectedId;
+	private List<PartGradeMappingVO> selectedPartGradeMapping = new ArrayList<PartGradeMappingVO>();
 
 	public PurchaseOrderVO getSearchPurchaseOrderVO() {
 		return searchPurchaseOrderVO;
@@ -179,6 +189,7 @@ public class PurchaseOrderBean {
 		Query hibernateQuery = session.createQuery ("from PurchaseOrderLinesHBC as m where (m.purchaseOrderId = :purchaseOrderId)");
 		hibernateQuery.setInteger ("purchaseOrderId", selectedPurchaseOrderVO.getPurchaseOrderId());
 		java.util.List<PurchaseOrderLinesHBC> results = hibernateQuery.list ();
+		selectedPurchaseOrderVO.setPoLines(new ArrayList<PurchaseOrderLinesVO> ());
 		for (PurchaseOrderLinesHBC result : results) {
 			selectedPurchaseOrderVO.getPoLines().add(new PurchaseOrderLinesVO(result));
 		}
@@ -243,4 +254,90 @@ public class PurchaseOrderBean {
 	public void setHeaderSaved(Boolean headerSaved) {
 		this.headerSaved = headerSaved;
 	}
+
+	public PartMasterVO getPartVo() {
+		return partVo;
+	}
+
+	public void setPartVo(PartMasterVO partVo) {
+		this.partVo = partVo;
+	}
+
+	public List<PartGradeMappingVO> getSelectedPartGradeMapping() {
+		return selectedPartGradeMapping;
+	}
+
+	public void setSelectedPartGradeMapping(List<PartGradeMappingVO> selectedPartGradeMapping) {
+		this.selectedPartGradeMapping = selectedPartGradeMapping;
+	}
+	
+
+	public List<String> partNameAutoComplete(String prefix) {
+		List<String> result = new ArrayList<String>();
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		Session session = cpool.getSession();
+		Query hibernateQuery = session
+				.createQuery("from PartMasterHBC as m where part_name like '%"
+						+ prefix + "%'");
+		List<PartMasterHBC> results = hibernateQuery.list();
+		for (int i = 0; i < results.size(); i++) {
+			result.add(results.get(i).getPartName());
+		}
+		session.close();
+		return result;
+	}
+
+	public void getGradesForPart(AjaxBehaviorEvent event) {
+		PartMasterHandler partMasterHandler = new PartMasterHandler();
+		selectedPartGradeMapping = new ArrayList<PartGradeMappingVO>();
+		String partName = (String) ((UIOutput) event.getSource()).getValue();
+		int partId = partMasterHandler.getPartIdByName(partName);
+		partVo = new PartMasterVO();
+		partVo.setPartId(partId);
+		partVo.setPartName(partName);
+		partMasterHandler.getGradesForPart(partVo);
+		// incorrect grades are coming for part
+		selectedPartGradeMapping = partVo.getPartGradeMapping();
+	}
+
+	public String addLineItem() {
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		Session session = cpool.getSession();
+		Transaction trans = session.beginTransaction();
+		getPartDetails(partVo.getPartName());
+		poLineItem.setPartId(partVo.getPartId());
+		poLineItem.setPurchaseOrderId(selectedPurchaseOrderVO.getPurchaseOrderId());
+
+//		
+//		DOES POLINE ITEM HAVE AMOUNT ????  CHECK
+//		
+		
+//		if (poLineItem.getUnit().equalsIgnoreCase("KG") || poLineItem.getUnit().equalsIgnoreCase("set")) {
+//			poLineItem.setAmount (poLineItem.getQuantityKg()
+//					* poLineItem.getRate());
+//		} else {
+//			invLineItem.setAmount(invLineItem.getQuantityNo()
+//					* invLineItem.getRate());
+//		}
+
+		PurchaseOrderLinesHBC poLinesHBC = new PurchaseOrderLinesHBC (poLineItem);
+		session.saveOrUpdate(poLinesHBC);
+		trans.commit();
+		session.flush();
+		session.close();
+		partVo = new PartMasterVO();
+		selectedPartGradeMapping = new ArrayList<PartGradeMappingVO>();
+		populateLineItems ();
+		return "PurchaseOrderAdd";
+	}
+	public void getPartDetails(String partName) {
+		PartMasterHandler partMasterHanlder = new PartMasterHandler();
+		partVo = partMasterHanlder.populatePartMaster(partName);
+	}
+
+	public void getPartDetails(int partId) {
+		PartMasterHandler partMasterHanlder = new PartMasterHandler();
+		partVo = partMasterHanlder.populatePartMaster(partId);
+	}
+	
 }

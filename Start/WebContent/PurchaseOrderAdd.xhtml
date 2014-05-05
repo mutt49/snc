@@ -11,54 +11,52 @@
 			<f:facet name="Header">
 				<h:outputText value="Add Line Item" />
 			</f:facet>
-			<a onclick="#{rich:component('addLineItem')}.hide()" href="#">Hide
-				ModalPanel</a>
+			<a onclick="#{rich:component('addLineItem')}.hide()" href="#">Hide ModalPanel</a>
 			<rich:panel>
 				<h:form>
 					<h:panelGrid id="addLineItemPanel" columns="2">
 						<h:outputText value="Serial No" />
-						<h:inputText value="#{PurchaseOrderVO.invLineItem.serialNo}" /> 
-
-
+						<h:inputText value="#{PurchaseOrderBean.poLineItem.serialNo}" />
 						<h:outputText value="Part Name" />
-						<!--    <h:inputText value="#{InvoiceHeaderBean.partVo.partName}" /> -->
 						<h:panelGroup>
-							<rich:autocomplete mode="cachedAjax" minChars="2" required="true" id="pName"
-								autocompleteMethod="#{InvoiceHeaderBean.partNameAutoComplete}"
-								value="#{InvoiceHeaderBean.partVo.partName}">
-								<a4j:ajax event="change" listener="#{InvoiceHeaderBean.getGradesForPart}"
+							<rich:autocomplete mode="cachedAjax" minChars="2" required="true"
+								id="pName"
+								autocompleteMethod="#{PurchaseOrderBean.partNameAutoComplete}"
+								value="#{PurchaseOrderBean.partVo.partName}">
+								<a4j:ajax event="change"
+									listener="#{PurchaseOrderBean.getGradesForPart}"
 									render="selectGrade" />
 							</rich:autocomplete>
 						</h:panelGroup>
-	
+
 						<h:outputText value="Grade" />
-						<h:selectOneMenu value="#{InvoiceHeaderBean.invLineItem.gradeId}" id="selectGrade">
-							<f:selectItems id="LinePartgradeId" value="#{InvoiceHeaderBean.selectedPartGradeMapping}" var="GradeList" itemLabel="#{GradeList.gradeName}" 
-							itemValue="#{GradeList.gradeId}"></f:selectItems>
+						<h:selectOneMenu value="#{PurchaseOrderBean.poLineItem.gradeId}"
+							id="selectGrade">
+							<f:selectItems id="LinePartgradeId"
+								value="#{PurchaseOrderBean.selectedPartGradeMapping}"
+								var="GradeList" itemLabel="#{GradeList.gradeName}"
+								itemValue="#{GradeList.gradeId}"></f:selectItems>
 						</h:selectOneMenu>
 
 						<h:outputText value="Package Desc" />
-						<h:inputText value="#{InvoiceHeaderBean.invLineItem.pkgDesc}" />
-
-						<h:outputText value="No of Packages" />
-						<h:inputText value="#{InvoiceHeaderBean.invLineItem.noOfPkgs}" />
+						<h:inputText value="#{PurchaseOrderBean.poLineItem.partDescription}" />
 
 						<h:outputText value="Quantity Nos." />
-						<h:inputText value="#{InvoiceHeaderBean.invLineItem.quantityNo}" />
+						<h:inputText value="#{PurchaseOrderBean.poLineItem.quantity}" />
 
 						<h:outputText value="Quantity Kgs." />
-						<h:inputText value="#{InvoiceHeaderBean.invLineItem.quantityKgs}" />
+						<h:inputText value="#{PurchaseOrderBean.poLineItem.quantityKg}" />
 
 						<h:outputText value="Unit" />
 						<h:panelGroup>
 							<!-- <h:inputText value="#{InvoiceHeaderBean.invLineItem.unit}"
 								id="unit" required="true" requiredMessage="    Required" /> -->
-
-							<h:selectOneRadio value="#{InvoiceHeaderBean.invLineItem.unit}"
+							<h:selectOneRadio value="#{PurchaseOrderBean.poLineItem.unit}"
 								id="unit" required="true" requiredMessage="    Required">
-								<f:selectItem itemValue="kg" itemLabel="KG" id="kg"/>
-								<f:selectItem itemValue="no" itemLabel="NO." id="no"/>
-								<f:selectItem itemValue="kg" itemLabel="SET" id="set"/>
+								<f:selectItem itemValue="kg" itemLabel="KG" id="kg" />
+								<f:selectItem itemValue="no" itemLabel="NO." id="no" />
+								<!-- adhi khalcha kg hota ani set kelay. -->
+								<f:selectItem itemValue="set" itemLabel="SET" id="set" />
 							</h:selectOneRadio>
 							<h:message for="unit" style="color:red;" />
 						</h:panelGroup>
@@ -66,57 +64,60 @@
 						<h:outputText value="Rate" />
 						<h:panelGroup>
 							<h:inputText id="liRate"
-								value="#{InvoiceHeaderBean.invLineItem.rate}" required="true"
+								value="#{PurchaseOrderBean.poLineItem.rate}" required="true"
 								requiredMessage="    Required" />
 							<h:message for="liRate" style="color:red;" />
 						</h:panelGroup>
 
-						<h:outputText value="Amount" />
-						<h:inputText id="liAmount"
-							value="#{InvoiceHeaderBean.invLineItem.amount}" disabled="true" />
-
 						<h:commandButton value="Save" styleClass="searchButton"
-							action="#{InvoiceHeaderBean.addLineItem}">
+							action="#{PurchaseOrderBean.addLineItem}">
 						</h:commandButton>
 
 					</h:panelGrid>
 				</h:form>
 			</rich:panel>
 		</rich:popupPanel>
-
-
+	
 		<f:view>
 			<h:form>
-
 				<h:outputText value="Purchase Orders" styleClass="pageTitle" />
 				<h:outputText value="Add New" styleClass="pageSubTitleActive" />
-				<rich:panel>
-					<table class="table" cellspacing="0">
-						<tr>
-							<td class="leftColumn"><h:outputText value="Description: " />
-							</td>
-							<td><h:inputText styleClass="searchEntry" id="description"
-									value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.customer_name}"
-									label="Description" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><a4j:commandButton value="Add"
-									styleClass="searchButton" action="#{PurchaseOrderBean.add}"
-									rendered="#{!PurchaseOrderBean.editFlag}" /></td>
-							<td><a4j:commandButton value="Edit"
-									styleClass="searchButton" action="#{PurchaseOrderBean.edit}"
-									rendered="#{PurchaseOrderBean.editFlag}" /></td>
-							<td><a4j:commandButton value="Add Line Item"
-									styleClass="searchButton" id="addLI"
-									oncomplete="#{rich:component('addLineItem')}.show()}"
-									rendered="#{PurchaseOrderBean.headerSaved}" render="totAmount">
-									<rich:componentControl target="addLineItem" operation="show"
-										event="click" />
-								</a4j:commandButton></td>
-						</tr>
-					</table>
-				</rich:panel>
+				<h:panelGrid styleClass="table" columns="4">
+					<h:outputText value="Purchase Order Number" styleClass="leftColumn" />
+					<h:inputText styleClass="searchEntry" name="ponumber"
+						value="#{PurchaseOrderBean.selectedPurchaseOrderVO.purchaseOrderNo}"
+						label="poNumber" />
+					<h:outputText value="Purchase Order Date" styleClass="leftColumn" />
+					<rich:calendar name="poDate"
+						value="#{PurchaseOrderBean.selectedPurchaseOrderVO.purchaseOrderDate}"
+						label="poDate" />
+					<h:outputText value="Customer Vendor Code" styleClass="leftColumn" />
+					<h:inputText styleClass="searchEntry" name="description"
+						value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.vendor_code}"
+						label="CustomerName" />
+					<h:outputText value="Customer Name" styleClass="leftColumn" />
+					<h:inputText styleClass="searchEntry" id="description"
+						value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.customer_name}"
+						label="CustomerName" />
+					<h:outputText value="Customer Address" styleClass="leftColumn" />
+					<h:inputTextarea styleClass="searchEntry" name="custCddress"
+						value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.customer_address}"
+						label="CustomerAddress" />
+					<h:commandButton value="Add" styleClass="searchButton"
+						action="#{PurchaseOrderBean.add}"
+						rendered="#{!PurchaseOrderBean.editFlag}" />
+					<h:commandButton value="Edit" styleClass="searchButton"
+						action="#{PurchaseOrderBean.edit}"
+						rendered="#{PurchaseOrderBean.editFlag}" />
 
+					<a4j:commandButton value="Add Line Item" styleClass="searchButton"
+						id="addLI" oncomplete="#{rich:component('addLineItem')}.show()}"
+						rendered="#{true}"
+						>
+						<rich:componentControl target="addLineItem" operation="show"
+							event="click" />
+					</a4j:commandButton>
+				</h:panelGrid>
 				<a4j:outputPanel ajaxRendered="true" id="SearchTable">
 					<h:outputText
 						value="There are no line items for this Purchase Order."
@@ -126,11 +127,42 @@
 						var="pol" id="table" rows="20"
 						rendered="#{PurchaseOrderBean.selectedPurchaseOrderVO.poLines.size()!= 0 || PurchaseOrderBean.selectedPurchaseOrderVO.poLines == null}"
 						styleClass="searchResultsTable">
+
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Check" />
+							</f:facet>
+							<h:selectBooleanCheckbox />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Serial No." />
+							</f:facet>
+							<h:outputText value="#{pol.serialNo}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Rate" />
+							</f:facet>
+							<h:outputText value="#{pol.rate}" />
+						</rich:column>
 						<rich:column>
 							<f:facet name="header">
 								<h:outputText value="Quantity" />
 							</f:facet>
+							<h:inputText value="#{pol.quantity}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Original Quantity" />
+							</f:facet>
 							<h:outputText value="#{pol.quantity}" />
+						</rich:column>
+						<rich:column>
+							<f:facet name="header">
+								<h:outputText value="Pending Quantity" />
+							</f:facet>
+							<h:outputText value="#{pol.pendingQuantity}" />
 						</rich:column>
 						<rich:column>
 							<h:commandButton value="Delete"
@@ -141,9 +173,7 @@
 						</rich:column>
 					</rich:dataTable>
 				</a4j:outputPanel>
-
 			</h:form>
 		</f:view>
-
 	</ui:define>
 </ui:composition>
