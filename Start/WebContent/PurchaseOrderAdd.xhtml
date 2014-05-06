@@ -7,11 +7,12 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<ui:define name="content">
-	<rich:popupPanel id="addLineItem" autosized="true">
+		<rich:popupPanel id="addLineItem" autosized="true">
 			<f:facet name="Header">
 				<h:outputText value="Add Line Item" />
 			</f:facet>
-			<a onclick="#{rich:component('addLineItem')}.hide()" href="#">Hide ModalPanel</a>
+			<a onclick="#{rich:component('addLineItem')}.hide()" href="#">Hide
+				ModalPanel</a>
 			<rich:panel>
 				<h:form>
 					<h:panelGrid id="addLineItemPanel" columns="2">
@@ -39,7 +40,8 @@
 						</h:selectOneMenu>
 
 						<h:outputText value="Package Desc" />
-						<h:inputText value="#{PurchaseOrderBean.poLineItem.partDescription}" />
+						<h:inputText
+							value="#{PurchaseOrderBean.poLineItem.partDescription}" />
 
 						<h:outputText value="Quantity Nos." />
 						<h:inputText value="#{PurchaseOrderBean.poLineItem.quantity}" />
@@ -77,7 +79,7 @@
 				</h:form>
 			</rich:panel>
 		</rich:popupPanel>
-	
+
 		<f:view>
 			<h:form>
 				<h:outputText value="Purchase Orders" styleClass="pageTitle" />
@@ -92,31 +94,37 @@
 						value="#{PurchaseOrderBean.selectedPurchaseOrderVO.purchaseOrderDate}"
 						label="poDate" />
 					<h:outputText value="Customer Vendor Code" styleClass="leftColumn" />
-					<h:inputText styleClass="searchEntry" name="description"
-						value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.vendor_code}"
-						label="CustomerName" />
-					<h:outputText value="Customer Name" styleClass="leftColumn" />
-					<h:inputText styleClass="searchEntry" id="description"
-						value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.customer_name}"
-						label="CustomerName" />
-					<h:outputText value="Customer Address" styleClass="leftColumn" />
-					<h:inputTextarea styleClass="searchEntry" name="custCddress"
-						value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.customer_address}"
-						label="CustomerAddress" />
-					<h:commandButton value="Add" styleClass="searchButton"
-						action="#{PurchaseOrderBean.add}"
-						rendered="#{!PurchaseOrderBean.editFlag}" />
-					<h:commandButton value="Edit" styleClass="searchButton"
-						action="#{PurchaseOrderBean.edit}"
-						rendered="#{PurchaseOrderBean.editFlag}" />
+					<rich:autocomplete mode="cachedAjax" minChars="2"
+						valueChangeListener="#{PurchaseOrderBean.getCustomerDataUsingVendorCode}"
+						autocompleteMethod="#{PurchaseOrderBean.vendorCodeAutoComplete}"
+						value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.vendor_code}">
+						<a4j:ajax event="change"
+							render="custName,custAddress" />
+					</rich:autocomplete>
+						<h:outputText value="Customer Name" styleClass="leftColumn" />
+						<h:inputText styleClass="searchEntry" id="custName"
+							value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.customer_name}"
+							label="CustomerName" />
+<!-- 						<h:outputText value="Customer Address" styleClass="leftColumn" /> -->
+<!-- 						<h:inputTextarea styleClass="searchEntry" name="custAddress" -->
+<!-- 							value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.customer_address}" -->
+<!-- 							label="CustomerAddress" /> -->
+						<h:commandButton value="Add" styleClass="searchButton"
+							action="#{PurchaseOrderBean.add}"
+							rendered="#{!PurchaseOrderBean.editFlag}" />
+						<h:commandButton value="Edit" styleClass="searchButton"
+							action="#{PurchaseOrderBean.edit}"
+							rendered="#{PurchaseOrderBean.editFlag}" />
 
-					<a4j:commandButton value="Add Line Item" styleClass="searchButton"
-						id="addLI" oncomplete="#{rich:component('addLineItem')}.show()}"
-						rendered="#{true}"
-						>
-						<rich:componentControl target="addLineItem" operation="show"
-							event="click" />
-					</a4j:commandButton>
+						<a4j:commandButton value="Add Line Item" styleClass="searchButton"
+							id="addLI" oncomplete="#{rich:component('addLineItem')}.show()}"
+							rendered="#{true}">
+							<rich:componentControl target="addLineItem" operation="show"
+								event="click" />
+						</a4j:commandButton>
+						
+						<h:commandButton value="Back" styleClass="searchButton"
+							action="#{PurchaseOrderBean.reset}"/>
 				</h:panelGrid>
 				<a4j:outputPanel ajaxRendered="true" id="SearchTable">
 					<h:outputText

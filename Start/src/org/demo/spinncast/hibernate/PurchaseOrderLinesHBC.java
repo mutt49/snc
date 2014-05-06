@@ -78,7 +78,7 @@ public class PurchaseOrderLinesHBC {
 		this.rate = purchaseOrderLinesVO.getRate();
 		this.pendingQuantity = purchaseOrderLinesVO.getPendingQuantity();
 		this.purchaseOrderId = purchaseOrderLinesVO.getPurchaseOrderId ();
-		this.partDescription = "";
+		this.partDescription = purchaseOrderLinesVO.getPartDescription();
 		this.quantityKg = purchaseOrderLinesVO.getQuantityKg();
 		this.gradeId = purchaseOrderLinesVO.getGradeId();
 		this.setUnit(purchaseOrderLinesVO.getUnit ());

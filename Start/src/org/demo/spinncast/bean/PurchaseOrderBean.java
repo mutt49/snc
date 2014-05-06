@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.component.UIOutput;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.event.ValueChangeEvent;
 
 import org.demo.spinncast.connections.ConnectionPool;
 import org.demo.spinncast.handler.CustomerHandler;
@@ -125,18 +126,16 @@ public class PurchaseOrderBean {
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Transaction trans = session.beginTransaction();
+		selectedPurchaseOrderVO.setPurchaseOrderId(0);
 		PurchaseOrderHBC purchaseOrderHBC = new PurchaseOrderHBC(
-				searchPurchaseOrderVO);
+				selectedPurchaseOrderVO);
 		session.saveOrUpdate(purchaseOrderHBC);
 		trans.commit();
 		session.close();
-		/*
-		 * Also save Line Items
-		 */
-		searchPurchaseOrderVO = new PurchaseOrderVO();
-		return search();
+		return "PurchaseOrderAdd";
 	}
 
+	
 	public String edit() {
 		System.out.println(getSelectedId());
 		ConnectionPool cpool = ConnectionPool.getInstance();
@@ -241,6 +240,7 @@ public class PurchaseOrderBean {
 	
 	public String resetBeforeAdd () {
 		selectedPurchaseOrderVO = new PurchaseOrderVO();
+		selectedPurchaseOrderVO.setCustDetails(new CustomerVO());
 		getSearchList().clear();
 		selectedId = null;
 		editFlag = false;
@@ -339,5 +339,38 @@ public class PurchaseOrderBean {
 		PartMasterHandler partMasterHanlder = new PartMasterHandler();
 		partVo = partMasterHanlder.populatePartMaster(partId);
 	}
-	
+
+	public void getCustomerDataUsingVendorCode(ValueChangeEvent event) {
+		CustomerHandler custHandler = new CustomerHandler();
+		String vendorCode = (String) event.getNewValue();
+		if (vendorCode.isEmpty()) {
+			return;
+		}
+		// CustomerVO tempCustVo =
+		// populateCustomerDetailsUsingVendorCode(vendorCode);
+		CustomerVO tempCustVo = custHandler
+				.populateCustomerDetailsUsingVendorCode(vendorCode);
+		if (tempCustVo != null) {
+			selectedPurchaseOrderVO.setCustDetails(tempCustVo);
+			selectedPurchaseOrderVO.setCustomerId(tempCustVo.getCustomer_id());
+		}
+	}
+	public List<String> vendorCodeAutoComplete(String prefix) {
+		List<String> result = new ArrayList<String>();
+
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		Session session = cpool.getSession();
+		Query hibernateQuery = session
+				.createQuery("from CustomerHBC as m where vendor_code like '%"
+						+ prefix + "%'");
+		java.util.List<CustomerHBC> results = hibernateQuery.list();
+
+		for (int i = 0; i < results.size(); i++) {
+			result.add(results.get(i).getVendor_code());
+		}
+		session.close();
+
+		return result;
+	}
+
 }
