@@ -18,10 +18,10 @@ public class PurchaseOrderLinesHBC {
 	private String partDescription;
 	private int gradeId;
 	private String unit;
-	private double amount;
+	private double amount;	
 	private int invId;
 	private double currQuantity;
-
+		
 	public double getCurrQuantity() {
 		return currQuantity;
 	}
@@ -99,9 +99,8 @@ public class PurchaseOrderLinesHBC {
 	}
 
 	public PurchaseOrderLinesHBC(PurchaseOrderLinesVO purchaseOrderLinesVO) {
-		if (purchaseOrderLinesVO.getPoLineId() != null) {
-			this.poLineId = purchaseOrderLinesVO.getPoLineId();
-		}
+		if(purchaseOrderLinesVO.getPoLineId() != null)
+		this.poLineId = purchaseOrderLinesVO.getPoLineId();
 		this.serialNo = purchaseOrderLinesVO.getSerialNo();
 		this.partId = purchaseOrderLinesVO.getPartId();
 		this.quantity = purchaseOrderLinesVO.getQuantity();

@@ -85,7 +85,6 @@ public class PurchaseOrderBean {
 
 	public String reset() {
 		getSearchList().clear();
-		searchPurchaseOrderVO = new PurchaseOrderVO();
 		selectedId = null;
 		return "PurchaseOrderSearch";
 	}
