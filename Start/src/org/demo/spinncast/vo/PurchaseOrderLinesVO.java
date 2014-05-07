@@ -20,6 +20,10 @@ public class PurchaseOrderLinesVO {
 	private String partDescription;
 	private int gradeId;
 	private String unit;
+	private boolean checked;
+	private double amount;
+	private int invId;
+	private double currQuantity;
 
 	public PurchaseOrderLinesVO(PurchaseOrderLinesHBC result) {
 		poLineId = result.getPoLineId ();
@@ -27,6 +31,7 @@ public class PurchaseOrderLinesVO {
 		partId = result.getPartId ();
 		purchaseOrderId = result.getPurchaseOrderId ();
 		quantity = result.getQuantity ();
+		currQuantity = result.getCurrQuantity();
 		rate = result.getRate ();
 		pendingQuantity = result.getPendingQuantity ();
 		partName = "";
@@ -34,10 +39,41 @@ public class PurchaseOrderLinesVO {
 		quantityKg = result.getQuantityKg();
 		gradeId = result.getGradeId();
 		unit = result.getUnit ();
+		amount = result.getAmount();
+		invId = result.getInvId();
+		if(unit.equalsIgnoreCase("no")){
+			currQuantity = quantity - pendingQuantity;
+		}else{
+			currQuantity = quantityKg - pendingQuantity;
+		}
 	}
 
 	public PurchaseOrderLinesVO() {
 		// TODO Auto-generated constructor stub
+	}
+
+	public double getCurrQuantity() {
+		return currQuantity;
+	}
+
+	public void setCurrQuantity(double currQuantity) {
+		this.currQuantity = currQuantity;
+	}
+
+	public int getInvId() {
+		return invId;
+	}
+
+	public void setInvId(int invId) {
+		this.invId = invId;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
 	}
 
 	public String getPartName() {
@@ -134,6 +170,14 @@ public class PurchaseOrderLinesVO {
 
 	public void setUnit(String unit) {
 		this.unit = unit;
+	}
+
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
 	}
 
 }

@@ -427,6 +427,7 @@ public class InvoiceHeaderBean {
 			selectedInvHdrVo.setInvId(invHeaderHBC.getInvId());
 			headerSaved = true;
 			editFlag = true;
+			addLIamountAggregation(new InvoiceLineItemVO());
 		} catch (Exception e) {
 			FacesContext
 					.getCurrentInstance()
@@ -548,7 +549,8 @@ public class InvoiceHeaderBean {
 		invLineItem.setPartId(partVo.getPartId());
 		invLineItem.setInvId(selectedInvHdrVo.getInvId());
 
-		if (invLineItem.getUnit().equalsIgnoreCase("KG") || invLineItem.getUnit().equalsIgnoreCase("set")) {
+		if (invLineItem.getUnit().equalsIgnoreCase("KG")
+				|| invLineItem.getUnit().equalsIgnoreCase("set")) {
 			invLineItem.setAmount(invLineItem.getQuantityKgs()
 					* invLineItem.getRate());
 		} else {
@@ -654,9 +656,12 @@ public class InvoiceHeaderBean {
 		session.close();
 		session = cpool.getSession();
 		trans = session.beginTransaction();
-		hql = "update InvoiceHeaderHBC set net_total_amount = pkg_frwd_chg + li_amount_total where invId = :inv_id ";
+		hql = "update InvoiceHeaderHBC set net_total_amount = :pkg_frwd_chg + li_amount_total where invId = :inv_id ";
 		query = session.createQuery(hql);
-		query.setInteger("inv_id", invLineItem.getInvId());
+		query.setFloat("pkg_frwd_chg", selectedInvHdrVo.getPkgFrwdChg());
+
+		query.setInteger("inv_id", selectedInvId);
+
 		result = query.executeUpdate();
 		trans.commit();
 		session.flush();
@@ -669,9 +674,13 @@ public class InvoiceHeaderBean {
 
 		session = cpool.getSession();
 		trans = session.beginTransaction();
-		hql = "update InvoiceHeaderHBC set grand_total = net_total_amount + :taxTotal + freight_insurance where invId = :inv_id ";
+		hql = "update InvoiceHeaderHBC set grand_total = net_total_amount + :taxTotal + :freight_insurance where invId = :inv_id ";
 		query = session.createQuery(hql);
-		query.setInteger("inv_id", invLineItem.getInvId());
+
+		query.setInteger("inv_id", selectedInvId);
+
+		query.setFloat("freight_insurance",
+				selectedInvHdrVo.getFreightInsurance());
 		query.setFloat("taxTotal", taxTotal);
 
 		result = query.executeUpdate();
@@ -1510,15 +1519,17 @@ public class InvoiceHeaderBean {
 				float yOffsetForLineItemText = yOffset + height - 395;
 				for (int lineItemIndex = 0; lineItemIndex < invLineItemList
 						.size(); lineItemIndex++) {
-					
-					
-					
+
 					String tempStr = invLineItemList.get(lineItemIndex)
 							.getPkgDesc();
 
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 9);
-					contentStream.moveTextPositionByAmount(xOffset + 5,  (yOffsetForLineItemText + topLineOfCurrentLineItemOnPdf * lineItemPadding));
+					contentStream
+							.moveTextPositionByAmount(
+									xOffset + 5,
+									(yOffsetForLineItemText + topLineOfCurrentLineItemOnPdf
+											* lineItemPadding));
 					contentStream.drawString(Integer.toString(invLineItemList
 							.get(lineItemIndex).getSerialNo()));
 					contentStream.endText();
@@ -1532,8 +1543,11 @@ public class InvoiceHeaderBean {
 
 						contentStream.beginText();
 						contentStream.setFont(fontBold, 9);
-						contentStream.moveTextPositionByAmount(xOffset + 40,
-								yOffsetForLineItemText + ((currentLineOnPdf + partLineIndex) * lineItemPadding));
+						contentStream
+								.moveTextPositionByAmount(
+										xOffset + 40,
+										yOffsetForLineItemText
+												+ ((currentLineOnPdf + partLineIndex) * lineItemPadding));
 						contentStream.drawString(str);
 						contentStream.endText();
 						partLineIndex++;
@@ -1552,13 +1566,16 @@ public class InvoiceHeaderBean {
 							woodenPadding = 9;
 						else
 							woodenPadding = 4;
-						contentStream.moveTextPositionByAmount(xOffset + 253
-								+ woodenPadding, yOffsetForLineItemText + ((currentLineOnPdf + noOfPackagesIndex) * lineItemPadding));
+						contentStream
+								.moveTextPositionByAmount(
+										xOffset + 253 + woodenPadding,
+										yOffsetForLineItemText
+												+ ((currentLineOnPdf + noOfPackagesIndex) * lineItemPadding));
 						contentStream.drawString(str);
 						contentStream.endText();
 						noOfPackagesIndex++;
 					}
-					
+
 					if (partLineIndex > noOfPackagesIndex) {
 						currentLineOnPdf += partLineIndex;
 					} else {
@@ -1579,7 +1596,9 @@ public class InvoiceHeaderBean {
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 9);
 					contentStream.moveTextPositionByAmount(
-							xOffset + 253 + 9 + 45, yOffsetForLineItemText + topLineOfCurrentLineItemOnPdf * lineItemPadding);
+							xOffset + 253 + 9 + 45, yOffsetForLineItemText
+									+ topLineOfCurrentLineItemOnPdf
+									* lineItemPadding);
 					contentStream.drawString(Integer.toString(invLineItemList
 							.get(lineItemIndex).getQuantityNo()));
 					contentStream.endText();
@@ -1587,7 +1606,9 @@ public class InvoiceHeaderBean {
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 9);
 					contentStream.moveTextPositionByAmount(
-							xOffset + 253 + 9 + 90, yOffsetForLineItemText + topLineOfCurrentLineItemOnPdf * lineItemPadding);
+							xOffset + 253 + 9 + 90, yOffsetForLineItemText
+									+ topLineOfCurrentLineItemOnPdf
+									* lineItemPadding);
 					contentStream.drawString(Float.toString(invLineItemList
 							.get(lineItemIndex).getQuantityKgs()));
 					contentStream.endText();
@@ -1595,7 +1616,9 @@ public class InvoiceHeaderBean {
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 9);
 					contentStream.moveTextPositionByAmount(
-							xOffset + 253 + 9 + 130, yOffsetForLineItemText + topLineOfCurrentLineItemOnPdf * lineItemPadding);
+							xOffset + 253 + 9 + 130, yOffsetForLineItemText
+									+ topLineOfCurrentLineItemOnPdf
+									* lineItemPadding);
 					contentStream.drawString(invLineItemList.get(lineItemIndex)
 							.getUnit());
 					contentStream.endText();
@@ -1610,7 +1633,8 @@ public class InvoiceHeaderBean {
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset + width - 15
-							- rateStringWidth, yOffsetForLineItemText + topLineOfCurrentLineItemOnPdf * lineItemPadding);
+							- rateStringWidth, yOffsetForLineItemText
+							+ topLineOfCurrentLineItemOnPdf * lineItemPadding);
 					contentStream.drawString(rateString);
 					contentStream.endText();
 
@@ -1626,10 +1650,11 @@ public class InvoiceHeaderBean {
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset + width - 82
-							- totalAmountStringWidth, yOffsetForLineItemText + topLineOfCurrentLineItemOnPdf * lineItemPadding);
+							- totalAmountStringWidth, yOffsetForLineItemText
+							+ topLineOfCurrentLineItemOnPdf * lineItemPadding);
 					contentStream.drawString(totalAmountString);
 					contentStream.endText();
-					
+
 					topLineOfCurrentLineItemOnPdf = currentLineOnPdf;
 				}
 
@@ -2620,13 +2645,13 @@ public class InvoiceHeaderBean {
 		List<String> returnValue = new ArrayList<String>();
 		if (bigString.length() < characters) {
 			bigString = bigString.trim();
-			
+
 			returnValue.add(bigString);
 		} else {
 			while (bigString.length() > characters) {
 				bigString = bigString.trim();
 				String temp = bigString.substring(0, characters);
-				
+
 				if (temp.indexOf(" ") != -1)
 					temp = temp.substring(0, temp.lastIndexOf(" "));
 				temp = temp.replaceAll("\\(", "\\\\(");
@@ -2659,6 +2684,7 @@ public class InvoiceHeaderBean {
 		selectedInvHdrVo.setInvId(invHeaderHBC.getInvId());
 		headerSaved = true;
 		editFlag = true;
+		addLIamountAggregation(new InvoiceLineItemVO());
 	}
 
 	public String deleteLineItem() {

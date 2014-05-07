@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import org.demo.spinncast.hibernate.InvoiceHeaderHBC;
+import org.demo.spinncast.hibernate.PurchaseOrderHBC;
 
 @ManagedBean(name = "InvoiceHeaderVO")
 @SessionScoped
@@ -86,6 +87,14 @@ public class InvoiceHeaderVO {
 		this.invNo = invHeaderHbc.getInvNo();
 		this.deliveryAddress = invHeaderHbc.getDeliveryAddress();
 		this.deliveryTo = invHeaderHbc.getDeliveryTo();
+		this.linesOfLineItem = 0;
+	}
+	
+	public InvoiceHeaderVO(PurchaseOrderVO purchaseOrderHbc){
+		this.customerId = purchaseOrderHbc.getCustomerId();
+		this.purchaseOrderId = purchaseOrderHbc.getPurchaseOrderNo()+"";
+		this.purchaseOrderDate = purchaseOrderHbc.getPurchaseOrderDate();
+		//this.netTotalAmount = purchaseOrderHbc.getNetTotalAmount();
 		this.linesOfLineItem = 0;
 	}
 

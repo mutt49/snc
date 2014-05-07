@@ -14,7 +14,7 @@ import org.demo.spinncast.hibernate.PurchaseOrderHBC;
 @SessionScoped
 public class PurchaseOrderVO {
 	private Integer purchaseOrderId;
-	private Integer purchaseOrderNo;
+	private String purchaseOrderNo;
 	private Integer customerId;
 	private Date purchaseOrderDate;
 	private String customerName;
@@ -45,11 +45,11 @@ public class PurchaseOrderVO {
 		this.purchaseOrderId = purchaseOrderId;
 	}
 
-	public Integer getPurchaseOrderNo() {
+	public String getPurchaseOrderNo() {
 		return purchaseOrderNo;
 	}
 
-	public void setPurchaseOrderNo(Integer purchaseOrderNo) {
+	public void setPurchaseOrderNo(String purchaseOrderNo) {
 		this.purchaseOrderNo = purchaseOrderNo;
 	}
 

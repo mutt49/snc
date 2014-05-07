@@ -17,6 +17,7 @@
 		<property name="partDescription" column="part_description"></property>
 		<property name="gradeId" column="grade_id"></property>	
 		<property name="unit" column="unit"></property>
+		<property name="amount" column="amount"></property>
 	</class>
 </hibernate-mapping>  
 

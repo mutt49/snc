@@ -2,3 +2,5 @@
  alter table purchase_order_lines add column part_description text not null;
  alter table purchase_order_lines add column quantity_kg float not null;
  alter table purchase_order_lines add column unit text not null;
+ 
+ alter table purchase_order_lines add column amount float;

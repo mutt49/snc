@@ -18,6 +18,33 @@ public class PurchaseOrderLinesHBC {
 	private String partDescription;
 	private int gradeId;
 	private String unit;
+	private double amount;
+	private int invId;
+	private double currQuantity;
+
+	public double getCurrQuantity() {
+		return currQuantity;
+	}
+
+	public void setCurrQuantity(double currQuantity) {
+		this.currQuantity = currQuantity;
+	}
+
+	public int getInvId() {
+		return invId;
+	}
+
+	public void setInvId(int invId) {
+		this.invId = invId;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
+	}
 
 	public int getPoLineId() {
 		return poLineId;
@@ -72,16 +99,21 @@ public class PurchaseOrderLinesHBC {
 	}
 
 	public PurchaseOrderLinesHBC(PurchaseOrderLinesVO purchaseOrderLinesVO) {
+		if (purchaseOrderLinesVO.getPoLineId() != null) {
+			this.poLineId = purchaseOrderLinesVO.getPoLineId();
+		}
 		this.serialNo = purchaseOrderLinesVO.getSerialNo();
 		this.partId = purchaseOrderLinesVO.getPartId();
 		this.quantity = purchaseOrderLinesVO.getQuantity();
 		this.rate = purchaseOrderLinesVO.getRate();
 		this.pendingQuantity = purchaseOrderLinesVO.getPendingQuantity();
-		this.purchaseOrderId = purchaseOrderLinesVO.getPurchaseOrderId ();
-		this.partDescription = "";
+		this.purchaseOrderId = purchaseOrderLinesVO.getPurchaseOrderId();
+		this.partDescription = purchaseOrderLinesVO.getPartDescription();
 		this.quantityKg = purchaseOrderLinesVO.getQuantityKg();
 		this.gradeId = purchaseOrderLinesVO.getGradeId();
-		this.setUnit(purchaseOrderLinesVO.getUnit ());
+		this.unit = purchaseOrderLinesVO.getUnit();
+		this.amount = purchaseOrderLinesVO.getAmount();
+		this.invId = purchaseOrderLinesVO.getInvId();
 	}
 
 	public void update(PurchaseOrderVO purchaseOrderVO) {

@@ -11,8 +11,12 @@
 
 		<f:view>
 			<h:form>
+
+				<h:messages globalOnly="true" styleClass="pageErrorMessage" />
+				
 				<h:outputText value="Purchase Orders" styleClass="pageTitle" />
-				<h:commandLink value="Add New" action="#{PurchaseOrderBean.resetBeforeAdd}"
+				<h:commandLink value="Add New"
+					action="#{PurchaseOrderBean.resetBeforeAdd}"
 					styleClass="pageSubTitle">
 					<f:setPropertyActionListener value="#{false}"
 						target="#{PurchaseOrderBean.editFlag}" />
@@ -20,8 +24,7 @@
 				<rich:panel>
 					<table class="table" cellspacing="0">
 						<tr>
-							<td class="leftColumn"><h:outputText value="PO No.: " />
-							</td>
+							<td class="leftColumn"><h:outputText value="PO No.: " /></td>
 							<td><h:inputText styleClass="searchEntry" id="poNo"
 									value="#{PurchaseOrderBean.searchPurchaseOrderVO.purchaseOrderNo}"
 									label="poNo" /></td>
@@ -61,16 +64,17 @@
 								<h:outputText value="#{po.customerName}" />
 							</rich:column>
 							<rich:column>
-								<a4j:commandButton value="View" action="#{PurchaseOrderBean.view}">
+								<a4j:commandButton value="View"
+									action="#{PurchaseOrderBean.view}">
 									<f:setPropertyActionListener value="#{po.purchaseOrderId}"
 										target="#{PurchaseOrderBean.selectedId}" />
 									<f:setPropertyActionListener value="#{true}"
 										target="#{PurchaseOrderBean.editFlag}" />
 								</a4j:commandButton>
 							</rich:column>
-							     <f:facet name="footer">
-                						<rich:dataScroller id="ds" renderIfSinglePage="true"></rich:dataScroller>
-            					</f:facet>
+							<f:facet name="footer">
+								<rich:dataScroller id="ds" renderIfSinglePage="true"></rich:dataScroller>
+							</f:facet>
 						</rich:dataTable>
 					</a4j:outputPanel>
 				</rich:panel>

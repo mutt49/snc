@@ -1,6 +1,8 @@
 package org.demo.spinncast.hibernate;
 
 import org.demo.spinncast.vo.InvoiceLineItemVO;
+import org.demo.spinncast.vo.PurchaseOrderLinesVO;
+import org.demo.spinncast.vo.PurchaseOrderVO;
 
 public class InvoiceLineItemHBC {
 
@@ -107,6 +109,27 @@ public class InvoiceLineItemHBC {
 
 	public InvoiceLineItemHBC() {
 
+	}
+	
+	public InvoiceLineItemHBC(PurchaseOrderLinesVO poLines) {
+		invId = poLines.getInvId();
+		pkgDesc = poLines.getPartDescription();
+		noOfPkgs = "";
+		partId = poLines.getPartId();
+		
+		unit = poLines.getUnit();
+		rate = Float.parseFloat(poLines.getRate()+"");
+		serialNo = poLines.getSerialNo();
+		gradeId = poLines.getGradeId();
+		if(unit.equalsIgnoreCase("no")){
+			amount = Float.parseFloat(poLines.getCurrQuantity()+"") * rate;
+			quantityNo = Integer.parseInt(new Double(poLines.getCurrQuantity()).intValue()+"");
+			quantityKgs = Float.parseFloat(poLines.getQuantityKg()+"");
+		}else{
+			amount = Float.parseFloat(poLines.getCurrQuantity()+"") * rate;
+			quantityNo = Integer.parseInt(new Double(poLines.getQuantity()).intValue()+"");
+			quantityKgs = Float.parseFloat(poLines.getCurrQuantity()+"");
+		}
 	}
 
 	public InvoiceLineItemHBC(InvoiceLineItemVO invLineItem) {

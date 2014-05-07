@@ -7,7 +7,7 @@ import org.demo.spinncast.vo.PurchaseOrderVO;
 public class PurchaseOrderHBC {
 
 	private int purchaseOrderId;
-	private int purchaseOrderNo;
+	private String purchaseOrderNo;
 	private int customerId;
 	private Date purchaseOrderDate;
 
@@ -19,11 +19,11 @@ public class PurchaseOrderHBC {
 		this.purchaseOrderId = purchaseOrderId;
 	}
 
-	public int getPurchaseOrderNo() {
+	public String getPurchaseOrderNo() {
 		return purchaseOrderNo;
 	}
 
-	public void setPurchaseOrderNo(int purchaseOrderNo) {
+	public void setPurchaseOrderNo(String purchaseOrderNo) {
 		this.purchaseOrderNo = purchaseOrderNo;
 	}
 
@@ -48,9 +48,11 @@ public class PurchaseOrderHBC {
 	}
 
 	public PurchaseOrderHBC(PurchaseOrderVO purchaseOrderVO) {
-		this.purchaseOrderId = purchaseOrderVO.getPurchaseOrderId();
+		if (purchaseOrderVO.getPurchaseOrderId() != null) {
+			this.purchaseOrderId = purchaseOrderVO.getPurchaseOrderId();
+		}
 		this.purchaseOrderNo = purchaseOrderVO.getPurchaseOrderNo();
-		this.customerId = purchaseOrderVO.getCustomerId();
+		this.customerId = purchaseOrderVO.getCustDetails().getCustomer_id();
 		this.purchaseOrderDate = purchaseOrderVO.getPurchaseOrderDate();
 	}
 
