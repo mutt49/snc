@@ -2650,6 +2650,10 @@ public class InvoiceHeaderBean {
 		} else {
 			while (bigString.length() > characters) {
 				bigString = bigString.trim();
+				if (bigString.length() <= characters) {
+					returnValue.add(bigString);
+					return returnValue;
+				}
 				String temp = bigString.substring(0, characters);
 
 				if (temp.indexOf(" ") != -1)
