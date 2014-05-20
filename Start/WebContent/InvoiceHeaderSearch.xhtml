@@ -34,7 +34,7 @@
 							</td>
 							<td>
 								<rich:autocomplete styleClass="searchEntry" mode="cachedAjax" minChars="2" id="cName"
-									valueChangeListener="#{InvoiceHeaderBean.getCustomerData}"
+									valueChangeListener="#{InvoiceHeaderBean.getCustomerData}" 
 									autocompleteMethod="#{InvoiceHeaderBean.customerNameAutoComplete}"
 									value="#{InvoiceHeaderBean.selectedInvHdrVo.custDetails.customer_name}">
 									<a4j:ajax event="change" 

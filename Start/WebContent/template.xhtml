@@ -12,34 +12,36 @@
 </h:head>
 <body>
 	<div id="header">
-		<div id="headerText">Spin-N-Cast</div>
-	</div>
-	<div id="wrapper">
-		<f:view>
-		<h:form>
-				<rich:toolbar styleClass="toolbar">
-					<rich:dropDownMenu id="dropDownMenu" label="Masters">
+		<div class="headerContent">
+			<div class="headerLogo">Spin-N-Cast</div>
+			<h:form styleClass="headerText">
+				<rich:toolbar>
+					<rich:dropDownMenu styleClass="headerMenuItemDropDownHeader" label="Masters">
 						<rich:menuItem action="CcmSearch.jsf"
 							label="Chemical Composition Masters" id="ChemMaster"
-							styleClass="toolbar"></rich:menuItem>
+							styleClass="headeDropDownItem"></rich:menuItem>
 						<rich:menuItem action="MpmSearch.jsf"
 							label="Physical Properties Masters" id="PhyMaster"
-							styleClass="toolbar"></rich:menuItem>
+							styleClass="headeDropDownItem"></rich:menuItem>
 						<rich:menuItem action="PartMasterSearch.jsf" label="Part Masters"
-							id="partMaster" styleClass="toolbar"></rich:menuItem>
+							id="partMaster" styleClass="headeDropDownItem"></rich:menuItem>
 						<rich:menuItem action="GradeMasterSearch.jsf"
-							label="Grade Masters" id="GradeMaster" styleClass="toolbar"></rich:menuItem>
+							label="Grade Masters" id="GradeMaster" styleClass="headeDropDownItem"></rich:menuItem>
 						<rich:menuItem action="CustomerSearch.jsf"
-							label="Customer Masters" id="CustMaster" styleClass="toolbar"></rich:menuItem>
+							label="Customer Masters" id="CustMaster" styleClass="headeDropDownItem"></rich:menuItem>
 					</rich:dropDownMenu>
-					<h:commandLink value="Invoices" action="InvoiceHeaderSearch.jsf"
-						styleClass="toolbar" />
-					<h:commandLink value="Test Certificates"
-						action="TestCertificateSearch.jsf" styleClass="toolbar" />
-					<h:commandLink value="Purchase Orders"
-						action="PurchaseOrderSearch.jsf" styleClass="toolbar" />
-				</rich:toolbar></h:form>
-		</f:view>
+					
+					<h:commandLink value="Invoices"  action="InvoiceHeaderSearch.jsf"
+						 styleClass="headerMenuItem" />
+					<h:commandLink value="Purchase Orders" 
+						action="PurchaseOrderSearch.jsf" styleClass="headerMenuItem" />
+					<h:commandLink value="Test Certificates" 
+						action="TestCertificateSearch.jsf" styleClass="headerMenuItem" />
+				</rich:toolbar>
+			</h:form>
+		</div>
+	</div>
+	<div id="wrapper">
 		<ui:insert name="content" />
 	</div>
 </body>

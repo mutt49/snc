@@ -82,9 +82,9 @@
 
 		<f:view>
 			<h:form>
-			
+
 				<h:messages globalOnly="true" styleClass="pageErrorMessage" />
-			
+
 				<h:outputText value="Purchase Orders" styleClass="pageTitle" />
 				<h:outputText value="Add New" styleClass="pageSubTitleActive" />
 				<h:panelGrid styleClass="table" columns="4">
@@ -98,6 +98,7 @@
 						label="poDate" />
 					<h:outputText value="Customer Vendor Code" styleClass="leftColumn" />
 					<rich:autocomplete mode="cachedAjax" minChars="2"
+						styleClass="searchEntry"
 						valueChangeListener="#{PurchaseOrderBean.getCustomerDataUsingVendorCode}"
 						autocompleteMethod="#{PurchaseOrderBean.vendorCodeAutoComplete}"
 						value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.vendor_code}">
@@ -111,22 +112,28 @@
 					<!-- 						<h:inputTextarea styleClass="searchEntry" name="custAddress" -->
 					<!-- 							value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.customer_address}" -->
 					<!-- 							label="CustomerAddress" /> -->
-					<h:commandButton value="Add" styleClass="searchButton"
-						action="#{PurchaseOrderBean.add}"
-						rendered="#{!PurchaseOrderBean.editFlag}" />
-					<h:commandButton value="Edit" styleClass="searchButton"
-						action="#{PurchaseOrderBean.edit}"
-						rendered="#{PurchaseOrderBean.editFlag}" />
+					
+					
+					<h:panelGroup>
+						<h:commandButton value="Add" styleClass="searchButton"
+							action="#{PurchaseOrderBean.add}"
+							rendered="#{!PurchaseOrderBean.editFlag}" />
+						<h:commandButton value="Edit" styleClass="searchButton"
+							action="#{PurchaseOrderBean.edit}"
+							rendered="#{PurchaseOrderBean.editFlag}" />
+					</h:panelGroup>
+						<a4j:commandButton value="Add Line Item" styleClass="searchButton"
+							id="addLI" oncomplete="#{rich:component('addLineItem')}.show()}"
+							rendered="#{true}">
+							<rich:componentControl target="addLineItem" operation="show"
+								event="click" />
+						</a4j:commandButton>
 
-					<a4j:commandButton value="Add Line Item" styleClass="searchButton"
-						id="addLI" oncomplete="#{rich:component('addLineItem')}.show()}"
-						rendered="#{true}">
-						<rich:componentControl target="addLineItem" operation="show"
-							event="click" />
-					</a4j:commandButton>
-
-					<h:commandButton value="Back" styleClass="searchButton"
-						action="#{PurchaseOrderBean.reset}" />
+					<h:panelGroup></h:panelGroup>
+					<h:panelGroup></h:panelGroup>
+						<h:commandButton value="Back" styleClass="searchButton"
+							action="#{PurchaseOrderBean.reset}" />
+					
 				</h:panelGrid>
 				<a4j:outputPanel ajaxRendered="true" id="SearchTable">
 					<h:outputText
@@ -182,11 +189,11 @@
 							</h:commandButton>
 						</rich:column>
 					</rich:dataTable>
-					
+
 					<a4j:commandButton value="Create Invoice" styleClass="searchButton"
 						action="#{PurchaseOrderBean.createInvoice}"
 						rendered="#{PurchaseOrderBean.selectedPurchaseOrderVO.poLines.size() > 0}" />
-						
+
 				</a4j:outputPanel>
 			</h:form>
 		</f:view>
