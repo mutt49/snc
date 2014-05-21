@@ -163,6 +163,12 @@ public class CustomerBean {
 	}
 
 	public String reset() {
+		searchList = new ArrayList<CustomerVO>();
+		customerVO = new CustomerVO();
+		customerPersonnelVO = new CustomerPersonnelVO();
+		selectedId = 0;
+		selectedPersonnelId = 0;
+		editedCustomer = new CustomerVO();
 		getSearchList().clear();
 		return "CustomerSearch";
 	}

@@ -17,26 +17,26 @@
 			<h:form styleClass="headerText">
 				<rich:toolbar>
 					<rich:dropDownMenu styleClass="headerMenuItemDropDownHeader" label="Masters">
-						<rich:menuItem action="CcmSearch.jsf"
+						<rich:menuItem action="#{CcmBean.reset}"
 							label="Chemical Composition Masters" id="ChemMaster"
 							styleClass="headeDropDownItem"></rich:menuItem>
-						<rich:menuItem action="MpmSearch.jsf"
+						<rich:menuItem action="#{MpmBean.reset}"
 							label="Physical Properties Masters" id="PhyMaster"
 							styleClass="headeDropDownItem"></rich:menuItem>
-						<rich:menuItem action="PartMasterSearch.jsf" label="Part Masters"
+						<rich:menuItem action="#{PartMasterBean.reset}" label="Part Masters"
 							id="partMaster" styleClass="headeDropDownItem"></rich:menuItem>
-						<rich:menuItem action="GradeMasterSearch.jsf"
+						<rich:menuItem action="#{GradeMasterBean.reset}"
 							label="Grade Masters" id="GradeMaster" styleClass="headeDropDownItem"></rich:menuItem>
-						<rich:menuItem action="CustomerSearch.jsf"
+						<rich:menuItem action="#{CustomerBean.reset}"
 							label="Customer Masters" id="CustMaster" styleClass="headeDropDownItem"></rich:menuItem>
 					</rich:dropDownMenu>
 					
-					<h:commandLink value="Invoices"  action="InvoiceHeaderSearch.jsf"
+					<h:commandLink value="Invoices"  action="#{InvoiceHeaderBean.reset}"
 						 styleClass="headerMenuItem" />
 					<h:commandLink value="Purchase Orders" 
-						action="PurchaseOrderSearch.jsf" styleClass="headerMenuItem" />
+						action="#{PurchaseOrderBean.reset}" styleClass="headerMenuItem" />
 					<h:commandLink value="Test Certificates" 
-						action="TestCertificateSearch.jsf" styleClass="headerMenuItem" />
+						action="#{TestCertificateBean.reset}" styleClass="headerMenuItem" />
 				</rich:toolbar>
 			</h:form>
 		</div>

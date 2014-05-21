@@ -109,6 +109,11 @@ public class CcmBean {
 	}
 
 	public String reset() {
+		ccmVO = new CcmVO();
+		searchList = new ArrayList<CcmVO>();
+		selectedId = 0;
+		selectedPersonnelId = 0;
+		editedCcm = new CcmVO();
 		getSearchList().clear();
 		return "CcmSearch";
 	}

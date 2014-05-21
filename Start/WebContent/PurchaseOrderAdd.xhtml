@@ -7,7 +7,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
 	<ui:define name="content">
-		<rich:popupPanel id="addLineItem" autosized="true">
+		<!-- <rich:popupPanel id="addPOLineItem" autosized="true">
 			<f:facet name="Header">
 				<h:outputText value="Add Line Item" />
 			</f:facet>
@@ -51,13 +51,13 @@
 
 						<h:outputText value="Unit" />
 						<h:panelGroup>
-							<!-- <h:inputText value="#{InvoiceHeaderBean.invLineItem.unit}"
-								id="unit" required="true" requiredMessage="    Required" /> -->
+							<h:inputText value="#{InvoiceHeaderBean.invLineItem.unit}"
+								id="unit" required="true" requiredMessage="    Required" />
 							<h:selectOneRadio value="#{PurchaseOrderBean.poLineItem.unit}"
 								id="unit" required="true" requiredMessage="    Required">
 								<f:selectItem itemValue="kg" itemLabel="KG" id="kg" />
 								<f:selectItem itemValue="no" itemLabel="NO." id="no" />
-								<!-- adhi khalcha kg hota ani set kelay. -->
+								adhi khalcha kg hota ani set kelay.
 								<f:selectItem itemValue="set" itemLabel="SET" id="set" />
 							</h:selectOneRadio>
 							<h:message for="unit" style="color:red;" />
@@ -78,7 +78,7 @@
 					</h:panelGrid>
 				</h:form>
 			</rich:panel>
-		</rich:popupPanel>
+		</rich:popupPanel> -->
 
 		<f:view>
 			<h:form>
@@ -131,9 +131,8 @@
 
 					<h:panelGroup></h:panelGroup>
 					<h:panelGroup></h:panelGroup>
-						<h:commandButton value="Back" styleClass="searchButton"
-							action="#{PurchaseOrderBean.reset}" />
-					
+					<h:commandButton value="Back" styleClass="searchButton"
+							action="#{PurchaseOrderBean.reset}" immediate="true"/>
 				</h:panelGrid>
 				<a4j:outputPanel ajaxRendered="true" id="SearchTable">
 					<h:outputText

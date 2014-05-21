@@ -113,6 +113,7 @@ public class PurchaseOrderLinesHBC {
 		this.unit = purchaseOrderLinesVO.getUnit();
 		this.amount = purchaseOrderLinesVO.getAmount();
 		this.invId = purchaseOrderLinesVO.getInvId();
+		this.currQuantity = quantity - pendingQuantity;
 	}
 
 	public void update(PurchaseOrderVO purchaseOrderVO) {

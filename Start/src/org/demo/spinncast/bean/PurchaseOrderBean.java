@@ -84,6 +84,15 @@ public class PurchaseOrderBean {
 	}
 
 	public String reset() {
+		searchPurchaseOrderVO = new PurchaseOrderVO();
+		selectedPurchaseOrderVO = new PurchaseOrderVO();
+		poLineItem = new PurchaseOrderLinesVO();
+		partVo = new PartMasterVO();
+
+		headerSaved = false;
+		editFlag = false;
+		selectedId = 0;
+		selectedPartGradeMapping = new ArrayList<PartGradeMappingVO>();
 		getSearchList().clear();
 		selectedId = null;
 		return "PurchaseOrderSearch";
@@ -343,6 +352,10 @@ public class PurchaseOrderBean {
 		selectedPartGradeMapping = new ArrayList<PartGradeMappingVO>();
 		populateLineItems();
 		return "PurchaseOrderAdd";
+	}
+	
+	public void showAddLineItemPopUp(){
+		poLineItem = new PurchaseOrderLinesVO();
 	}
 
 	public void getPartDetails(String partName) {

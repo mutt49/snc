@@ -131,7 +131,7 @@ public class PartMasterBean {
 		partName = "";
 		grade = "";
 		searchList = new ArrayList<PartMasterVO>();
-		return "";
+		return "PartMasterSearch.jsf";
 	}
 
 	@SuppressWarnings("unchecked")

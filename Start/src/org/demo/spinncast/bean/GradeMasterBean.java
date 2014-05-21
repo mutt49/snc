@@ -86,8 +86,12 @@ public class GradeMasterBean {
 	}
 
 	public String reset() {
-		
-		return "";
+		selectedGradeMasterVO = new GradeMasterVO();
+		selectedGradeCompositionVO = new GradeCompositionVO();
+		gradeName = "";
+		searchList = new ArrayList<GradeMasterVO>();
+		editFlag = false;
+		return "GradeMasterSearch";
 	}
 	
 	@SuppressWarnings("unchecked")

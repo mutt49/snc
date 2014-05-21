@@ -111,6 +111,9 @@ public class MpmBean {
 	}
 
 	public String reset() {
+		selectedId = 0;
+		editedMpm = new MpmVO();
+		mpmVO = new MpmVO();
 		getSearchList().clear();
 		return "MpmSearch";
 	}
