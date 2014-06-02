@@ -82,8 +82,17 @@ public class InvoiceHeaderBean {
 	private String serviceTax;
 	private String incomeTaxPan;
 	private String searchCustomer;
+	private boolean showPopUpPanel = false;
 
 	static final Integer lineLimitOnPdf = 16;
+
+	public boolean isShowPopUpPanel() {
+		return showPopUpPanel;
+	}
+
+	public void setShowPopUpPanel(boolean showPopUpPanel) {
+		this.showPopUpPanel = showPopUpPanel;
+	}
 
 	public String getSearchCustomer() {
 		return searchCustomer;
@@ -521,6 +530,14 @@ public class InvoiceHeaderBean {
 		PartMasterHandler partMasterHanlder = new PartMasterHandler();
 		partVo = partMasterHanlder.populatePartMaster(partId);
 	}
+	
+	public void showPopup(){
+		System.out.println("show PopUp");
+		partVo = new PartMasterVO();
+		selectedPartGradeMapping = new ArrayList<PartGradeMappingVO>();
+		invLineItem = new InvoiceLineItemVO(); 
+		showPopUpPanel = true;
+	}
 
 	public String addLineItem() {
 
@@ -607,6 +624,9 @@ public class InvoiceHeaderBean {
 		}
 		System.out.println(getSearchList().size());
 		session.close();
+		partVo = new PartMasterVO();
+		selectedPartGradeMapping = new ArrayList<PartGradeMappingVO>();
+		showPopUpPanel = false;
 		return "InvoiceHeaderAdd";
 	}
 
@@ -2581,7 +2601,7 @@ public class InvoiceHeaderBean {
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Query hibernateQuery = session
-				.createQuery("from PartMasterHBC as m where part_name like '%"
+				.createQuery("from PartMasterHBC as m where part_name like '"
 						+ prefix + "%'");
 		List<PartMasterHBC> results = hibernateQuery.list();
 		for (int i = 0; i < results.size(); i++) {
@@ -2719,7 +2739,7 @@ public class InvoiceHeaderBean {
 		PartMasterHandler partMasterHandler = new PartMasterHandler();
 		selectedPartGradeMapping = new ArrayList<PartGradeMappingVO>();
 		String partName = (String) ((UIOutput) event.getSource()).getValue();
-		int partId = partMasterHandler.getPartIdByName(partName);
+		int partId = partMasterHandler.getPartIdByExactName(partName);
 		partVo = new PartMasterVO();
 		partVo.setPartId(partId);
 		partVo.setPartName(partName);

@@ -165,4 +165,18 @@ public class PartMasterHandler {
 		}
 		return partId;
 	}
+	
+	public int getPartIdByExactName(String partName) {
+		int partId = 0;
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		Session session = cpool.getSession();
+		Query hibernateQuery = session
+				.createQuery("from PartMasterHBC as m where m.partName like :part_name order by m.partId");
+		hibernateQuery.setString("part_name", partName);
+		java.util.List<PartMasterHBC> results = hibernateQuery.list();
+		for (int i = 0; i < results.size(); i++) {
+			partId = results.get(i).getPartId();
+		}
+		return partId;
+	}
 }
