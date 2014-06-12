@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+<!DOCTYPE hibernate-mapping SYSTEM 
+"hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.demo.spinncast.hibernate.UserHBC" table="user_master">
+		<id name="userId" column="user_id">
+			<generator class="native"/>
+		</id>
+		<property name="userName" column="userName"></property>
+		<property name="password" column="password"></property>
+		<property name="emailId" column="email_id"></property>
+		<property name="userRole" column="user_role"></property>
+	</class>
+</hibernate-mapping>  
