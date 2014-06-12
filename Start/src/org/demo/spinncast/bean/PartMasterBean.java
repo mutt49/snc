@@ -30,11 +30,29 @@ public class PartMasterBean {
 	private List<PartMasterVO> searchList = new ArrayList<PartMasterVO>();
 	private Boolean editFlag = false;
 	private PartGradeMappingVO selectedPartGradeMapping = new PartGradeMappingVO();
-	List searchGradeList = new ArrayList<GradeMasterVO>();
-	List<String> grades = new ArrayList<String>();
-	List<PartGradeMappingVO> partGradeMapping = new ArrayList<PartGradeMappingVO>();
-	List<PartGradeMappingVO> partGradeMappingList = new ArrayList<PartGradeMappingVO>();
-	List<Integer> gradeList = new ArrayList<Integer>();
+	private List searchGradeList = new ArrayList<GradeMasterVO>();
+	private List<String> grades = new ArrayList<String>();
+	private List<Integer> gradesIdsList = new ArrayList<Integer>();
+	private List<PartGradeMappingVO> partGradeMapping = new ArrayList<PartGradeMappingVO>();
+	private List<PartGradeMappingVO> partGradeMappingList = new ArrayList<PartGradeMappingVO>();
+	private List<Integer> gradeList = new ArrayList<Integer>();
+	private Integer[] gradesForPickList;
+
+	public List<Integer> getGradesIdsList() {
+		return gradesIdsList;
+	}
+
+	public void setGradesIdsList(List<Integer> gradesIdsList) {
+		this.gradesIdsList = gradesIdsList;
+	}
+
+	public Integer[] getGradesForPickList() {
+		return gradesForPickList;
+	}
+
+	public void setGradesForPickList(Integer[] gradesForPickList) {
+		this.gradesForPickList = gradesForPickList;
+	}
 
 	public List<Integer> getGradeList() {
 		return gradeList;
@@ -150,14 +168,11 @@ public class PartMasterBean {
 			partMasterHandler.getGradesForPart(tempObj);
 			for(GradeMasterVO gm : tempObj.getGrades()){
 				grades.add(gm.getGradeName());
+				gradeList.add(gm.getGradeId());
 			}
 			searchList.add(tempObj);
 		}
 
-		//Transaction trans = session.beginTransaction();
-		//trans.commit();
-		
-		
 		session.close();
 		return "PartMasterSearch";
 	}
@@ -200,6 +215,7 @@ public class PartMasterBean {
 	}
 
 	public String edit() {
+		populatePartGradeList();
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Transaction trans = session.beginTransaction();
@@ -207,20 +223,21 @@ public class PartMasterBean {
 		session.update(partMasterHbc);
 		trans.commit();
 		session.close();
+		editPartGradeMapping();
 		selectedPartMasterVO = new PartMasterVO();
 		return search();
 	}
 	
-	public String editPartGradeMapping() {
-		ConnectionPool cpool = ConnectionPool.getInstance();
-		Session session = cpool.getSession();
-		Transaction trans = session.beginTransaction();
-		PartGradeMappingHBC partGradeMappingHBC = new PartGradeMappingHBC(selectedPartGradeMapping);
-		session.update(partGradeMappingHBC);
-		trans.commit();
-		session.close();
-		selectedPartMasterVO = new PartMasterVO();
-		return search();
+	public void editPartGradeMapping() {
+		for(PartGradeMappingVO selectedPartGradeMapping : selectedPartMasterVO.getPartGradeMapping()){
+			ConnectionPool cpool = ConnectionPool.getInstance();
+			Session session = cpool.getSession();
+			Transaction trans = session.beginTransaction();
+			PartGradeMappingHBC partGradeMappingHBC = new PartGradeMappingHBC(selectedPartGradeMapping);
+			session.saveOrUpdate(partGradeMappingHBC);
+			trans.commit();
+			session.close();
+		}
 	}
 
 	public String deletePart() {
@@ -266,7 +283,15 @@ public class PartMasterBean {
 			tempObj.setGradeId(i);
 			tempObj.setPartId(selectedPartMasterVO.getPartId());
 			partGradeMappingList.add(tempObj);
+			selectedPartMasterVO.setPartGradeMapping(partGradeMappingList);
 		}
 	}
 
+	public String viewForEdit(){
+		gradeList = new ArrayList<Integer>();
+		for(int i=0;i<selectedPartMasterVO.getGrades().size();i++){
+			gradeList.add(selectedPartMasterVO.getGrades().get(i).getGradeId());
+		}
+		return "PartMasterAdd.xhtml";
+	}
 }

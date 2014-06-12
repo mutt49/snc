@@ -186,7 +186,7 @@
 								<h:outputText value="#{pm.quantity}" />
 							</rich:column>
 							<rich:column>
-								<a4j:commandButton value="Edit" action="PartMasterAdd.xhtml">
+								<a4j:commandButton value="Edit" action="#{PartMasterBean.viewForEdit}">
 									<f:setPropertyActionListener
 										target="#{PartMasterBean.selectedPartMasterVO}" value="#{pm}" />
 										<f:setPropertyActionListener

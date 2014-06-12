@@ -16,27 +16,33 @@
 			<div class="headerLogo">Spin-N-Cast</div>
 			<h:form styleClass="headerText">
 				<rich:toolbar>
-					<rich:dropDownMenu styleClass="headerMenuItemDropDownHeader" label="Masters">
+					<rich:dropDownMenu styleClass="headerMenuItemDropDownHeader"
+						label="Masters">
 						<rich:menuItem action="#{CcmBean.reset}"
 							label="Chemical Composition Masters" id="ChemMaster"
 							styleClass="headeDropDownItem"></rich:menuItem>
 						<rich:menuItem action="#{MpmBean.reset}"
 							label="Physical Properties Masters" id="PhyMaster"
 							styleClass="headeDropDownItem"></rich:menuItem>
-						<rich:menuItem action="#{PartMasterBean.reset}" label="Part Masters"
-							id="partMaster" styleClass="headeDropDownItem"></rich:menuItem>
+						<rich:menuItem action="#{PartMasterBean.reset}"
+							label="Part Masters" id="partMaster"
+							styleClass="headeDropDownItem"></rich:menuItem>
 						<rich:menuItem action="#{GradeMasterBean.reset}"
-							label="Grade Masters" id="GradeMaster" styleClass="headeDropDownItem"></rich:menuItem>
+							label="Grade Masters" id="GradeMaster"
+							styleClass="headeDropDownItem"></rich:menuItem>
 						<rich:menuItem action="#{CustomerBean.reset}"
-							label="Customer Masters" id="CustMaster" styleClass="headeDropDownItem"></rich:menuItem>
+							label="Customer Masters" id="CustMaster"
+							styleClass="headeDropDownItem"></rich:menuItem>
 					</rich:dropDownMenu>
-					
-					<h:commandLink value="Invoices"  action="#{InvoiceHeaderBean.reset}"
-						 styleClass="headerMenuItem" />
-					<h:commandLink value="Purchase Orders" 
+
+					<h:commandLink value="Invoices" action="#{InvoiceHeaderBean.reset}"
+						styleClass="headerMenuItem" />
+					<h:commandLink value="Purchase Orders"
 						action="#{PurchaseOrderBean.reset}" styleClass="headerMenuItem" />
-					<h:commandLink value="Test Certificates" 
+					<h:commandLink value="Test Certificates"
 						action="#{TestCertificateBean.reset}" styleClass="headerMenuItem" />
+					<h:commandLink value="Logout"
+						action="#{LoginBean.logout}" styleClass="headerMenuItem" />
 				</rich:toolbar>
 			</h:form>
 		</div>
