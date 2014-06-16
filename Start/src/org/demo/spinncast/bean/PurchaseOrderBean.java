@@ -46,6 +46,15 @@ public class PurchaseOrderBean {
 	private Integer selectedId;
 	private List<PartGradeMappingVO> selectedPartGradeMapping = new ArrayList<PartGradeMappingVO>();
 
+	private boolean showPopUpPanel = false;
+
+	public boolean isShowPopUpPanel() {
+		return showPopUpPanel;
+	}
+
+	public void setShowPopUpPanel(boolean showPopUpPanel) {
+		this.showPopUpPanel = showPopUpPanel;
+	}
 	public PurchaseOrderVO getSearchPurchaseOrderVO() {
 		return searchPurchaseOrderVO;
 	}
@@ -211,6 +220,7 @@ public class PurchaseOrderBean {
 					new PurchaseOrderLinesVO(result));
 		}
 		session.close();
+		showPopUpPanel = false;
 	}
 
 	public PurchaseOrderVO getSelectedPurchaseOrderVO() {
@@ -450,6 +460,15 @@ public class PurchaseOrderBean {
 		session.update(poLineHBC);
 		trans.commit();
 		session.close();
+	}
+	
+	public void showPopup(){
+		System.out.println("show PopUp");
+		partVo = new PartMasterVO();
+		selectedPartGradeMapping = new ArrayList<PartGradeMappingVO>();
+		//invLineItem = new InvoiceLineItemVO(); 
+		poLineItem = new PurchaseOrderLinesVO();
+		showPopUpPanel = true;
 	}
 
 }
