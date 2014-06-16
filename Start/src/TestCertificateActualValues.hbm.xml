@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>  
+<!DOCTYPE hibernate-mapping SYSTEM 
+"hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+	<class name="org.demo.spinncast.hibernate.TestCertificateActualValuesHBC" table="test_certificate_actual_values">
+		<id name="tableId" column="table_id">
+			<generator class="native"/>
+		</id>
+		<property name="tcId" column="tc_id"></property>
+		<property name="propName" column="prop_name"></property>
+		<property name="propType" column="prop_type"></property>
+		<property name="minValue" column="min_value"></property>
+		<property name="maxValue" column="max_value"></property>
+		<property name="actual1" column="actual1"></property>
+		<property name="actual2" column="actual2"></property>
+		<property name="actual3" column="actual3"></property>
+	</class>
+</hibernate-mapping>  

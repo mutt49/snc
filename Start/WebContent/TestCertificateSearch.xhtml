@@ -20,7 +20,7 @@
 				</h:commandLink>
 				<rich:panel>
 					<table class="table" cellspacing="0">
-						<tr>
+						<!-- <tr>
 							<td class="leftColumn"><h:outputText value="Client Name: " />
 							</td>
 							<td><h:inputText styleClass="searchEntry" id="clientName"
@@ -40,11 +40,11 @@
 							<td><h:inputText styleClass="searchEntry" id="quantity"
 									value="#{TestCertificateBean.testCertificateVO.quantity}"
 									label="Quantity" /></td>
-						</tr>
+						</tr> -->
 						<tr>
-							<td class="leftColumn"><h:outputText value="Rate: " /></td>
+							<td class="leftColumn"><h:outputText value="Test Case Number " /></td>
 							<td><h:inputText styleClass="searchEntry" id="rate"
-									value="#{TestCertificateBean.testCertificateVO.rate}"
+									value="#{TestCertificateBean.searchTestCertificateVO.tcNo}"
 									label="Rate" /></td>
 						</tr>
 						<tr>
@@ -60,18 +60,18 @@
 					</table>
 					<a4j:outputPanel ajaxRendered="true" id="SearchTable">
 						<h:outputText value="There are no items with the search criteria."
-							rendered="#{TestCertificateBean.searchList.size () == 0}" />
-						<rich:dataTable value="#{TestCertificateBean.searchList}" var="tc"
+							rendered="#{TestCertificateBean.searchTCVOList.size () == 0}" />
+						<rich:dataTable value="#{TestCertificateBean.searchTCVOList}" var="tc"
 							id="table" rows="20"
-							rendered="#{TestCertificateBean.searchList.size () != 0}"
+							rendered="#{TestCertificateBean.searchTCVOList.size () != 0}"
 							styleClass="searchResultsTable">
 							<rich:column>
 								<f:facet name="header">
 									<h:outputText value="Name " />
 								</f:facet>
-								<h:outputText value="#{tc.name}" />
+								<h:outputText value="#{tc.tcNo}" />
 							</rich:column>
-							<rich:column>
+							<!-- <rich:column>
 								<f:facet name="header">
 									<h:outputText value="Description" />
 								</f:facet>
@@ -95,7 +95,7 @@
 									<f:setPropertyActionListener value="#{true}"
 										target="#{TestCertificateBean.editFlag}" />
 								</h:commandButton>
-							</rich:column>
+							</rich:column> -->
 							     <f:facet name="footer">
                 						<rich:dataScroller id="ds" renderIfSinglePage="true"></rich:dataScroller>
             					</f:facet>

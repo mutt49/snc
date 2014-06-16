@@ -3,13 +3,21 @@
 "hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-	<class name="org.demo.spinncast.hibernate.TestCertificateHBC" table="test_certificates">
-		<id name="id" column="id">
+	<class name="org.demo.spinncast.hibernate.TestCertificateHBC" table="test_cert_master">
+		<id name="tcId" column="tc_id">
 			<generator class="native"/>
 		</id>
-		<property name="name" column="name"></property>
-		<property name="description" column="description"></property>
-		<property name="quantity" column="quantity"></property>
-		<property name="rate" column="rate"></property>
+		<property name="tcNo" column="tc_no"></property>
+		<property name="tcDate" column="tc_date"></property>
+		<property name="heatBatchNo" column="heat_batch_no"></property>
+		<property name="heatBatchDate" column="heat_batch_date"></property>
+		<property name="poNo" column="po_no"></property>
+		<property name="poDate" column="po_date"></property>
+		<property name="challanNo" column="challan_no"></property>
+		<property name="challanDate" column="challan_date"></property>
+		<property name="vendorName" column="vendor_name"></property>
+		<property name="grade" column="grade"></property>
+		<property name="desc" column="description"></property>
+		<property name="otherTests" column="other_tests_remarks"></property>
 	</class>
 </hibernate-mapping>  
