@@ -111,7 +111,19 @@ public class TestCertificateHBC {
 	}
 	
 	public TestCertificateHBC(TestCertificateVO testCertificateVO) {
-		
+		tcId = testCertificateVO.getTcId(); 
+		tcNo = testCertificateVO.getTcNo();
+		tcDate = testCertificateVO.getTcDate();
+		heatBatchNo = testCertificateVO.getHeatBatchNo();
+		heatBatchDate = testCertificateVO.getHeatBatchDate();
+		poNo = testCertificateVO.getPoNo();
+		poDate = testCertificateVO.getPoDate();
+		challanNo = testCertificateVO.getChallanNo();
+		challanDate = testCertificateVO.getChallanDate();
+		vendorName = testCertificateVO.getVendorName();
+		grade = testCertificateVO.getGrade();
+		desc = testCertificateVO.getDesc();
+		otherTests = testCertificateVO.getOtherTests();
 	}
 
 	public void update (TestCertificateVO testCertificateVO) {

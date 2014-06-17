@@ -1,6 +1,8 @@
 package org.demo.spinncast.vo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -24,7 +26,8 @@ public class TestCertificateVO {
 	private String grade;
 	private String  desc;
 	private String otherTests;
-	private TestCertificateActualValuesVO actualValues;
+	private List<TestCertificateActualValuesVO> actualValues = new ArrayList<TestCertificateActualValuesVO>();
+	//private List<TestCertificateActualValuesVO> actualValues;
 	
 	public int getTcId() {
 		return tcId;
@@ -103,14 +106,13 @@ public class TestCertificateVO {
 	}
 	public void setOtherTests(String otherTests) {
 		this.otherTests = otherTests;
-	}
-	public TestCertificateActualValuesVO getActualValues() {
+	}	
+	public List<TestCertificateActualValuesVO> getActualValues() {
 		return actualValues;
 	}
-	public void setActualValues(TestCertificateActualValuesVO actualValues) {
+	public void setActualValues(List<TestCertificateActualValuesVO> actualValues) {
 		this.actualValues = actualValues;
 	}
-	
 	public TestCertificateVO(){
 		
 	}

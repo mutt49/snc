@@ -20,31 +20,28 @@
 				</h:commandLink>
 				<rich:panel>
 					<table class="table" cellspacing="0">
-						<!-- <tr>
-							<td class="leftColumn"><h:outputText value="Client Name: " />
-							</td>
-							<td><h:inputText styleClass="searchEntry" id="clientName"
-									value="#{TestCertificateBean.testCertificateVO.name}"
-									label="Client Name" /></td>
-						</tr>
 						<tr>
-							<td class="leftColumn"><h:outputText value="Description: " />
-							</td>
-							<td><h:inputText styleClass="searchEntry" id="description"
-									value="#{TestCertificateBean.testCertificateVO.description}"
-									label="Description" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><h:outputText value="Quantity: " />
-							</td>
-							<td><h:inputText styleClass="searchEntry" id="quantity"
-									value="#{TestCertificateBean.testCertificateVO.quantity}"
-									label="Quantity" /></td>
-						</tr> -->
-						<tr>
-							<td class="leftColumn"><h:outputText value="Test Case Number " /></td>
-							<td><h:inputText styleClass="searchEntry" id="rate"
+							<td class="leftColumn"><h:outputText value="Test Certificate Number " /></td>
+							<td><h:inputText styleClass="searchEntry" id="tcNo"
 									value="#{TestCertificateBean.searchTestCertificateVO.tcNo}"
+									label="Rate" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Purchase Order Number " /></td>
+							<td><h:inputText styleClass="searchEntry" id="poNo"
+									value="#{TestCertificateBean.searchTestCertificateVO.poNo}"
+									label="Rate" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Heat Batch Number " /></td>
+							<td><h:inputText styleClass="searchEntry" id="hbNo"
+									value="#{TestCertificateBean.searchTestCertificateVO.heatBatchNo}"
+									label="Rate" /></td>
+						</tr>
+						<tr>
+							<td class="leftColumn"><h:outputText value="Challan Number " /></td>
+							<td><h:inputText styleClass="searchEntry" id="chNo"
+									value="#{TestCertificateBean.searchTestCertificateVO.challanNo}"
 									label="Rate" /></td>
 						</tr>
 						<tr>
@@ -67,9 +64,33 @@
 							styleClass="searchResultsTable">
 							<rich:column>
 								<f:facet name="header">
-									<h:outputText value="Name " />
+									<h:outputText value="Test Certificate Number " />
 								</f:facet>
 								<h:outputText value="#{tc.tcNo}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Purchase Order Number " />
+								</f:facet>
+								<h:outputText value="#{tc.poNo}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Heat Batch Number " />
+								</f:facet>
+								<h:outputText value="#{tc.heatBatchNo}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Challan Number" />
+								</f:facet>
+								<h:outputText value="#{tc.challanNo}" />
+							</rich:column>
+							<rich:column>
+								<f:facet name="header">
+									<h:outputText value="Grade" />
+								</f:facet>
+								<h:outputText value="#{tc.grade}" />
 							</rich:column>
 							<!-- <rich:column>
 								<f:facet name="header">

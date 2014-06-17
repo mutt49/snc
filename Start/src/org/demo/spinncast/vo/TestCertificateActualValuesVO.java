@@ -8,8 +8,8 @@ import javax.faces.bean.SessionScoped;
 public class TestCertificateActualValuesVO {
 	private int tableId;
 	private int tcId;
-	private String propName;
-	private String propType;
+	private String propName = "";
+	private String propType = "";
 	private String minValue;
 	private String maxValue;
 	private String actual1;
@@ -69,6 +69,15 @@ public class TestCertificateActualValuesVO {
 	}
 	public void setActual3(String actual3) {
 		this.actual3 = actual3;
+	}
+	public TestCertificateActualValuesVO() {
+	}
+	
+	public TestCertificateActualValuesVO(GradeCompositionVO gradeComp) {
+		propName = gradeComp.getIngrediantName();
+		propType = gradeComp.getIngrediantType();
+		minValue = gradeComp.getMinValue();
+		maxValue = gradeComp.getMaxValue();
 	}
 
 }

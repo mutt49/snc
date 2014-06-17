@@ -13,48 +13,121 @@
 			<h:form>
 
 				<h:outputText value="Test Certificates" styleClass="pageTitle" />
-				<h:outputText value="Add New" styleClass="pageSubTitleActive" />
 				<rich:panel>
-					<table class="table" cellspacing="0">
-						<tr>
-							<td class="leftColumn"><h:outputText value="Client Name: " />
-							</td>
-							<td><h:inputText styleClass="searchEntry" id="clientName"
-									value="#{TestCertificateBean.testCertificateVO.name}"
-									label="Client Name" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><h:outputText value="Description: " />
-							</td>
-							<td><h:inputText styleClass="searchEntry" id="description"
-									value="#{TestCertificateBean.testCertificateVO.description}"
-									label="Description" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><h:outputText value="Quantity: " />
-							</td>
-							<td><h:inputText styleClass="searchEntry" id="quantity"
-									value="#{TestCertificateBean.testCertificateVO.quantity}"
-									label="Quantity" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><h:outputText value="Rate: " /></td>
-							<td><h:inputText styleClass="searchEntry" id="rate"
-									value="#{TestCertificateBean.testCertificateVO.rate}"
-									label="Rate" /></td>
-						</tr>
-						<tr>
-							<td class="leftColumn"><a4j:commandButton value="Add"
-									styleClass="searchButton" action="#{TestCertificateBean.add}"
-									rendered="#{!TestCertificateBean.editFlag}" /></td>
-							<td><a4j:commandButton value="Edit"
-									styleClass="searchButton" action="#{TestCertificateBean.edit}"
-									rendered="#{TestCertificateBean.editFlag}" /></td>
-							<td><h:commandButton value="Print"
-									styleClass="searchButton" action="#{TestCertificateBean.print}"
-									rendered="#{TestCertificateBean.editFlag}" /></td>
-						</tr>
-					</table>
+
+					<h:panelGrid id="tcLeftPanel" columns="2">
+						<h:panelGrid id="addTaxesPanel" columns="2">
+							<h:outputText value="Test Certificate Number" />
+
+							<h:inputText styleClass="searchEntry" id="tcNo"
+								value="#{TestCertificateBean.selectedTestCertificateVO.tcNo}"
+								label="Client Name" />
+							<h:outputText value="Test Certificate Date" />
+							<rich:calendar id="tcDate"
+								value="#{TestCertificateBean.selectedTestCertificateVO.tcDate}" />
+							<h:outputText value="Heat Batch Number" />
+							<h:inputText styleClass="searchEntry" id="hbNo"
+								value="#{TestCertificateBean.selectedTestCertificateVO.heatBatchNo}"
+								label="Client Name" />
+							<h:outputText value="Heat Batch Date" />
+							<rich:calendar id="hbDate"
+								value="#{TestCertificateBean.selectedTestCertificateVO.heatBatchDate}" />
+							<h:outputText value="Purchase Order Number" />
+							<h:inputText styleClass="searchEntry" id="poNo"
+								value="#{TestCertificateBean.selectedTestCertificateVO.poNo}"
+								label="Client Name" />
+							<h:outputText value="Purchase Order Date" />
+							<rich:calendar id="poDate"
+								value="#{TestCertificateBean.selectedTestCertificateVO.poDate}" />
+							<h:outputText value="Challan Number" />
+							<h:inputText styleClass="searchEntry" id="chNo"
+								value="#{TestCertificateBean.selectedTestCertificateVO.challanNo}"
+								label="Client Name" />
+							<h:outputText value="Challan Date" />
+							<rich:calendar id="cdDate"
+								value="#{TestCertificateBean.selectedTestCertificateVO.challanDate}" />
+						</h:panelGrid>
+						<h:panelGrid id="tcRightPanel" columns="2">
+							<h:outputText styleClass="leftColumn"
+								value="Vendor/Supplier Code No." />
+							<rich:autocomplete mode="cachedAjax" minChars="2"
+								styleClass="searchEntry"
+								autocompleteMethod="#{TestCertificateBean.vendorCodeAutoComplete}"
+								value="#{TestCertificateBean.selectedTestCertificateVO.vendorName}">
+							</rich:autocomplete>
+
+							<h:outputText value="Grade" />
+							<h:panelGroup>
+								<rich:autocomplete mode="cachedAjax" minChars="2"
+									id="selectGrade"
+									valueChangeListener="#{TestCertificateBean.fetchGradeDetails}"
+									styleClass="searchEntry"
+									autocompleteMethod="#{TestCertificateBean.gradeAutoComplete}"
+									value="#{TestCertificateBean.selectedTestCertificateVO.grade}">
+									<a4j:ajax event="change" render="gradeDetailsTable" />
+								</rich:autocomplete>
+								<h:message for="selectGrade" style="color:red;" />
+
+							</h:panelGroup>
+
+							<h:outputText value="Description" />
+							<h:inputText styleClass="searchEntry" id="desc"
+								value="#{TestCertificateBean.selectedTestCertificateVO.desc}"
+								label="Client Name" />
+						</h:panelGrid>
+					</h:panelGrid>
+
+
+					<a4j:outputPanel ajaxRendered="true" id="gradeDetailsTable">
+						<h:outputText value="There are no Chemical Properties associated"
+							rendered="#{TestCertificateBean.selectedTestCertificateVO.actualValues.size()== 0}" />
+						<h:panelGrid id="tcLeftcmPanel" columns="2">
+							<rich:dataTable value="#{TestCertificateBean.selectedTestCertificateVO.actualValues}"
+								var="actValues" id="table" rows="20"
+								styleClass="searchResultsTable">
+								<rich:column>
+									<f:facet name="header">
+										<h:outputText value="Ingrediants" />
+									</f:facet>
+									<h:outputText
+										value="#{actValues.propName}" />
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">
+										<h:outputText value="Min Value" />
+									</f:facet>
+									<h:outputText
+										value="#{actValues.minValue}" />
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">
+										<h:outputText value="Max Value" />
+									</f:facet>
+									<h:outputText
+										value="#{actValues.maxValue}" />
+								</rich:column>
+								<rich:column>
+									<f:facet name="header">
+										<h:outputText value="Actual" />
+									</f:facet>
+									<h:outputText
+										value="#{actValues.actual1}" />
+								</rich:column>
+							</rich:dataTable>
+						</h:panelGrid>
+					</a4j:outputPanel>
+
+					<a4j:commandButton value="Add" styleClass="searchButton"
+						action="#{TestCertificateBean.add}"
+						rendered="#{!TestCertificateBean.editFlag}" />
+					<a4j:commandButton value="Edit" styleClass="searchButton"
+						action="#{TestCertificateBean.edit}"
+						rendered="#{TestCertificateBean.editFlag}" />
+
+					<h:commandButton value="Print" styleClass="searchButton"
+						action="#{TestCertificateBean.print}"
+						rendered="#{TestCertificateBean.editFlag}" />
+
 				</rich:panel>
 			</h:form>
 		</f:view>
