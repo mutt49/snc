@@ -73,7 +73,14 @@ public class TestCertificateActualValuesHBC {
 	}
 	
 	public TestCertificateActualValuesHBC(TestCertificateActualValuesVO testCertificateVO) {
-		
+		propName = testCertificateVO.getPropName();
+		propType = testCertificateVO.getPropType();
+		minValue = testCertificateVO.getMinValue();
+		maxValue = testCertificateVO.getMaxValue();
+		actual1 = testCertificateVO.getActual1();
+		actual2 = testCertificateVO.getActual2();
+		actual3 = testCertificateVO.getActual3();
+		tcId = testCertificateVO.getTcId();
 	}
 
 	public void update (TestCertificateActualValuesVO testCertificateVO) {

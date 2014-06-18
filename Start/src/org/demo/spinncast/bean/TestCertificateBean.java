@@ -11,6 +11,7 @@ import org.demo.spinncast.connections.ConnectionPool;
 import org.demo.spinncast.hibernate.CustomerHBC;
 import org.demo.spinncast.hibernate.GradeCompositionHBC;
 import org.demo.spinncast.hibernate.GradeMasterHBC;
+import org.demo.spinncast.hibernate.TestCertificateActualValuesHBC;
 import org.demo.spinncast.hibernate.TestCertificateHBC;
 import org.demo.spinncast.vo.GradeCompositionVO;
 import org.demo.spinncast.vo.GradeMasterVO;
@@ -28,6 +29,26 @@ public class TestCertificateBean {
 	private ArrayList<TestCertificateVO> searchTCVOList;
 	private Boolean editFlag = false;
 	private int selectedTestCaseNo;
+	private List<TestCertificateActualValuesVO> actualValuesChem = new ArrayList<TestCertificateActualValuesVO>();
+	private List<TestCertificateActualValuesVO> actualValuesMech = new ArrayList<TestCertificateActualValuesVO>();
+
+	public List<TestCertificateActualValuesVO> getActualValuesChem() {
+		return actualValuesChem;
+	}
+
+	public void setActualValuesChem(
+			List<TestCertificateActualValuesVO> actualValuesChem) {
+		this.actualValuesChem = actualValuesChem;
+	}
+
+	public List<TestCertificateActualValuesVO> getActualValuesMech() {
+		return actualValuesMech;
+	}
+
+	public void setActualValuesMech(
+			List<TestCertificateActualValuesVO> actualValuesMech) {
+		this.actualValuesMech = actualValuesMech;
+	}
 
 	public TestCertificateVO getSearchTestCertificateVO() {
 		return searchTestCertificateVO;
@@ -125,21 +146,76 @@ public class TestCertificateBean {
 		session.close();
 		return "TestCertificateSearch";
 	}
-	
+
 	// Add reset method
-	
-	public String reset(){
+
+	public String reset() {
 		searchTestCertificateVO = new TestCertificateVO();
 		selectedTestCertificateVO = new TestCertificateVO();
 		searchTCVOList = new ArrayList<TestCertificateVO>();
 		editFlag = false;
 		selectedTestCaseNo = 0;
+		actualValuesChem = new ArrayList<TestCertificateActualValuesVO>();
+		actualValuesMech = new ArrayList<TestCertificateActualValuesVO>();
 		return "TestCertificateAdd";
 	}
-	
-	public void fetchGradeDetails(ValueChangeEvent event){
+
+	public String add() {
+		try {
+			ConnectionPool cpool = ConnectionPool.getInstance();
+			Session session = cpool.getSession();
+			Transaction trans = session.beginTransaction();
+			TestCertificateHBC tcHbc = new TestCertificateHBC(
+					selectedTestCertificateVO);
+			session.saveOrUpdate(tcHbc);
+			trans.commit();
+			session.close();
+			selectedTestCertificateVO.setTcId(tcHbc.getTcId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		addActualValues();
+		selectedTestCertificateVO = new TestCertificateVO();
+		actualValuesChem = new ArrayList<TestCertificateActualValuesVO>();
+		actualValuesMech = new ArrayList<TestCertificateActualValuesVO>();
+		selectedTestCaseNo = 0;
+		return search();
+	}
+
+	public void addActualValues() {
+		try {
+			selectedTestCertificateVO.setActualValues(new ArrayList<TestCertificateActualValuesVO>());
+			for (TestCertificateActualValuesVO tempVO : actualValuesChem) {
+				tempVO.setTcId(selectedTestCertificateVO.getTcId());
+				selectedTestCertificateVO.getActualValues().add(tempVO);
+			}
+			for (TestCertificateActualValuesVO tempVO : actualValuesMech) {
+				tempVO.setTcId(selectedTestCertificateVO.getTcId());
+				selectedTestCertificateVO.getActualValues().add(tempVO);
+			}
+			ConnectionPool cpool = ConnectionPool.getInstance();
+			Session session = cpool.getSession();
+			Transaction trans = session.beginTransaction();
+			for (TestCertificateActualValuesVO tempData : selectedTestCertificateVO
+					.getActualValues()) {
+				TestCertificateActualValuesHBC tcActualHbc = new TestCertificateActualValuesHBC(
+						tempData);
+				session.saveOrUpdate(tcActualHbc);
+			}
+			trans.commit();
+			session.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void fetchGradeDetails(ValueChangeEvent event) {
 		String gradeName = (String) event.getNewValue();
-		selectedTestCertificateVO.setActualValues(new ArrayList<TestCertificateActualValuesVO>());
+		selectedTestCertificateVO
+				.setActualValues(new ArrayList<TestCertificateActualValuesVO>());
+		actualValuesChem = new ArrayList<TestCertificateActualValuesVO>();
+		actualValuesMech = new ArrayList<TestCertificateActualValuesVO>();
 		int gradeId = getGrdeIdbyName(gradeName);
 		if (gradeName.isEmpty()) {
 			return;
@@ -150,31 +226,40 @@ public class TestCertificateBean {
 		Query hibernateQuery = session
 				.createQuery("from GradeCompositionHBC as g where g.gradeId = :gradeId order by g.gradeCompositionId");
 		hibernateQuery.setInteger("gradeId", gradeId);
-		
+
 		java.util.List<GradeCompositionHBC> results = hibernateQuery.list();
-		
+
 		for (int i = 0; i < results.size(); i++) {
 			GradeCompositionVO tempObj = new GradeCompositionVO();
 			tempObj.setIngrediantName(results.get(i).getIngrediantName());
 			tempObj.setIngrediantType(results.get(i).getIngrediantType());
 			tempObj.setMaxValue(results.get(i).getMaxValue());
 			tempObj.setMinValue(results.get(i).getMinValue());
-			//gradeObj.getGradeCompVOList().add(tempObj);
-			selectedTestCertificateVO.getActualValues().add(new TestCertificateActualValuesVO(tempObj));
+			if (results.get(i).getIngrediantType().equalsIgnoreCase("C")) {
+				actualValuesChem
+						.add(new TestCertificateActualValuesVO(tempObj));
+			} else {
+				actualValuesMech
+						.add(new TestCertificateActualValuesVO(tempObj));
+			}
+			selectedTestCertificateVO.getActualValues().add(
+					new TestCertificateActualValuesVO(tempObj));
 		}
+
 		Transaction trans = session.beginTransaction();
 		trans.commit();
 		session.close();
 	}
+
 	// Move this method to handler
-	public int getGrdeIdbyName(String gradeName){
+	public int getGrdeIdbyName(String gradeName) {
 		GradeMasterVO tempObj = new GradeMasterVO();
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Query hibernateQuery = session
 				.createQuery("from GradeMasterHBC as g where g.gradeName like :gradeName order by g.gradeName");
 		hibernateQuery.setString("gradeName", gradeName);
-		
+
 		java.util.List<GradeMasterHBC> results = hibernateQuery.list();
 		for (int i = 0; i < results.size(); i++) {
 			tempObj.setGradeId(results.get(i).getGradeId());
@@ -202,7 +287,7 @@ public class TestCertificateBean {
 		session.close();
 		return result;
 	}
-	
+
 	public List<String> gradeAutoComplete(String prefix) {
 		List<String> result = new ArrayList<String>();
 
