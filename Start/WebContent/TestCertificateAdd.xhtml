@@ -211,11 +211,14 @@
 							action="#{TestCertificateBean.add}"
 							rendered="#{!TestCertificateBean.editFlag}" />
 						<h:commandButton value="Edit" styleClass="searchButton"
-							action="#{TestCertificateBean.edit}"
+							action="#{TestCertificateBean.save}"
 							rendered="#{TestCertificateBean.editFlag}" />
 						<h:commandButton value="Print" styleClass="searchButton"
 							action="#{TestCertificateBean.print}"
 							rendered="#{TestCertificateBean.editFlag}" />
+						<h:commandButton value="Back" styleClass="searchButton"
+						immediate="true" action="#{TestCertificateBean.reset}">
+					</h:commandButton>
 
 					</h:panelGrid>
 				</rich:panel>

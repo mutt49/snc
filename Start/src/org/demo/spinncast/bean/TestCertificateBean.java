@@ -143,8 +143,27 @@ public class TestCertificateBean {
 			TestCertificateVO tempTc = new TestCertificateVO(results.get(i));
 			searchTCVOList.add(tempTc);
 		}
+		getActualValues();
 		session.close();
 		return "TestCertificateSearch";
+	}
+
+	public void getActualValues() {
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		for (TestCertificateVO tc : searchTCVOList) {
+			Session session = cpool.getSession();
+			StringBuilder query = new StringBuilder(
+					"from TestCertificateActualValuesHBC as m where m.tcId= :tcId ");
+			Query hibernateQuery = session.createQuery(query.toString());
+			hibernateQuery.setInteger("tcId", tc.getTcId());
+			java.util.List<TestCertificateActualValuesHBC> results = hibernateQuery
+					.list();
+			for (int i = 0; i < results.size(); i++) {
+				TestCertificateActualValuesVO tempTc = new TestCertificateActualValuesVO(
+						results.get(i));
+				tc.getActualValues().add(tempTc);
+			}
+		}
 	}
 
 	// Add reset method
@@ -157,7 +176,12 @@ public class TestCertificateBean {
 		selectedTestCaseNo = 0;
 		actualValuesChem = new ArrayList<TestCertificateActualValuesVO>();
 		actualValuesMech = new ArrayList<TestCertificateActualValuesVO>();
-		return "TestCertificateAdd";
+		return "TestCertificateSearch";
+	}
+
+	public String addNew() {
+		reset();
+		return "TestCertificateAdd.jsf";
 	}
 
 	public String add() {
@@ -185,7 +209,8 @@ public class TestCertificateBean {
 
 	public void addActualValues() {
 		try {
-			selectedTestCertificateVO.setActualValues(new ArrayList<TestCertificateActualValuesVO>());
+			selectedTestCertificateVO
+					.setActualValues(new ArrayList<TestCertificateActualValuesVO>());
 			for (TestCertificateActualValuesVO tempVO : actualValuesChem) {
 				tempVO.setTcId(selectedTestCertificateVO.getTcId());
 				selectedTestCertificateVO.getActualValues().add(tempVO);
@@ -205,6 +230,36 @@ public class TestCertificateBean {
 			}
 			trans.commit();
 			session.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void editActualValues() {
+		try {
+			selectedTestCertificateVO
+					.setActualValues(new ArrayList<TestCertificateActualValuesVO>());
+			for (TestCertificateActualValuesVO tempVO : actualValuesChem) {
+				tempVO.setTcId(selectedTestCertificateVO.getTcId());
+				selectedTestCertificateVO.getActualValues().add(tempVO);
+			}
+			for (TestCertificateActualValuesVO tempVO : actualValuesMech) {
+				tempVO.setTcId(selectedTestCertificateVO.getTcId());
+				selectedTestCertificateVO.getActualValues().add(tempVO);
+			}
+			ConnectionPool cpool = ConnectionPool.getInstance();
+			Session session = cpool.getSession();
+			Transaction trans = session.beginTransaction();
+			for (TestCertificateActualValuesVO tempData : selectedTestCertificateVO
+					.getActualValues()) {
+				TestCertificateActualValuesHBC tcActualHbc = new TestCertificateActualValuesHBC(
+						tempData);
+				session.update(tcActualHbc);
+			}
+			trans.commit();
+			session.close();
+			selectedTestCertificateVO
+					.setActualValues(new ArrayList<TestCertificateActualValuesVO>());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -304,4 +359,43 @@ public class TestCertificateBean {
 		session.close();
 		return result;
 	}
+
+	public String viewTestCertificate() {
+		actualValuesChem = new ArrayList<TestCertificateActualValuesVO>();
+		actualValuesMech = new ArrayList<TestCertificateActualValuesVO>();
+		for (TestCertificateActualValuesVO testVo : selectedTestCertificateVO
+				.getActualValues()) {
+			if (testVo.getPropType().equalsIgnoreCase("C")) {
+				actualValuesChem.add(testVo);
+			} else {
+				actualValuesMech.add(testVo);
+			}
+		}
+		// editFlag = true;
+		return "TestCertificateAdd";
+	}
+
+	public String save() {
+		try {
+			ConnectionPool cpool = ConnectionPool.getInstance();
+			Session session = cpool.getSession();
+			Transaction trans = session.beginTransaction();
+			TestCertificateHBC tcHbc = new TestCertificateHBC(
+					selectedTestCertificateVO);
+			session.update(tcHbc);
+			trans.commit();
+			session.close();
+			selectedTestCertificateVO.setTcId(tcHbc.getTcId());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		editActualValues();
+		selectedTestCertificateVO = new TestCertificateVO();
+		actualValuesChem = new ArrayList<TestCertificateActualValuesVO>();
+		actualValuesMech = new ArrayList<TestCertificateActualValuesVO>();
+		selectedTestCaseNo = 0;
+
+		return search();
+	}
+
 }

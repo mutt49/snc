@@ -13,7 +13,7 @@
 			<h:form>
 
 				<h:outputText value="Test Certificates" styleClass="pageTitle" />
-				<h:commandLink value="Add New" action="TestCertificateAdd.jsf"
+				<h:commandLink value="Add New" action="#{TestCertificateBean.addNew}"
 					styleClass="pageSubTitle">
 					<f:setPropertyActionListener value="#{false}"
 						target="#{TestCertificateBean.editFlag}" />
@@ -57,10 +57,10 @@
 					</table>
 					<a4j:outputPanel ajaxRendered="true" id="SearchTable">
 						<h:outputText value="There are no items with the search criteria."
-							rendered="#{TestCertificateBean.searchTCVOList.size () == 0}" />
+							rendered="#{TestCertificateBean.searchTCVOList.size() == 0}" />
 						<rich:dataTable value="#{TestCertificateBean.searchTCVOList}" var="tc"
 							id="table" rows="20"
-							rendered="#{TestCertificateBean.searchTCVOList.size () != 0}"
+							rendered="#{TestCertificateBean.searchTCVOList.size() != 0}"
 							styleClass="searchResultsTable">
 							<rich:column>
 								<f:facet name="header">
@@ -91,6 +91,15 @@
 									<h:outputText value="Grade" />
 								</f:facet>
 								<h:outputText value="#{tc.grade}" />
+							</rich:column>
+							<rich:column>
+								<h:commandButton value="View"
+									action="#{TestCertificateBean.viewTestCertificate}">
+									<f:setPropertyActionListener
+										target="#{TestCertificateBean.selectedTestCertificateVO}" value="#{tc}" />
+									<f:setPropertyActionListener
+										target="#{TestCertificateBean.editFlag}" value="true" />	
+								</h:commandButton>
 							</rich:column>
 							<!-- <rich:column>
 								<f:facet name="header">

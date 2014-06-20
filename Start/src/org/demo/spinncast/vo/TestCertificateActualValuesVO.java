@@ -3,6 +3,8 @@ package org.demo.spinncast.vo;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.demo.spinncast.hibernate.TestCertificateActualValuesHBC;
+
 @ManagedBean(name = "TestCertificateActualValuesVO")
 @SessionScoped
 public class TestCertificateActualValuesVO {
@@ -71,6 +73,17 @@ public class TestCertificateActualValuesVO {
 		this.actual3 = actual3;
 	}
 	public TestCertificateActualValuesVO() {
+	}
+	public TestCertificateActualValuesVO(TestCertificateActualValuesHBC tcHbc){
+		propName = tcHbc.getPropName();
+		propType = tcHbc.getPropType();
+		tableId = tcHbc.getTableId();
+		tcId = tcHbc.getTcId();
+		minValue = tcHbc.getMinValue();
+		maxValue = tcHbc.getMaxValue();
+		actual1 = tcHbc.getActual1();
+		actual2 = tcHbc.getActual2();
+		actual3 = tcHbc.getActual3();
 	}
 	
 	public TestCertificateActualValuesVO(GradeCompositionVO gradeComp) {

@@ -81,6 +81,7 @@ public class TestCertificateActualValuesHBC {
 		actual2 = testCertificateVO.getActual2();
 		actual3 = testCertificateVO.getActual3();
 		tcId = testCertificateVO.getTcId();
+		tableId = testCertificateVO.getTableId(); 
 	}
 
 	public void update (TestCertificateActualValuesVO testCertificateVO) {
