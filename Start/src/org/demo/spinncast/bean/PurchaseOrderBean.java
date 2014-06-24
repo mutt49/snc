@@ -55,6 +55,7 @@ public class PurchaseOrderBean {
 	public void setShowPopUpPanel(boolean showPopUpPanel) {
 		this.showPopUpPanel = showPopUpPanel;
 	}
+
 	public PurchaseOrderVO getSearchPurchaseOrderVO() {
 		return searchPurchaseOrderVO;
 	}
@@ -115,12 +116,17 @@ public class PurchaseOrderBean {
 
 		StringBuilder sb = new StringBuilder("from PurchaseOrderHBC as m");
 
-		if (searchPurchaseOrderVO.getPurchaseOrderNo() != null && searchPurchaseOrderVO.getPurchaseOrderNo() != "") {
+		if (searchPurchaseOrderVO.getPurchaseOrderNo() != null
+				&& searchPurchaseOrderVO.getPurchaseOrderNo() != "") {
 			sb.append(" where ");
 			sb.append(" purchaseOrderNo = :poNo ");
 		}
+
+		sb.append(" order by m.purchaseOrderNo ");
+
 		Query hibernateQuery = session.createQuery(sb.toString());
-		if (searchPurchaseOrderVO.getPurchaseOrderNo() != null && searchPurchaseOrderVO.getPurchaseOrderNo() != "") {
+		if (searchPurchaseOrderVO.getPurchaseOrderNo() != null
+				&& searchPurchaseOrderVO.getPurchaseOrderNo() != "") {
 			hibernateQuery.setString("poNo",
 					searchPurchaseOrderVO.getPurchaseOrderNo());
 		}
@@ -265,7 +271,6 @@ public class PurchaseOrderBean {
 	}
 
 	public void deleteLineItem() {
-
 	}
 
 	public String resetBeforeAdd() {
@@ -363,8 +368,8 @@ public class PurchaseOrderBean {
 		populateLineItems();
 		return "PurchaseOrderAdd";
 	}
-	
-	public void showAddLineItemPopUp(){
+
+	public void showAddLineItemPopUp() {
 		poLineItem = new PurchaseOrderLinesVO();
 	}
 
@@ -421,16 +426,26 @@ public class PurchaseOrderBean {
 			if (poLine.isChecked()) {
 				if (poLine.getUnit().equalsIgnoreCase("no")
 						&& poLine.getCurrQuantity() > poLine.getQuantity()) {
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									"Invoice Quantity Should Not Be Greater Than Original Quantity. ", null));
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_ERROR,
+											"Invoice Quantity Should Not Be Greater Than Original Quantity. ",
+											null));
 					return "";
-				}else if(poLine.getCurrQuantity() > poLine.getQuantityKg() && (poLine.getUnit().equalsIgnoreCase("kg") || poLine.getUnit().equalsIgnoreCase("set"))){
-					FacesContext.getCurrentInstance().addMessage(
-							null,
-							new FacesMessage(FacesMessage.SEVERITY_ERROR,
-									"Invoice Quantity Should Not Be Greater Than Original Quantity. ", null));
+				} else if (poLine.getCurrQuantity() > poLine.getQuantityKg()
+						&& (poLine.getUnit().equalsIgnoreCase("kg") || poLine
+								.getUnit().equalsIgnoreCase("set"))) {
+					FacesContext
+							.getCurrentInstance()
+							.addMessage(
+									null,
+									new FacesMessage(
+											FacesMessage.SEVERITY_ERROR,
+											"Invoice Quantity Should Not Be Greater Than Original Quantity. ",
+											null));
 					return "";
 				}
 			}
@@ -450,23 +465,22 @@ public class PurchaseOrderBean {
 								+ " Created Successfully.", null));
 		return "";
 	}
-	
-	public void updatePurchaseOrderLine(PurchaseOrderLinesVO poLine){
+
+	public void updatePurchaseOrderLine(PurchaseOrderLinesVO poLine) {
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Transaction trans = session.beginTransaction();
-		PurchaseOrderLinesHBC poLineHBC = new PurchaseOrderLinesHBC(
-				poLine);
+		PurchaseOrderLinesHBC poLineHBC = new PurchaseOrderLinesHBC(poLine);
 		session.update(poLineHBC);
 		trans.commit();
 		session.close();
 	}
-	
-	public void showPopup(){
+
+	public void showPopup() {
 		System.out.println("show PopUp");
 		partVo = new PartMasterVO();
 		selectedPartGradeMapping = new ArrayList<PartGradeMappingVO>();
-		//invLineItem = new InvoiceLineItemVO(); 
+		// invLineItem = new InvoiceLineItemVO();
 		poLineItem = new PurchaseOrderLinesVO();
 		showPopUpPanel = true;
 	}
