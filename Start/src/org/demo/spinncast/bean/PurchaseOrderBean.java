@@ -270,7 +270,19 @@ public class PurchaseOrderBean {
 		this.poLineItem = poLineItem;
 	}
 
-	public void deleteLineItem() {
+	public String deleteLineItem() {
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		Session session = cpool.getSession();
+		Transaction trans = session.beginTransaction();
+		PurchaseOrderLinesHBC poLineHBC = new PurchaseOrderLinesHBC(poLineItem);
+		session.delete(poLineHBC);
+		session.flush();
+		trans.commit();
+		session.flush();
+		session.close();
+		poLineItem = new PurchaseOrderLinesVO();
+		populateLineItems();
+		return "PurchaseOrderAdd";
 	}
 
 	public String resetBeforeAdd() {
