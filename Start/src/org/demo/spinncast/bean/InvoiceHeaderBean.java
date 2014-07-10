@@ -2496,6 +2496,7 @@ public class InvoiceHeaderBean {
 
 	private List<String> getFormattedAddress(String bigString, int characters) {
 		List<String> returnValue = new ArrayList<String>();
+		bigString = bigString.replaceAll("\r", "");
 		if (bigString.contains("\n")) {
 			// This is from a text area.
 			while (bigString.length() > characters) {
