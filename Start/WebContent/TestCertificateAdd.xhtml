@@ -81,6 +81,7 @@
 								<rich:autocomplete mode="cachedAjax" minChars="2" id="custCode"
 									required="true" requiredMessage="    Required"
 									styleClass="searchEntry"
+									valueChangeListener="#{TestCertificateBean.getCustomerDataUsingVendorCode}"
 									autocompleteMethod="#{TestCertificateBean.vendorCodeAutoComplete}"
 									value="#{TestCertificateBean.selectedTestCertificateVO.vendorName}">
 								</rich:autocomplete>
@@ -103,8 +104,8 @@
 
 							<h:outputText value="Description" />
 							<h:panelGroup>
-								<h:inputText styleClass="searchEntry" id="desc" required="true"
-									requiredMessage="    Required"
+								<h:inputTextarea styleClass="searchEntry" id="desc" required="true"
+									requiredMessage="    Required" rows="4" cols="30" 
 									value="#{TestCertificateBean.selectedTestCertificateVO.desc}"
 									label="Client Name" />
 								<h:message for="desc" style="color:red;" />

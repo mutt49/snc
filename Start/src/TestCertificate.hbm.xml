@@ -16,6 +16,8 @@
 		<property name="challanNo" column="challan_no"></property>
 		<property name="challanDate" column="challan_date"></property>
 		<property name="vendorName" column="vendor_name"></property>
+		<property name="vendorRealName" column="vendor_real_name"></property>
+		<property name="vendorAddress" column="vendor_address"></property>
 		<property name="grade" column="grade"></property>
 		<property name="desc" column="description"></property>
 		<property name="otherTests" column="other_tests_remarks"></property>

@@ -16,6 +16,8 @@ public class TestCertificateHBC {
 	private String challanNo;
 	private Date challanDate;
 	private String vendorName;
+	private String vendorRealName;
+	private String vendorAddress;
 	private String grade;
 	private String  desc;
 	private String otherTests;
@@ -124,10 +126,24 @@ public class TestCertificateHBC {
 		grade = testCertificateVO.getGrade();
 		desc = testCertificateVO.getDesc();
 		otherTests = testCertificateVO.getOtherTests();
+		vendorAddress = testCertificateVO.getVendorAddress ();
+		vendorRealName = testCertificateVO.getVendorRealName();
 	}
 
 	public void update (TestCertificateVO testCertificateVO) {
 		
+	}
+	public String getVendorAddress() {
+		return vendorAddress;
+	}
+	public void setVendorAddress(String vendorAddress) {
+		this.vendorAddress = vendorAddress;
+	}
+	public String getVendorRealName() {
+		return vendorRealName;
+	}
+	public void setVendorRealName(String vendorRealName) {
+		this.vendorRealName = vendorRealName;
 	}
 	
 }
