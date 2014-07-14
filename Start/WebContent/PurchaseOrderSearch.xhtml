@@ -42,7 +42,7 @@
 						<h:outputText value="There are no items with the search criteria."
 							rendered="#{PurchaseOrderBean.searchList.size()== 0}" />
 						<rich:dataTable value="#{PurchaseOrderBean.searchList}" var="po"
-							id="table" rows="20"
+							id="table" rows="20" sortMode="single" 
 							rendered="#{PurchaseOrderBean.searchList.size()!= 0}"
 							styleClass="searchResultsTable">
 							<rich:column>
@@ -57,10 +57,10 @@
 								</f:facet>
 								<h:outputText value="#{po.purchaseOrderDate}" />
 							</rich:column>
-							<rich:column>
+							<rich:column sortBy="#{po.customerName}" sortOrder="#{PurchaseOrderBean.customerNameOrder}">
 								<f:facet name="header">
-									<h:outputText value="Customer Name" />
-								</f:facet>
+								     <a4j:commandLink value="Customer Name" render="SearchTable" action="#{PurchaseOrderBean.sortByStates}" />
+             						</f:facet>
 								<h:outputText value="#{po.customerName}" />
 							</rich:column>
 							<rich:column>

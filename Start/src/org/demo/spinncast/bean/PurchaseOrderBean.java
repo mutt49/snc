@@ -28,9 +28,11 @@ import org.demo.spinncast.vo.PartGradeMappingVO;
 import org.demo.spinncast.vo.PartMasterVO;
 import org.demo.spinncast.vo.PurchaseOrderLinesVO;
 import org.demo.spinncast.vo.PurchaseOrderVO;
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.richfaces.component.SortOrder;
 
 @ManagedBean(name = "PurchaseOrderBean")
 @SessionScoped
@@ -106,37 +108,45 @@ public class PurchaseOrderBean {
 		getSearchList().clear();
 		selectedId = null;
 		return "PurchaseOrderSearch";
-	}
-
+	};
+    private SortOrder customerNameOrder = SortOrder.unsorted;
+    
+    public void sortByStates() {
+        if (customerNameOrder.equals(SortOrder.ascending)) {
+            setCustomerNameOrder(SortOrder.descending);
+        } else {
+        	setCustomerNameOrder(SortOrder.ascending);
+        }
+    }
 	@SuppressWarnings("unchecked")
 	public String search() {
 		CustomerHandler custHandler = new CustomerHandler();
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 
-		StringBuilder sb = new StringBuilder("from PurchaseOrderHBC as m");
-
+		StringBuilder sb = new StringBuilder("from PurchaseOrderHBC as m, CustomerHBC as c");
+		sb.append(" where m.customerId = c.customer_id ");
 		if (searchPurchaseOrderVO.getPurchaseOrderNo() != null
 				&& searchPurchaseOrderVO.getPurchaseOrderNo() != "") {
-			sb.append(" where ");
+			sb.append (" and ");
 			sb.append(" purchaseOrderNo = :poNo ");
 		}
 
-		sb.append(" order by m.purchaseOrderNo ");
-
+		sb.append(" order by c.customer_name ");
+		System.out.println(sb);
 		Query hibernateQuery = session.createQuery(sb.toString());
 		if (searchPurchaseOrderVO.getPurchaseOrderNo() != null
 				&& searchPurchaseOrderVO.getPurchaseOrderNo() != "") {
 			hibernateQuery.setString("poNo",
 					searchPurchaseOrderVO.getPurchaseOrderNo());
 		}
-		java.util.List<PurchaseOrderHBC> results = hibernateQuery.list();
+//		java.util.List results = hibernateQuery.list();
+		Criteria criteria = session.createCriteria(PurchaseOrderHBC.class);
 		setSearchList(new ArrayList<PurchaseOrderVO>());
-		for (int i = 0; i < results.size(); i++) {
-			PurchaseOrderVO po = new PurchaseOrderVO(results.get(i));
+		for (final Object o : criteria.list()) {
+			PurchaseOrderVO po = new PurchaseOrderVO((PurchaseOrderHBC) o);
 			CustomerVO custVo = new CustomerVO();
-			custVo = custHandler.populateCustomerDetailsUsingCustomerId(results
-					.get(i).getCustomerId());
+			custVo = custHandler.populateCustomerDetailsUsingCustomerId(((PurchaseOrderHBC) o).getCustomerId());
 			po.setCustomerName(custVo.getCustomer_name());
 			/*
 			 * Get Line Items for this specific Purchase Order.
@@ -495,6 +505,14 @@ public class PurchaseOrderBean {
 		// invLineItem = new InvoiceLineItemVO();
 		poLineItem = new PurchaseOrderLinesVO();
 		showPopUpPanel = true;
+	}
+
+	public SortOrder getCustomerNameOrder() {
+		return customerNameOrder;
+	}
+
+	public void setCustomerNameOrder(SortOrder customerNameOrder) {
+		this.customerNameOrder = customerNameOrder;
 	}
 
 }
