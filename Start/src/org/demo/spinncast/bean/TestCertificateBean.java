@@ -48,6 +48,7 @@ public class TestCertificateBean {
 	private int selectedTestCaseNo;
 	private List<TestCertificateActualValuesVO> actualValuesChem = new ArrayList<TestCertificateActualValuesVO>();
 	private List<TestCertificateActualValuesVO> actualValuesMech = new ArrayList<TestCertificateActualValuesVO>();
+	private boolean printMechanicalProperties = true;
 
 	public List<TestCertificateActualValuesVO> getActualValuesChem() {
 		return actualValuesChem;
@@ -359,6 +360,7 @@ public class TestCertificateBean {
 		session.close();
 		return result;
 	}
+
 	public void getCustomerDataUsingVendorCode(ValueChangeEvent event) {
 		CustomerHandler custHandler = new CustomerHandler();
 		String vendorCode = (String) event.getNewValue();
@@ -369,9 +371,12 @@ public class TestCertificateBean {
 		// populateCustomerDetailsUsingVendorCode(vendorCode);
 		CustomerVO tempCustVo = custHandler
 				.populateCustomerDetailsUsingVendorCode(vendorCode);
-		selectedTestCertificateVO.setVendorAddress(tempCustVo.getCustomer_address());
-		selectedTestCertificateVO.setVendorRealName(tempCustVo.getCustomer_name());
+		selectedTestCertificateVO.setVendorAddress(tempCustVo
+				.getCustomer_address());
+		selectedTestCertificateVO.setVendorRealName(tempCustVo
+				.getCustomer_name());
 	}
+
 	public List<String> gradeAutoComplete(String prefix) {
 		List<String> result = new ArrayList<String>();
 
@@ -507,7 +512,6 @@ public class TestCertificateBean {
 					contentStream.addLine(xOffset + width - 2, yOffset + 15,
 							xOffset + width - 2, yOffset + height - 2);
 
-
 					// Top Image
 					InputStream in = new FileInputStream(new File(
 							"tcHeader.jpg"));
@@ -519,10 +523,9 @@ public class TestCertificateBean {
 					// Top Section
 					contentStream.addLine(xOffset + 2, yOffset + height - 80,
 							xOffset + width - 2, yOffset + height - 80);
-					
-					contentStream.addLine(xOffset + 250, yOffset + height - 2 - 25,
-							xOffset + 250, yOffset + height - 80);
-					
+
+					contentStream.addLine(xOffset + 250, yOffset + height - 2
+							- 25, xOffset + 250, yOffset + height - 80);
 
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 20);
@@ -531,7 +534,6 @@ public class TestCertificateBean {
 					contentStream.drawString("TEST CERTIFICATE");
 					contentStream.endText();
 
-
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset + 260,
@@ -539,12 +541,12 @@ public class TestCertificateBean {
 					contentStream.drawString("T.C. No.:");
 					contentStream.endText();
 
-
 					contentStream.beginText();
 					contentStream.setFont(font, 10);
 					contentStream.moveTextPositionByAmount(xOffset + 310,
 							yOffset + height - 70);
-					contentStream.drawString(Integer.toString (selectedTestCertificateVO.getTcNo()));
+					contentStream.drawString(Integer
+							.toString(selectedTestCertificateVO.getTcNo()));
 					contentStream.endText();
 
 					contentStream.beginText();
@@ -554,19 +556,17 @@ public class TestCertificateBean {
 					contentStream.drawString("Date:");
 					contentStream.endText();
 
-
 					contentStream.beginText();
 					contentStream.setFont(font, 10);
 					contentStream.moveTextPositionByAmount(xOffset + 430,
 							yOffset + height - 70);
 					SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-					String dateInString = sdf.format(selectedTestCertificateVO.getTcDate());
+					String dateInString = sdf.format(selectedTestCertificateVO
+							.getTcDate());
 
 					contentStream.drawString(dateInString);
 					contentStream.endText();
 
-					
-					
 					// Second Section
 					contentStream.addLine(xOffset + 2, yOffset + height - 110,
 							xOffset + width - 2, yOffset + height - 110);
@@ -631,7 +631,8 @@ public class TestCertificateBean {
 					contentStream.setFont(font, 10);
 					contentStream.moveTextPositionByAmount(xOffset + width
 							- 150, yOffset + height - 180);
-					dateInString = sdf.format(selectedTestCertificateVO.getHeatBatchDate());
+					dateInString = sdf.format(selectedTestCertificateVO
+							.getHeatBatchDate());
 					contentStream.drawString(dateInString);
 					contentStream.endText();
 
@@ -646,44 +647,50 @@ public class TestCertificateBean {
 					contentStream.setFont(font, 10);
 					contentStream.moveTextPositionByAmount(xOffset + 35,
 							yOffset + height - 225);
-					contentStream.drawString(selectedTestCertificateVO.getVendorRealName());
+					contentStream.drawString(selectedTestCertificateVO
+							.getVendorRealName());
 					contentStream.endText();
 
 					int addressLineIndex = 0;
 					int addressLinePadding = -15;
-					System.out.println(selectedTestCertificateVO.getVendorAddress());
-					for (String addressLine : getFormattedAddress(selectedTestCertificateVO.getVendorAddress()
-							, 33)) {
+					System.out.println(selectedTestCertificateVO
+							.getVendorAddress());
+					for (String addressLine : getFormattedAddress(
+							selectedTestCertificateVO.getVendorAddress(), 33)) {
 						contentStream.beginText();
 						contentStream.setFont(font, 10);
-						contentStream.moveTextPositionByAmount(xOffset + 35,
-								yOffset + height - 240
-										+ (addressLineIndex * addressLinePadding));
+						contentStream
+								.moveTextPositionByAmount(
+										xOffset + 35,
+										yOffset
+												+ height
+												- 240
+												+ (addressLineIndex * addressLinePadding));
 						contentStream.drawString(addressLine);
 						contentStream.endText();
 						addressLineIndex++;
 					}
-//					
-//					contentStream.beginText();
-//					contentStream.setFont(fontBold, 10);
-//					contentStream.moveTextPositionByAmount(xOffset + 35,
-//							yOffset + height - 240);
-//					contentStream.drawString("To,");
-//					contentStream.endText();
-//
-//					contentStream.beginText();
-//					contentStream.setFont(fontBold, 10);
-//					contentStream.moveTextPositionByAmount(xOffset + 35,
-//							yOffset + height - 255);
-//					contentStream.drawString("To,");
-//					contentStream.endText();
-//
-//					contentStream.beginText();
-//					contentStream.setFont(fontBold, 10);
-//					contentStream.moveTextPositionByAmount(xOffset + 35,
-//							yOffset + height - 270);
-//					contentStream.drawString("To,");
-//					contentStream.endText();
+					//
+					// contentStream.beginText();
+					// contentStream.setFont(fontBold, 10);
+					// contentStream.moveTextPositionByAmount(xOffset + 35,
+					// yOffset + height - 240);
+					// contentStream.drawString("To,");
+					// contentStream.endText();
+					//
+					// contentStream.beginText();
+					// contentStream.setFont(fontBold, 10);
+					// contentStream.moveTextPositionByAmount(xOffset + 35,
+					// yOffset + height - 255);
+					// contentStream.drawString("To,");
+					// contentStream.endText();
+					//
+					// contentStream.beginText();
+					// contentStream.setFont(fontBold, 10);
+					// contentStream.moveTextPositionByAmount(xOffset + 35,
+					// yOffset + height - 270);
+					// contentStream.drawString("To,");
+					// contentStream.endText();
 
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 10);
@@ -711,7 +718,8 @@ public class TestCertificateBean {
 					contentStream.setFont(font, 10);
 					contentStream.moveTextPositionByAmount(xOffset + width
 							- 150, yOffset + height - 300);
-					dateInString = sdf.format(selectedTestCertificateVO.getPoDate());
+					dateInString = sdf.format(selectedTestCertificateVO
+							.getPoDate());
 					contentStream.drawString(dateInString);
 					contentStream.endText();
 
@@ -741,7 +749,8 @@ public class TestCertificateBean {
 					contentStream.setFont(font, 10);
 					contentStream.moveTextPositionByAmount(xOffset + width
 							- 150, yOffset + height - 330);
-					dateInString = sdf.format(selectedTestCertificateVO.getChallanDate());
+					dateInString = sdf.format(selectedTestCertificateVO
+							.getChallanDate());
 					contentStream.drawString(dateInString);
 					contentStream.endText();
 
@@ -775,14 +784,15 @@ public class TestCertificateBean {
 							yOffset + height - 450);
 					contentStream.drawString("CHEMICAL COMPOSITION");
 					contentStream.endText();
+					if (isPrintMechanicalProperties()) {
+						contentStream.beginText();
+						contentStream.setFont(fontBold, 12);
+						contentStream.moveTextPositionByAmount(xOffset + width
+								- 250, yOffset + height - 450);
+						contentStream.drawString("MECHANICAL PROPERTIES");
+						contentStream.endText();
 
-					contentStream.beginText();
-					contentStream.setFont(fontBold, 12);
-					contentStream.moveTextPositionByAmount(xOffset + width
-							- 250, yOffset + height - 450);
-					contentStream.drawString("MECHANICAL PROPERTIES");
-					contentStream.endText();
-
+					}
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset + 35,
@@ -805,7 +815,7 @@ public class TestCertificateBean {
 								yOffset + height - (475 + (16 * ij)), xOffset
 										+ tableOffset + 210, yOffset + height
 										- (475 + (16 * ij)));
-						
+
 						if (ij == 1) {
 							contentStream.beginText();
 							contentStream.setFont(font, 10);
@@ -872,38 +882,61 @@ public class TestCertificateBean {
 							contentStream.drawString("Max.");
 							contentStream.endText();
 						} else {
-							for (;actualValueIndex < selectedTestCertificateVO.getActualValues().size();actualValueIndex++) {
-								if (selectedTestCertificateVO.getActualValues().get(actualValueIndex).getPropType().equalsIgnoreCase("C")){
+							for (; actualValueIndex < selectedTestCertificateVO
+									.getActualValues().size(); actualValueIndex++) {
+								if (selectedTestCertificateVO.getActualValues()
+										.get(actualValueIndex).getPropType()
+										.equalsIgnoreCase("C")) {
 									contentStream.beginText();
 									contentStream.setFont(font, 10);
-									contentStream.moveTextPositionByAmount(xOffset
-											+ tableOffset + 25, yOffset + height
-											- ((471 + (16 * ij))));
-									contentStream.drawString(selectedTestCertificateVO.getActualValues().get(actualValueIndex).getPropName());
+									contentStream.moveTextPositionByAmount(
+											xOffset + tableOffset + 25, yOffset
+													+ height
+													- ((471 + (16 * ij))));
+									contentStream
+											.drawString(selectedTestCertificateVO
+													.getActualValues()
+													.get(actualValueIndex)
+													.getPropName());
 									contentStream.endText();
 
 									contentStream.beginText();
 									contentStream.setFont(font, 10);
-									contentStream.moveTextPositionByAmount(xOffset
-											+ tableOffset + 80, yOffset + height
-											- ((471 + (16 * ij))));
-									contentStream.drawString(selectedTestCertificateVO.getActualValues().get(actualValueIndex).getMinValue());
+									contentStream.moveTextPositionByAmount(
+											xOffset + tableOffset + 80, yOffset
+													+ height
+													- ((471 + (16 * ij))));
+									contentStream
+											.drawString(selectedTestCertificateVO
+													.getActualValues()
+													.get(actualValueIndex)
+													.getMinValue());
 									contentStream.endText();
 
 									contentStream.beginText();
 									contentStream.setFont(font, 10);
-									contentStream.moveTextPositionByAmount(xOffset
-											+ tableOffset + 120, yOffset + height
-											- ((471 + (16 * ij))));
-									contentStream.drawString(selectedTestCertificateVO.getActualValues().get(actualValueIndex).getMaxValue());
+									contentStream.moveTextPositionByAmount(
+											xOffset + tableOffset + 120,
+											yOffset + height
+													- ((471 + (16 * ij))));
+									contentStream
+											.drawString(selectedTestCertificateVO
+													.getActualValues()
+													.get(actualValueIndex)
+													.getMaxValue());
 									contentStream.endText();
 
 									contentStream.beginText();
 									contentStream.setFont(font, 10);
-									contentStream.moveTextPositionByAmount(xOffset
-											+ tableOffset + 165, yOffset + height
-											- ((471 + (16 * ij))));
-									contentStream.drawString(selectedTestCertificateVO.getActualValues().get(actualValueIndex).getActual1());
+									contentStream.moveTextPositionByAmount(
+											xOffset + tableOffset + 165,
+											yOffset + height
+													- ((471 + (16 * ij))));
+									contentStream
+											.drawString(selectedTestCertificateVO
+													.getActualValues()
+													.get(actualValueIndex)
+													.getActual1());
 									contentStream.endText();
 									actualValueIndex++;
 									break;
@@ -912,158 +945,200 @@ public class TestCertificateBean {
 							}
 						}
 					}
-
-					int tableOffset2 = 10;
-					actualValueIndex = 0;
-					for (int ij = 0; ij < 15; ij++) {
-						contentStream.addLine(xOffset + tableOffset2 + 265,
-								yOffset + height - (475 + (16 * ij)), xOffset
-										+ tableOffset2 + 525, yOffset + height
-										- (475 + (16 * ij)));
-
-						if (ij == 1) {
-							contentStream.beginText();
-							contentStream.setFont(font, 10);
-							contentStream.moveTextPositionByAmount(xOffset
-									+ tableOffset2 + 270, yOffset + height
-									- ((471 + (16 * ij))));
-							contentStream.drawString("Particulars");
-							contentStream.endText();
-
-							contentStream.beginText();
-							contentStream.setFont(font, 10);
-							contentStream.moveTextPositionByAmount(xOffset
-									+ tableOffset2 + 325, yOffset + height
-									- ((471 + (16 * ij))));
-							contentStream.drawString("Specified");
-							contentStream.endText();
-
-							contentStream.beginText();
-							contentStream.setFont(font, 10);
-							contentStream.moveTextPositionByAmount(xOffset
-									+ tableOffset2 + 410, yOffset + height
-									- ((471 + (16 * ij))));
-							contentStream.drawString("Actual");
-							contentStream.endText();
-
-							contentStream.beginText();
-							contentStream.setFont(font, 10);
-							contentStream.moveTextPositionByAmount(xOffset
-									+ tableOffset2 + 450, yOffset + height
-									- ((471 + (16 * ij))));
-							contentStream.drawString("Actual");
-							contentStream.endText();
-
-							contentStream.beginText();
-							contentStream.setFont(font, 10);
-							contentStream.moveTextPositionByAmount(xOffset
-									+ tableOffset2 + 490, yOffset + height
-									- ((471 + (16 * ij))));
-							contentStream.drawString("Actual");
-							contentStream.endText();
-						} else if (ij == 2) {
-							contentStream.beginText();
-							contentStream.setFont(font, 10);
-							contentStream.moveTextPositionByAmount(xOffset
-									+ tableOffset2 + 325, yOffset + height
-									- ((471 + (16 * ij))));
-							contentStream.drawString("Min.");
-							contentStream.endText();
-
-							contentStream.beginText();
-							contentStream.setFont(font, 10);
-							contentStream.moveTextPositionByAmount(xOffset
-									+ tableOffset2 + 365, yOffset + height
-									- ((471 + (16 * ij))));
-							contentStream.drawString("Max.");
-							contentStream.endText();
-						} else if (ij == 0){
+					if (printMechanicalProperties) {
+						int tableOffset2 = 10;
+						actualValueIndex = 0;
+						for (int ij = 0; ij < 15; ij++) {
 							contentStream.addLine(xOffset + tableOffset2 + 265,
-									yOffset + height - (475 + (16 * 0)),
-									xOffset + tableOffset2 + 265, yOffset
-											+ height - (475 + (16 * 14)));
-							contentStream.addLine(xOffset + tableOffset2 + 320,
-									yOffset + height - (475 + (16 * 0)),
-									xOffset + tableOffset2 + 320, yOffset
-											+ height - (475 + (16 * 14)));
-							contentStream.addLine(xOffset + tableOffset2 + 362,
-									yOffset + height - (475 + (16 * 1)),
-									xOffset + tableOffset2 + 362, yOffset
-											+ height - (475 + (16 * 14)));
-							contentStream.addLine(xOffset + tableOffset2 + 405,
-									yOffset + height - (475 + (16 * 0)),
-									xOffset + tableOffset2 + 405, yOffset
-											+ height - (475 + (16 * 14)));
-							contentStream.addLine(xOffset + tableOffset2 + 445,
-									yOffset + height - (475 + (16 * 0)),
-									xOffset + tableOffset2 + 445, yOffset
-											+ height - (475 + (16 * 14)));
-							contentStream.addLine(xOffset + tableOffset2 + 485,
-									yOffset + height - (475 + (16 * 0)),
-									xOffset + tableOffset2 + 485, yOffset
-											+ height - (475 + (16 * 14)));
-							contentStream.addLine(xOffset + tableOffset2 + 525,
-									yOffset + height - (475 + (16 * 0)),
+									yOffset + height - (475 + (16 * ij)),
 									xOffset + tableOffset2 + 525, yOffset
-											+ height - (475 + (16 * 14)));
-						} else {
-							for (;actualValueIndex < selectedTestCertificateVO.getActualValues().size();actualValueIndex++) {
-								if (selectedTestCertificateVO.getActualValues().get(actualValueIndex).getPropType().equalsIgnoreCase("M")){
-									contentStream.beginText();
-									contentStream.setFont(font, 10);
-									contentStream.moveTextPositionByAmount(xOffset
-											+ tableOffset2 + 270, yOffset + height
-											- ((471 + (16 * ij))));
-									contentStream.drawString(selectedTestCertificateVO.getActualValues().get(actualValueIndex).getPropName());
-									contentStream.endText();
+											+ height - (475 + (16 * ij)));
 
-									contentStream.beginText();
-									contentStream.setFont(font, 10);
-									contentStream.moveTextPositionByAmount(xOffset
-											+ tableOffset2 + 325, yOffset + height
-											- ((471 + (16 * ij))));
-									contentStream.drawString(selectedTestCertificateVO.getActualValues().get(actualValueIndex).getMinValue());
-									contentStream.endText();
+							if (ij == 1) {
+								contentStream.beginText();
+								contentStream.setFont(font, 10);
+								contentStream.moveTextPositionByAmount(xOffset
+										+ tableOffset2 + 270, yOffset + height
+										- ((471 + (16 * ij))));
+								contentStream.drawString("Particulars");
+								contentStream.endText();
 
-									contentStream.beginText();
-									contentStream.setFont(font, 10);
-									contentStream.moveTextPositionByAmount(xOffset
-											+ tableOffset2 + 365, yOffset + height
-											- ((471 + (16 * ij))));
-									contentStream.drawString(selectedTestCertificateVO.getActualValues().get(actualValueIndex).getMaxValue());
-									contentStream.endText();
+								contentStream.beginText();
+								contentStream.setFont(font, 10);
+								contentStream.moveTextPositionByAmount(xOffset
+										+ tableOffset2 + 325, yOffset + height
+										- ((471 + (16 * ij))));
+								contentStream.drawString("Specified");
+								contentStream.endText();
 
-									contentStream.beginText();
-									contentStream.setFont(font, 10);
-									contentStream.moveTextPositionByAmount(xOffset
-											+ tableOffset2 + 410, yOffset + height
-											- ((471 + (16 * ij))));
-									contentStream.drawString(selectedTestCertificateVO.getActualValues().get(actualValueIndex).getActual1());
-									contentStream.endText();
-									
-									contentStream.beginText();
-									contentStream.setFont(font, 10);
-									contentStream.moveTextPositionByAmount(xOffset
-											+ tableOffset2 + 450, yOffset + height
-											- ((471 + (16 * ij))));
-									contentStream.drawString(selectedTestCertificateVO.getActualValues().get(actualValueIndex).getActual2());
-									contentStream.endText();
-									
-									contentStream.beginText();
-									contentStream.setFont(font, 10);
-									contentStream.moveTextPositionByAmount(xOffset
-											+ tableOffset2 + 490, yOffset + height
-											- ((471 + (16 * ij))));
-									contentStream.drawString(selectedTestCertificateVO.getActualValues().get(actualValueIndex).getActual3());
-									contentStream.endText();
+								contentStream.beginText();
+								contentStream.setFont(font, 10);
+								contentStream.moveTextPositionByAmount(xOffset
+										+ tableOffset2 + 410, yOffset + height
+										- ((471 + (16 * ij))));
+								contentStream.drawString("Actual");
+								contentStream.endText();
+
+								contentStream.beginText();
+								contentStream.setFont(font, 10);
+								contentStream.moveTextPositionByAmount(xOffset
+										+ tableOffset2 + 450, yOffset + height
+										- ((471 + (16 * ij))));
+								contentStream.drawString("Actual");
+								contentStream.endText();
+
+								contentStream.beginText();
+								contentStream.setFont(font, 10);
+								contentStream.moveTextPositionByAmount(xOffset
+										+ tableOffset2 + 490, yOffset + height
+										- ((471 + (16 * ij))));
+								contentStream.drawString("Actual");
+								contentStream.endText();
+							} else if (ij == 2) {
+								contentStream.beginText();
+								contentStream.setFont(font, 10);
+								contentStream.moveTextPositionByAmount(xOffset
+										+ tableOffset2 + 325, yOffset + height
+										- ((471 + (16 * ij))));
+								contentStream.drawString("Min.");
+								contentStream.endText();
+
+								contentStream.beginText();
+								contentStream.setFont(font, 10);
+								contentStream.moveTextPositionByAmount(xOffset
+										+ tableOffset2 + 365, yOffset + height
+										- ((471 + (16 * ij))));
+								contentStream.drawString("Max.");
+								contentStream.endText();
+							} else if (ij == 0) {
+								contentStream.addLine(xOffset + tableOffset2
+										+ 265, yOffset + height
+										- (475 + (16 * 0)), xOffset
+										+ tableOffset2 + 265, yOffset + height
+										- (475 + (16 * 14)));
+								contentStream.addLine(xOffset + tableOffset2
+										+ 320, yOffset + height
+										- (475 + (16 * 0)), xOffset
+										+ tableOffset2 + 320, yOffset + height
+										- (475 + (16 * 14)));
+								contentStream.addLine(xOffset + tableOffset2
+										+ 362, yOffset + height
+										- (475 + (16 * 1)), xOffset
+										+ tableOffset2 + 362, yOffset + height
+										- (475 + (16 * 14)));
+								contentStream.addLine(xOffset + tableOffset2
+										+ 405, yOffset + height
+										- (475 + (16 * 0)), xOffset
+										+ tableOffset2 + 405, yOffset + height
+										- (475 + (16 * 14)));
+								contentStream.addLine(xOffset + tableOffset2
+										+ 445, yOffset + height
+										- (475 + (16 * 0)), xOffset
+										+ tableOffset2 + 445, yOffset + height
+										- (475 + (16 * 14)));
+								contentStream.addLine(xOffset + tableOffset2
+										+ 485, yOffset + height
+										- (475 + (16 * 0)), xOffset
+										+ tableOffset2 + 485, yOffset + height
+										- (475 + (16 * 14)));
+								contentStream.addLine(xOffset + tableOffset2
+										+ 525, yOffset + height
+										- (475 + (16 * 0)), xOffset
+										+ tableOffset2 + 525, yOffset + height
+										- (475 + (16 * 14)));
+							} else {
+								for (; actualValueIndex < selectedTestCertificateVO
+										.getActualValues().size(); actualValueIndex++) {
+									if (selectedTestCertificateVO
+											.getActualValues()
+											.get(actualValueIndex)
+											.getPropType()
+											.equalsIgnoreCase("M")) {
+										contentStream.beginText();
+										contentStream.setFont(font, 10);
+										contentStream.moveTextPositionByAmount(
+												xOffset + tableOffset2 + 270,
+												yOffset + height
+														- ((471 + (16 * ij))));
+										contentStream
+												.drawString(selectedTestCertificateVO
+														.getActualValues()
+														.get(actualValueIndex)
+														.getPropName());
+										contentStream.endText();
+
+										contentStream.beginText();
+										contentStream.setFont(font, 10);
+										contentStream.moveTextPositionByAmount(
+												xOffset + tableOffset2 + 325,
+												yOffset + height
+														- ((471 + (16 * ij))));
+										contentStream
+												.drawString(selectedTestCertificateVO
+														.getActualValues()
+														.get(actualValueIndex)
+														.getMinValue());
+										contentStream.endText();
+
+										contentStream.beginText();
+										contentStream.setFont(font, 10);
+										contentStream.moveTextPositionByAmount(
+												xOffset + tableOffset2 + 365,
+												yOffset + height
+														- ((471 + (16 * ij))));
+										contentStream
+												.drawString(selectedTestCertificateVO
+														.getActualValues()
+														.get(actualValueIndex)
+														.getMaxValue());
+										contentStream.endText();
+
+										contentStream.beginText();
+										contentStream.setFont(font, 10);
+										contentStream.moveTextPositionByAmount(
+												xOffset + tableOffset2 + 410,
+												yOffset + height
+														- ((471 + (16 * ij))));
+										contentStream
+												.drawString(selectedTestCertificateVO
+														.getActualValues()
+														.get(actualValueIndex)
+														.getActual1());
+										contentStream.endText();
+
+										contentStream.beginText();
+										contentStream.setFont(font, 10);
+										contentStream.moveTextPositionByAmount(
+												xOffset + tableOffset2 + 450,
+												yOffset + height
+														- ((471 + (16 * ij))));
+										contentStream
+												.drawString(selectedTestCertificateVO
+														.getActualValues()
+														.get(actualValueIndex)
+														.getActual2());
+										contentStream.endText();
+
+										contentStream.beginText();
+										contentStream.setFont(font, 10);
+										contentStream.moveTextPositionByAmount(
+												xOffset + tableOffset2 + 490,
+												yOffset + height
+														- ((471 + (16 * ij))));
+										contentStream
+												.drawString(selectedTestCertificateVO
+														.getActualValues()
+														.get(actualValueIndex)
+														.getActual3());
+										contentStream.endText();
+										actualValueIndex++;
+										break;
+									}
 									actualValueIndex++;
-									break;
 								}
-								actualValueIndex++;
 							}
 						}
 					}
-
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset
@@ -1074,7 +1149,8 @@ public class TestCertificateBean {
 					contentStream.setFont(font, 10);
 					contentStream.moveTextPositionByAmount(xOffset
 							+ tableOffset + 125, yOffset + height - 720);
-					contentStream.drawString(selectedTestCertificateVO.getOtherTests());
+					contentStream.drawString(selectedTestCertificateVO
+							.getOtherTests());
 					contentStream.endText();
 
 					// Signature
@@ -1179,6 +1255,14 @@ public class TestCertificateBean {
 			}
 		}
 		return returnValue;
+	}
+
+	public boolean isPrintMechanicalProperties() {
+		return printMechanicalProperties;
+	}
+
+	public void setPrintMechanicalProperties(boolean printMechanicalProperties) {
+		this.printMechanicalProperties = printMechanicalProperties;
 	}
 
 }
