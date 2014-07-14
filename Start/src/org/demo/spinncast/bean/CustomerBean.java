@@ -89,8 +89,17 @@ public class CustomerBean {
 	public String search() {
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
+		StringBuilder sb = new StringBuilder ("from CustomerHBC as m");
+		if (customerVO.getCustomer_name()!= null && !customerVO.getCustomer_name().isEmpty()) {
+			sb.append (" where m.customer_name like '%");
+			sb.append (customerVO.getCustomer_name());
+			sb.append ("%'");
+		}
+		
+		sb.append(" order by m.customer_id");
+		System.out.println(sb);
 		Query hibernateQuery = session
-				.createQuery("from CustomerHBC as m order by m.customer_id");
+				.createQuery(sb.toString ());
 		java.util.List<CustomerHBC> results = hibernateQuery.list();
 		setSearchList(new ArrayList<CustomerVO>());
 		for (int i = 0; i < results.size(); i++) {
