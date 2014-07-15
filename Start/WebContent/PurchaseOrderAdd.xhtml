@@ -121,8 +121,8 @@
 					</h:panelGroup>
 					<h:outputText value="Customer Vendor Code" styleClass="leftColumn" />
 					<h:panelGroup>
-						<rich:autocomplete mode="cachedAjax" minChars="2" required="true" id="custVendor"
-							requiredMessage="    Required" styleClass="searchEntry"
+						<rich:autocomplete mode="cachedAjax" minChars="2" required="false" id="custVendor"
+							styleClass="searchEntry"
 							valueChangeListener="#{PurchaseOrderBean.getCustomerDataUsingVendorCode}"
 							autocompleteMethod="#{PurchaseOrderBean.vendorCodeAutoComplete}"
 							value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.vendor_code}">
@@ -131,10 +131,18 @@
 						<rich:message for="custVendor" style="color:red;" />
 					</h:panelGroup>
 					<h:outputText value="Customer Name" styleClass="leftColumn" />
-					<h:inputText styleClass="searchEntry" id="custName"
-						value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.customer_name}"
-						label="CustomerName" />
-
+						
+					<h:panelGroup>
+					<rich:autocomplete mode="cachedAjax" minChars="2" required="false" id="custName"
+							styleClass="searchEntry"
+							valueChangeListener="#{PurchaseOrderBean.getCustomerData}"
+							autocompleteMethod="#{PurchaseOrderBean.customerNameAutoComplete}"
+							value="#{PurchaseOrderBean.selectedPurchaseOrderVO.custDetails.customer_name}">
+							<a4j:ajax event="change" render="custVendor" />
+						</rich:autocomplete>
+						<rich:message for="custVendor" style="color:red;" />
+					</h:panelGroup>
+					
 					<h:panelGroup>
 						<h:commandButton value="Add" styleClass="searchButton"
 							action="#{PurchaseOrderBean.add}"

@@ -161,7 +161,8 @@ public class PurchaseOrderBean {
 	}
 
 	public String add() {
-		System.out.println(getSelectedId());
+		if (selectedPurchaseOrderVO.getCustomerId() == null)
+			return "PurchaseOrderAdd";
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Transaction trans = session.beginTransaction();
@@ -438,6 +439,59 @@ public class PurchaseOrderBean {
 
 		return result;
 	}
+	public List<String> customerNameAutoComplete(String prefix) {
+		List<String> result = new ArrayList<String>();
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		Session session = cpool.getSession();
+		Query hibernateQuery = session
+				.createQuery("from CustomerHBC as m where customer_name like '%"
+						+ prefix + "%'");
+		java.util.List<CustomerHBC> results = hibernateQuery.list();
+
+		for (int i = 0; i < results.size(); i++) {
+			result.add(results.get(i).getCustomer_name());
+		}
+		session.close();
+
+		return result;
+	}
+
+	public void getCustomerData(ValueChangeEvent event) {
+		String custName = (String) event.getNewValue();
+		if (custName.isEmpty()) {
+			return;
+		}
+		CustomerVO tempCustVo = populateCustomerDetails(custName);
+		if (tempCustVo != null) {
+			selectedPurchaseOrderVO.setCustDetails(tempCustVo);
+			selectedPurchaseOrderVO.setCustomerId(tempCustVo.getCustomer_id());
+		}
+	}
+
+	public CustomerVO populateCustomerDetails(String custName) {
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		Session session = cpool.getSession();
+		Query hibernateQuery = session
+				.createQuery("from CustomerHBC as m where customer_name =:cust_name");
+		hibernateQuery.setString("cust_name", custName);
+		java.util.List<CustomerHBC> results = hibernateQuery.list();
+
+		CustomerVO tempCustVo = new CustomerVO();
+		if (results.size() > 0) {
+			tempCustVo.setCustomer_id(results.get(0).getCustomer_id());
+			tempCustVo.setCustomer_name(results.get(0).getCustomer_name());
+			tempCustVo
+					.setCustomer_address(results.get(0).getCustomer_address());
+			tempCustVo.setBst_no(results.get(0).getBst_no());
+			tempCustVo.setCst_no(results.get(0).getCst_no());
+			tempCustVo.setEcc_no(results.get(0).getEcc_no());
+			tempCustVo.setOctroi_no(results.get(0).getOctroi_no());
+			tempCustVo.setVendor_code(results.get(0).getVendor_code());
+		}
+		session.close();
+		return tempCustVo;
+	}
+
 
 	public String createInvoice() {
 		InvoiceHeaderVO invHdr = new InvoiceHeaderVO(selectedPurchaseOrderVO);
