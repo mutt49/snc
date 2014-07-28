@@ -79,14 +79,37 @@
 								value="Vendor/Supplier Code No." />
 							<h:panelGroup>
 								<rich:autocomplete mode="cachedAjax" minChars="2" id="custCode"
-									required="true" requiredMessage="    Required"
-									styleClass="searchEntry"
+									required="false" styleClass="searchEntry"
 									valueChangeListener="#{TestCertificateBean.getCustomerDataUsingVendorCode}"
 									autocompleteMethod="#{TestCertificateBean.vendorCodeAutoComplete}"
 									value="#{TestCertificateBean.selectedTestCertificateVO.vendorName}">
+									
+						<a4j:ajax event="change"
+							render="custName,custAddress" />
 								</rich:autocomplete>
 								<h:message for="custCode" style="color:red;" />
 							</h:panelGroup>
+
+
+							<h:outputText styleClass="leftColumn"
+								value="Vendor/Supplier Name" />
+							<h:panelGroup>
+								<rich:autocomplete mode="cachedAjax" minChars="2" id="custName"
+									required="false" styleClass="searchEntry"
+									valueChangeListener="#{TestCertificateBean.getCustomerData}"
+									autocompleteMethod="#{TestCertificateBean.customerNameAutoComplete}"
+									value="#{TestCertificateBean.selectedTestCertificateVO.vendorRealName}">
+						<a4j:ajax event="change"
+							render="custCode,custAddress" />
+								</rich:autocomplete>
+								<h:message for="custCode" style="color:red;" />
+							</h:panelGroup>
+							
+							<h:outputText styleClass="leftColumn"
+								value="Vendor/Supplier Address" />
+							<h:inputTextarea id="custAddress" rows="4" cols="30"
+								styleClass="searchEntryPreformatted"
+								value="#{TestCertificateBean.selectedTestCertificateVO.vendorAddress}" />
 
 							<h:outputText value="Grade" />
 							<h:panelGroup>
@@ -104,8 +127,9 @@
 
 							<h:outputText value="Description" />
 							<h:panelGroup>
-								<h:inputTextarea styleClass="searchEntry" id="desc" required="true"
-									requiredMessage="    Required" rows="4" cols="30" 
+								<h:inputTextarea styleClass="searchEntry" id="desc"
+									required="true" requiredMessage="    Required" rows="4"
+									cols="30"
 									value="#{TestCertificateBean.selectedTestCertificateVO.desc}"
 									label="Client Name" />
 								<h:message for="desc" style="color:red;" />
@@ -198,7 +222,8 @@
 								</rich:dataTable>
 							</h:panelGroup>
 						</h:panelGrid>
-						<h:selectBooleanCheckbox value="#{TestCertificateBean.printMechanicalProperties}">
+						<h:selectBooleanCheckbox
+							value="#{TestCertificateBean.printMechanicalProperties}">
 						Print Mechanical Properties
 						</h:selectBooleanCheckbox>
 					</a4j:outputPanel>
@@ -221,8 +246,8 @@
 							action="#{TestCertificateBean.print}"
 							rendered="#{TestCertificateBean.editFlag}" />
 						<h:commandButton value="Back" styleClass="searchButton"
-						immediate="true" action="#{TestCertificateBean.reset}">
-					</h:commandButton>
+							immediate="true" action="#{TestCertificateBean.reset}">
+						</h:commandButton>
 
 					</h:panelGrid>
 				</rich:panel>
