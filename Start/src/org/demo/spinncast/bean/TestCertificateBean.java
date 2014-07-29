@@ -831,13 +831,14 @@ public class TestCertificateBean {
 					}
 
 					// TABLES
-					contentStream.beginText();
-					contentStream.setFont(fontBold, 12);
-					contentStream.moveTextPositionByAmount(xOffset + 70,
-							yOffset + height - 450);
-					contentStream.drawString("CHEMICAL COMPOSITION");
-					contentStream.endText();
 					if (isPrintMechanicalProperties()) {
+						contentStream.beginText();
+						contentStream.setFont(fontBold, 12);
+						contentStream.moveTextPositionByAmount(xOffset + 70,
+								yOffset + height - 450);
+						contentStream.drawString("CHEMICAL COMPOSITION");
+						contentStream.endText();
+
 						contentStream.beginText();
 						contentStream.setFont(fontBold, 12);
 						contentStream.moveTextPositionByAmount(xOffset + width
@@ -845,23 +846,47 @@ public class TestCertificateBean {
 						contentStream.drawString("MECHANICAL PROPERTIES");
 						contentStream.endText();
 
-					}
-					contentStream.beginText();
-					contentStream.setFont(fontBold, 10);
-					contentStream.moveTextPositionByAmount(xOffset + 35,
-							yOffset + height - 470);
-					contentStream.drawString("Grade .: ");
-					contentStream.endText();
 
-					contentStream.beginText();
-					contentStream.setFont(font, 10);
-					contentStream.moveTextPositionByAmount(xOffset + 80,
-							yOffset + height - 470);
-					contentStream.drawString(selectedTestCertificateVO
-							.getGrade());
-					contentStream.endText();
+						contentStream.beginText();
+						contentStream.setFont(fontBold, 10);
+						contentStream.moveTextPositionByAmount(xOffset + 30,
+								yOffset + height - 470);
+						contentStream.drawString("Grade .: ");
+						contentStream.endText();
+
+						contentStream.beginText();
+						contentStream.setFont(font, 10);
+						contentStream.moveTextPositionByAmount(xOffset + 80,
+								yOffset + height - 470);
+						contentStream.drawString(selectedTestCertificateVO
+								.getGrade());
+						contentStream.endText();
+					} else {
+						contentStream.beginText();
+						contentStream.setFont(fontBold, 12);
+						contentStream.moveTextPositionByAmount(xOffset + 195,
+								yOffset + height - 450);
+						contentStream.drawString("CHEMICAL COMPOSITION");
+						contentStream.endText();
+
+						contentStream.beginText();
+						contentStream.setFont(fontBold, 10);
+						contentStream.moveTextPositionByAmount(xOffset + 150,
+								yOffset + height - 470);
+						contentStream.drawString("Grade .: ");
+						contentStream.endText();
+
+						contentStream.beginText();
+						contentStream.setFont(font, 10);
+						contentStream.moveTextPositionByAmount(xOffset + 200,
+								yOffset + height - 470);
+						contentStream.drawString(selectedTestCertificateVO
+								.getGrade());
+						contentStream.endText();
+					}
 
 					int tableOffset = 20;
+					if (printMechanicalProperties) {
 					int actualValueIndex = 0;
 					for (int ij = 0; ij < 15; ij++) {
 						contentStream.addLine(xOffset + tableOffset + 20,
@@ -998,7 +1023,6 @@ public class TestCertificateBean {
 							}
 						}
 					}
-					if (printMechanicalProperties) {
 						int tableOffset2 = 10;
 						actualValueIndex = 0;
 						for (int ij = 0; ij < 15; ij++) {
@@ -1099,7 +1123,7 @@ public class TestCertificateBean {
 										- (475 + (16 * 0)), xOffset
 										+ tableOffset2 + 525, yOffset + height
 										- (475 + (16 * 14)));
-							} else {
+							} else { 
 								for (; actualValueIndex < selectedTestCertificateVO
 										.getActualValues().size(); actualValueIndex++) {
 									if (selectedTestCertificateVO
@@ -1191,7 +1215,148 @@ public class TestCertificateBean {
 								}
 							}
 						}
+					} else {
+						// Print the table in the middle.
+						tableOffset = 155;
+						int actualValueIndex = 0;
+						for (int ij = 0; ij < 15; ij++) {
+							contentStream.addLine(xOffset + tableOffset + 20,
+									yOffset + height - (475 + (16 * ij)), xOffset
+											+ tableOffset + 210, yOffset + height
+											- (475 + (16 * ij)));
+
+							if (ij == 1) {
+								contentStream.beginText();
+								contentStream.setFont(font, 10);
+								contentStream.moveTextPositionByAmount(xOffset
+										+ tableOffset + 25, yOffset + height
+										- ((471 + (16 * ij))));
+								contentStream.drawString("Ingredients");
+								contentStream.endText();
+
+								contentStream.beginText();
+								contentStream.setFont(font, 10);
+								contentStream.moveTextPositionByAmount(xOffset
+										+ tableOffset + 80, yOffset + height
+										- ((471 + (16 * ij))));
+								contentStream.drawString("Specified");
+								contentStream.endText();
+
+								contentStream.beginText();
+								contentStream.setFont(font, 10);
+								contentStream.moveTextPositionByAmount(xOffset
+										+ tableOffset + 165, yOffset + height
+										- ((471 + (16 * ij))));
+								contentStream.drawString("Actual");
+								contentStream.endText();
+							} else if (ij == 0) {
+								contentStream.addLine(xOffset + tableOffset + 20,
+										yOffset + height - (475 + (16 * 0)),
+										xOffset + tableOffset + 20, yOffset
+												+ height - (475 + (16 * 14)));
+								contentStream.addLine(xOffset + tableOffset + 78,
+										yOffset + height - (475 + (16 * 0)),
+										xOffset + tableOffset + 78, yOffset
+												+ height - (475 + (16 * 14)));
+
+								// Line between min & max.
+								contentStream.addLine(xOffset + tableOffset + 117,
+										yOffset + height - (475 + (16 * 1)),
+										xOffset + tableOffset + 117, yOffset
+												+ height - (475 + (16 * 14)));
+								contentStream.addLine(xOffset + tableOffset + 157,
+										yOffset + height - (475 + (16 * 0)),
+										xOffset + tableOffset + 157, yOffset
+												+ height - (475 + (16 * 14)));
+								// Last Line
+								contentStream.addLine(xOffset + tableOffset + 210,
+										yOffset + height - (475 + (16 * 0)),
+										xOffset + tableOffset + 210, yOffset
+												+ height - (475 + (16 * 14)));
+
+							} else if (ij == 2) {
+								contentStream.beginText();
+								contentStream.setFont(font, 10);
+								contentStream.moveTextPositionByAmount(xOffset
+										+ tableOffset + 80, yOffset + height
+										- ((471 + (16 * ij))));
+								contentStream.drawString("Min.");
+								contentStream.endText();
+
+								contentStream.beginText();
+								contentStream.setFont(font, 10);
+								contentStream.moveTextPositionByAmount(xOffset
+										+ tableOffset + 120, yOffset + height
+										- ((471 + (16 * ij))));
+								contentStream.drawString("Max.");
+								contentStream.endText();
+							} else {
+								for (; actualValueIndex < selectedTestCertificateVO
+										.getActualValues().size(); actualValueIndex++) {
+									if (selectedTestCertificateVO.getActualValues()
+											.get(actualValueIndex).getPropType()
+											.equalsIgnoreCase("C")) {
+										contentStream.beginText();
+										contentStream.setFont(font, 10);
+										contentStream.moveTextPositionByAmount(
+												xOffset + tableOffset + 25, yOffset
+														+ height
+														- ((471 + (16 * ij))));
+										contentStream
+												.drawString(selectedTestCertificateVO
+														.getActualValues()
+														.get(actualValueIndex)
+														.getPropName());
+										contentStream.endText();
+
+										contentStream.beginText();
+										contentStream.setFont(font, 10);
+										contentStream.moveTextPositionByAmount(
+												xOffset + tableOffset + 80, yOffset
+														+ height
+														- ((471 + (16 * ij))));
+										contentStream
+												.drawString(selectedTestCertificateVO
+														.getActualValues()
+														.get(actualValueIndex)
+														.getMinValue());
+										contentStream.endText();
+
+										contentStream.beginText();
+										contentStream.setFont(font, 10);
+										contentStream.moveTextPositionByAmount(
+												xOffset + tableOffset + 120,
+												yOffset + height
+														- ((471 + (16 * ij))));
+										contentStream
+												.drawString(selectedTestCertificateVO
+														.getActualValues()
+														.get(actualValueIndex)
+														.getMaxValue());
+										contentStream.endText();
+
+										contentStream.beginText();
+										contentStream.setFont(font, 10);
+										contentStream.moveTextPositionByAmount(
+												xOffset + tableOffset + 165,
+												yOffset + height
+														- ((471 + (16 * ij))));
+										contentStream
+												.drawString(selectedTestCertificateVO
+														.getActualValues()
+														.get(actualValueIndex)
+														.getActual1());
+										contentStream.endText();
+										actualValueIndex++;
+										break;
+									}
+									actualValueIndex++;
+								}
+							}
+						}
+
 					}
+					tableOffset = 20;
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset
