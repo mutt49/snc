@@ -52,7 +52,9 @@ public class PurchaseOrderHBC {
 			this.purchaseOrderId = purchaseOrderVO.getPurchaseOrderId();
 		}
 		this.purchaseOrderNo = purchaseOrderVO.getPurchaseOrderNo();
-		this.customerId = purchaseOrderVO.getCustDetails().getCustomer_id();
+		if(purchaseOrderVO.getCustDetails().getCustomer_id() != null){
+			this.customerId = purchaseOrderVO.getCustDetails().getCustomer_id();
+		}
 		this.purchaseOrderDate = purchaseOrderVO.getPurchaseOrderDate();
 	}
 

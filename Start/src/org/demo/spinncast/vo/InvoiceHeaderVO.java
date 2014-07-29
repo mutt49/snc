@@ -39,12 +39,13 @@ public class InvoiceHeaderVO {
 	private String invNo;
 	private String deliveryTo;
 	private String deliveryAddress;
-	
+
 	/**
-	 * This member contains the number of lines this invoice will generate in the pdf.
+	 * This member contains the number of lines this invoice will generate in
+	 * the pdf.
 	 */
 	private Integer linesOfLineItem;
-	
+
 	public String getDeliveryTo() {
 		return deliveryTo;
 	}
@@ -60,8 +61,8 @@ public class InvoiceHeaderVO {
 	public void setDeliveryAddress(String deliveryAddress) {
 		this.deliveryAddress = deliveryAddress;
 	}
-	
-	public InvoiceHeaderVO(InvoiceHeaderHBC invHeaderHbc){
+
+	public InvoiceHeaderVO(InvoiceHeaderHBC invHeaderHbc) {
 		this.customerId = invHeaderHbc.getCustomerId();
 		this.invId = invHeaderHbc.getInvId();
 		this.invDate = invHeaderHbc.getInvDate();
@@ -89,12 +90,15 @@ public class InvoiceHeaderVO {
 		this.deliveryTo = invHeaderHbc.getDeliveryTo();
 		this.linesOfLineItem = 0;
 	}
-	
-	public InvoiceHeaderVO(PurchaseOrderVO purchaseOrderHbc){
-		this.customerId = purchaseOrderHbc.getCustomerId();
-		this.purchaseOrderId = purchaseOrderHbc.getPurchaseOrderNo()+"";
+
+	public InvoiceHeaderVO(PurchaseOrderVO purchaseOrderHbc) {
+		if (purchaseOrderHbc.getCustomerId() != null
+				&& purchaseOrderHbc.getCustomerId() != 0) {
+			this.customerId = purchaseOrderHbc.getCustomerId();
+		}
+		this.purchaseOrderId = purchaseOrderHbc.getPurchaseOrderNo() + "";
 		this.purchaseOrderDate = purchaseOrderHbc.getPurchaseOrderDate();
-		//this.netTotalAmount = purchaseOrderHbc.getNetTotalAmount();
+		// this.netTotalAmount = purchaseOrderHbc.getNetTotalAmount();
 		this.linesOfLineItem = 0;
 	}
 

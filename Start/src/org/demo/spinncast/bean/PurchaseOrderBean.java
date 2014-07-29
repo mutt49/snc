@@ -109,26 +109,29 @@ public class PurchaseOrderBean {
 		selectedId = null;
 		return "PurchaseOrderSearch";
 	};
-    private SortOrder customerNameOrder = SortOrder.unsorted;
-    
-    public void sortByStates() {
-        if (customerNameOrder.equals(SortOrder.ascending)) {
-            setCustomerNameOrder(SortOrder.descending);
-        } else {
-        	setCustomerNameOrder(SortOrder.ascending);
-        }
-    }
+
+	private SortOrder customerNameOrder = SortOrder.unsorted;
+
+	public void sortByStates() {
+		if (customerNameOrder.equals(SortOrder.ascending)) {
+			setCustomerNameOrder(SortOrder.descending);
+		} else {
+			setCustomerNameOrder(SortOrder.ascending);
+		}
+	}
+
 	@SuppressWarnings("unchecked")
 	public String search() {
 		CustomerHandler custHandler = new CustomerHandler();
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 
-		StringBuilder sb = new StringBuilder("from PurchaseOrderHBC as m, CustomerHBC as c");
+		StringBuilder sb = new StringBuilder(
+				"from PurchaseOrderHBC as m, CustomerHBC as c");
 		sb.append(" where m.customerId = c.customer_id ");
 		if (searchPurchaseOrderVO.getPurchaseOrderNo() != null
 				&& searchPurchaseOrderVO.getPurchaseOrderNo() != "") {
-			sb.append (" and ");
+			sb.append(" and ");
 			sb.append(" purchaseOrderNo = :poNo ");
 		}
 
@@ -140,14 +143,18 @@ public class PurchaseOrderBean {
 			hibernateQuery.setString("poNo",
 					searchPurchaseOrderVO.getPurchaseOrderNo());
 		}
-//		java.util.List results = hibernateQuery.list();
+		// java.util.List results = hibernateQuery.list();
 		Criteria criteria = session.createCriteria(PurchaseOrderHBC.class);
 		setSearchList(new ArrayList<PurchaseOrderVO>());
 		for (final Object o : criteria.list()) {
 			PurchaseOrderVO po = new PurchaseOrderVO((PurchaseOrderHBC) o);
 			CustomerVO custVo = new CustomerVO();
-			custVo = custHandler.populateCustomerDetailsUsingCustomerId(((PurchaseOrderHBC) o).getCustomerId());
-			po.setCustomerName(custVo.getCustomer_name());
+			if (((PurchaseOrderHBC) o).getCustomerId() != 0) {
+				custVo = custHandler
+						.populateCustomerDetailsUsingCustomerId(((PurchaseOrderHBC) o)
+								.getCustomerId());
+				po.setCustomerName(custVo.getCustomer_name());
+			}
 			/*
 			 * Get Line Items for this specific Purchase Order.
 			 */
@@ -161,8 +168,10 @@ public class PurchaseOrderBean {
 	}
 
 	public String add() {
-		if (selectedPurchaseOrderVO.getCustomerId() == null)
-			return "PurchaseOrderAdd";
+		/*
+		 * if (selectedPurchaseOrderVO.getCustomerId() == null) return
+		 * "PurchaseOrderAdd";
+		 */
 		ConnectionPool cpool = ConnectionPool.getInstance();
 		Session session = cpool.getSession();
 		Transaction trans = session.beginTransaction();
@@ -439,6 +448,7 @@ public class PurchaseOrderBean {
 
 		return result;
 	}
+
 	public List<String> customerNameAutoComplete(String prefix) {
 		List<String> result = new ArrayList<String>();
 		ConnectionPool cpool = ConnectionPool.getInstance();
@@ -491,7 +501,6 @@ public class PurchaseOrderBean {
 		session.close();
 		return tempCustVo;
 	}
-
 
 	public String createInvoice() {
 		InvoiceHeaderVO invHdr = new InvoiceHeaderVO(selectedPurchaseOrderVO);
