@@ -850,14 +850,14 @@ public class TestCertificateBean {
 						contentStream.beginText();
 						contentStream.setFont(fontBold, 10);
 						contentStream.moveTextPositionByAmount(xOffset + 30,
-								yOffset + height - 470);
+								yOffset + height - 465);
 						contentStream.drawString("Grade .: ");
 						contentStream.endText();
 
 						contentStream.beginText();
 						contentStream.setFont(font, 10);
 						contentStream.moveTextPositionByAmount(xOffset + 80,
-								yOffset + height - 470);
+								yOffset + height - 465);
 						contentStream.drawString(selectedTestCertificateVO
 								.getGrade());
 						contentStream.endText();
@@ -889,12 +889,12 @@ public class TestCertificateBean {
 					if (printMechanicalProperties) {
 					int actualValueIndex = 0;
 					for (int ij = 0; ij < 15; ij++) {
-						contentStream.addLine(xOffset + tableOffset + 20,
-								yOffset + height - (475 + (16 * ij)), xOffset
-										+ tableOffset + 210, yOffset + height
-										- (475 + (16 * ij)));
 
 						if (ij == 1) {
+							contentStream.addLine(xOffset + tableOffset + 20,
+									yOffset + height - (475 + (16 * ij)), xOffset
+											+ tableOffset + 210, yOffset + height
+											- (475 + (16 * ij)));
 							contentStream.beginText();
 							contentStream.setFont(font, 10);
 							contentStream.moveTextPositionByAmount(xOffset
@@ -920,30 +920,14 @@ public class TestCertificateBean {
 							contentStream.endText();
 						} else if (ij == 0) {
 							contentStream.addLine(xOffset + tableOffset + 20,
-									yOffset + height - (475 + (16 * 0)),
-									xOffset + tableOffset + 20, yOffset
-											+ height - (475 + (16 * 14)));
-							contentStream.addLine(xOffset + tableOffset + 78,
-									yOffset + height - (475 + (16 * 0)),
-									xOffset + tableOffset + 78, yOffset
-											+ height - (475 + (16 * 14)));
-
-							// Line between min & max.
-							contentStream.addLine(xOffset + tableOffset + 117,
-									yOffset + height - (475 + (16 * 1)),
-									xOffset + tableOffset + 117, yOffset
-											+ height - (475 + (16 * 14)));
-							contentStream.addLine(xOffset + tableOffset + 157,
-									yOffset + height - (475 + (16 * 0)),
-									xOffset + tableOffset + 157, yOffset
-											+ height - (475 + (16 * 14)));
-							// Last Line
-							contentStream.addLine(xOffset + tableOffset + 210,
-									yOffset + height - (475 + (16 * 0)),
-									xOffset + tableOffset + 210, yOffset
-											+ height - (475 + (16 * 14)));
-
+									yOffset + height - (475 + (16 * ij)), xOffset
+											+ tableOffset + 210, yOffset + height
+											- (475 + (16 * ij)));
 						} else if (ij == 2) {
+							contentStream.addLine(xOffset + tableOffset + 20,
+									yOffset + height - (475 + (16 * ij)), xOffset
+											+ tableOffset + 210, yOffset + height
+											- (475 + (16 * ij)));
 							contentStream.beginText();
 							contentStream.setFont(font, 10);
 							contentStream.moveTextPositionByAmount(xOffset
@@ -965,6 +949,34 @@ public class TestCertificateBean {
 								if (selectedTestCertificateVO.getActualValues()
 										.get(actualValueIndex).getPropType()
 										.equalsIgnoreCase("C")) {
+									contentStream.addLine(xOffset + tableOffset + 20,
+											yOffset + height - (475 + (16 * ij)), xOffset
+													+ tableOffset + 210, yOffset + height
+													- (475 + (16 * ij)));
+									contentStream.addLine(xOffset + tableOffset + 20,
+											yOffset + height - (475 + (16 * 0)),
+											xOffset + tableOffset + 20, yOffset
+													+ height - (475 + (16 * ij)));
+									contentStream.addLine(xOffset + tableOffset + 78,
+											yOffset + height - (475 + (16 * 0)),
+											xOffset + tableOffset + 78, yOffset
+													+ height - (475 + (16 * ij)));
+
+									// Line between min & max.
+									contentStream.addLine(xOffset + tableOffset + 117,
+											yOffset + height - (475 + (16 * 1)),
+											xOffset + tableOffset + 117, yOffset
+													+ height - (475 + (16 * ij)));
+									contentStream.addLine(xOffset + tableOffset + 157,
+											yOffset + height - (475 + (16 * 0)),
+											xOffset + tableOffset + 157, yOffset
+													+ height - (475 + (16 * ij)));
+									// Last Line
+									contentStream.addLine(xOffset + tableOffset + 210,
+											yOffset + height - (475 + (16 * 0)),
+											xOffset + tableOffset + 210, yOffset
+													+ height - (475 + (16 * ij)));
+
 									contentStream.beginText();
 									contentStream.setFont(font, 10);
 									contentStream.moveTextPositionByAmount(
@@ -1026,12 +1038,12 @@ public class TestCertificateBean {
 						int tableOffset2 = 10;
 						actualValueIndex = 0;
 						for (int ij = 0; ij < 15; ij++) {
-							contentStream.addLine(xOffset + tableOffset2 + 265,
-									yOffset + height - (475 + (16 * ij)),
-									xOffset + tableOffset2 + 525, yOffset
-											+ height - (475 + (16 * ij)));
 
 							if (ij == 1) {
+								contentStream.addLine(xOffset + tableOffset2 + 265,
+										yOffset + height - (475 + (16 * ij)),
+										xOffset + tableOffset2 + 525, yOffset
+												+ height - (475 + (16 * ij)));
 								contentStream.beginText();
 								contentStream.setFont(font, 10);
 								contentStream.moveTextPositionByAmount(xOffset
@@ -1072,6 +1084,10 @@ public class TestCertificateBean {
 								contentStream.drawString("Actual");
 								contentStream.endText();
 							} else if (ij == 2) {
+								contentStream.addLine(xOffset + tableOffset2 + 265,
+										yOffset + height - (475 + (16 * ij)),
+										xOffset + tableOffset2 + 525, yOffset
+												+ height - (475 + (16 * ij)));
 								contentStream.beginText();
 								contentStream.setFont(font, 10);
 								contentStream.moveTextPositionByAmount(xOffset
@@ -1088,41 +1104,10 @@ public class TestCertificateBean {
 								contentStream.drawString("Max.");
 								contentStream.endText();
 							} else if (ij == 0) {
-								contentStream.addLine(xOffset + tableOffset2
-										+ 265, yOffset + height
-										- (475 + (16 * 0)), xOffset
-										+ tableOffset2 + 265, yOffset + height
-										- (475 + (16 * 14)));
-								contentStream.addLine(xOffset + tableOffset2
-										+ 320, yOffset + height
-										- (475 + (16 * 0)), xOffset
-										+ tableOffset2 + 320, yOffset + height
-										- (475 + (16 * 14)));
-								contentStream.addLine(xOffset + tableOffset2
-										+ 362, yOffset + height
-										- (475 + (16 * 1)), xOffset
-										+ tableOffset2 + 362, yOffset + height
-										- (475 + (16 * 14)));
-								contentStream.addLine(xOffset + tableOffset2
-										+ 405, yOffset + height
-										- (475 + (16 * 0)), xOffset
-										+ tableOffset2 + 405, yOffset + height
-										- (475 + (16 * 14)));
-								contentStream.addLine(xOffset + tableOffset2
-										+ 445, yOffset + height
-										- (475 + (16 * 0)), xOffset
-										+ tableOffset2 + 445, yOffset + height
-										- (475 + (16 * 14)));
-								contentStream.addLine(xOffset + tableOffset2
-										+ 485, yOffset + height
-										- (475 + (16 * 0)), xOffset
-										+ tableOffset2 + 485, yOffset + height
-										- (475 + (16 * 14)));
-								contentStream.addLine(xOffset + tableOffset2
-										+ 525, yOffset + height
-										- (475 + (16 * 0)), xOffset
-										+ tableOffset2 + 525, yOffset + height
-										- (475 + (16 * 14)));
+								contentStream.addLine(xOffset + tableOffset2 + 265,
+										yOffset + height - (475 + (16 * ij)),
+										xOffset + tableOffset2 + 525, yOffset
+												+ height - (475 + (16 * ij)));
 							} else { 
 								for (; actualValueIndex < selectedTestCertificateVO
 										.getActualValues().size(); actualValueIndex++) {
@@ -1131,6 +1116,48 @@ public class TestCertificateBean {
 											.get(actualValueIndex)
 											.getPropType()
 											.equalsIgnoreCase("M")) {
+										contentStream.addLine(xOffset + tableOffset2 + 265,
+												yOffset + height - (475 + (16 * ij)),
+												xOffset + tableOffset2 + 525, yOffset
+														+ height - (475 + (16 * ij)));
+										
+
+										contentStream.addLine(xOffset + tableOffset2
+												+ 265, yOffset + height
+												- (475 + (16 * 0)), xOffset
+												+ tableOffset2 + 265, yOffset + height
+												- (475 + (16 * ij)));
+										contentStream.addLine(xOffset + tableOffset2
+												+ 320, yOffset + height
+												- (475 + (16 * 0)), xOffset
+												+ tableOffset2 + 320, yOffset + height
+												- (475 + (16 * ij)));
+										contentStream.addLine(xOffset + tableOffset2
+												+ 362, yOffset + height
+												- (475 + (16 * 1)), xOffset
+												+ tableOffset2 + 362, yOffset + height
+												- (475 + (16 * ij)));
+										contentStream.addLine(xOffset + tableOffset2
+												+ 405, yOffset + height
+												- (475 + (16 * 0)), xOffset
+												+ tableOffset2 + 405, yOffset + height
+												- (475 + (16 * ij)));
+										contentStream.addLine(xOffset + tableOffset2
+												+ 445, yOffset + height
+												- (475 + (16 * 0)), xOffset
+												+ tableOffset2 + 445, yOffset + height
+												- (475 + (16 * ij)));
+										contentStream.addLine(xOffset + tableOffset2
+												+ 485, yOffset + height
+												- (475 + (16 * 0)), xOffset
+												+ tableOffset2 + 485, yOffset + height
+												- (475 + (16 * ij)));
+										contentStream.addLine(xOffset + tableOffset2
+												+ 525, yOffset + height
+												- (475 + (16 * 0)), xOffset
+												+ tableOffset2 + 525, yOffset + height
+												- (475 + (16 * ij)));
+										
 										contentStream.beginText();
 										contentStream.setFont(font, 10);
 										contentStream.moveTextPositionByAmount(
@@ -1220,12 +1247,12 @@ public class TestCertificateBean {
 						tableOffset = 155;
 						int actualValueIndex = 0;
 						for (int ij = 0; ij < 15; ij++) {
-							contentStream.addLine(xOffset + tableOffset + 20,
-									yOffset + height - (475 + (16 * ij)), xOffset
-											+ tableOffset + 210, yOffset + height
-											- (475 + (16 * ij)));
 
 							if (ij == 1) {
+								contentStream.addLine(xOffset + tableOffset + 20,
+										yOffset + height - (475 + (16 * ij)), xOffset
+												+ tableOffset + 210, yOffset + height
+												- (475 + (16 * ij)));
 								contentStream.beginText();
 								contentStream.setFont(font, 10);
 								contentStream.moveTextPositionByAmount(xOffset
@@ -1251,30 +1278,15 @@ public class TestCertificateBean {
 								contentStream.endText();
 							} else if (ij == 0) {
 								contentStream.addLine(xOffset + tableOffset + 20,
-										yOffset + height - (475 + (16 * 0)),
-										xOffset + tableOffset + 20, yOffset
-												+ height - (475 + (16 * 14)));
-								contentStream.addLine(xOffset + tableOffset + 78,
-										yOffset + height - (475 + (16 * 0)),
-										xOffset + tableOffset + 78, yOffset
-												+ height - (475 + (16 * 14)));
-
-								// Line between min & max.
-								contentStream.addLine(xOffset + tableOffset + 117,
-										yOffset + height - (475 + (16 * 1)),
-										xOffset + tableOffset + 117, yOffset
-												+ height - (475 + (16 * 14)));
-								contentStream.addLine(xOffset + tableOffset + 157,
-										yOffset + height - (475 + (16 * 0)),
-										xOffset + tableOffset + 157, yOffset
-												+ height - (475 + (16 * 14)));
-								// Last Line
-								contentStream.addLine(xOffset + tableOffset + 210,
-										yOffset + height - (475 + (16 * 0)),
-										xOffset + tableOffset + 210, yOffset
-												+ height - (475 + (16 * 14)));
+										yOffset + height - (475 + (16 * ij)), xOffset
+												+ tableOffset + 210, yOffset + height
+												- (475 + (16 * ij)));
 
 							} else if (ij == 2) {
+								contentStream.addLine(xOffset + tableOffset + 20,
+										yOffset + height - (475 + (16 * ij)), xOffset
+												+ tableOffset + 210, yOffset + height
+												- (475 + (16 * ij)));
 								contentStream.beginText();
 								contentStream.setFont(font, 10);
 								contentStream.moveTextPositionByAmount(xOffset
@@ -1296,6 +1308,33 @@ public class TestCertificateBean {
 									if (selectedTestCertificateVO.getActualValues()
 											.get(actualValueIndex).getPropType()
 											.equalsIgnoreCase("C")) {
+										contentStream.addLine(xOffset + tableOffset + 20,
+												yOffset + height - (475 + (16 * ij)), xOffset
+														+ tableOffset + 210, yOffset + height
+														- (475 + (16 * ij)));
+										contentStream.addLine(xOffset + tableOffset + 20,
+												yOffset + height - (475 + (16 * 0)),
+												xOffset + tableOffset + 20, yOffset
+														+ height - (475 + (16 * ij)));
+										contentStream.addLine(xOffset + tableOffset + 78,
+												yOffset + height - (475 + (16 * 0)),
+												xOffset + tableOffset + 78, yOffset
+														+ height - (475 + (16 * ij)));
+
+										// Line between min & max.
+										contentStream.addLine(xOffset + tableOffset + 117,
+												yOffset + height - (475 + (16 * 1)),
+												xOffset + tableOffset + 117, yOffset
+														+ height - (475 + (16 * ij)));
+										contentStream.addLine(xOffset + tableOffset + 157,
+												yOffset + height - (475 + (16 * 0)),
+												xOffset + tableOffset + 157, yOffset
+														+ height - (475 + (16 * ij)));
+										// Last Line
+										contentStream.addLine(xOffset + tableOffset + 210,
+												yOffset + height - (475 + (16 * 0)),
+												xOffset + tableOffset + 210, yOffset
+														+ height - (475 + (16 * ij)));
 										contentStream.beginText();
 										contentStream.setFont(font, 10);
 										contentStream.moveTextPositionByAmount(
@@ -1366,7 +1405,7 @@ public class TestCertificateBean {
 					contentStream.beginText();
 					contentStream.setFont(font, 10);
 					contentStream.moveTextPositionByAmount(xOffset
-							+ tableOffset + 125, yOffset + height - 720);
+							+ tableOffset + 155, yOffset + height - 720);
 					contentStream.drawString(selectedTestCertificateVO
 							.getOtherTests());
 					contentStream.endText();
