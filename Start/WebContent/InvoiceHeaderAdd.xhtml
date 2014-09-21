@@ -337,6 +337,13 @@
 							<h:inputText styleClass="searchEntry" id="irNo" value="InvoiceHeaderBean.selectedInvHdrVo.paymentTerms" />
 						</h:panelGrid> -->
 
+					<h:selectBooleanCheckbox
+						value="#{InvoiceHeaderBean.invoiceTypeBoolean}"></h:selectBooleanCheckbox> 
+					<h:outputText value="Change Invoice Type"/>
+					
+					<h:outputText styleClass="leftColumn" value="Type Of Invoice" />
+					<h:inputText styleClass="searchEntry" id="invoiceTypeString"
+						value="#{InvoiceHeaderBean.invoiceTypeString}" />
 				</h:panelGrid>
 
 				<h:panelGrid columns="2">

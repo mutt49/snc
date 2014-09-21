@@ -84,6 +84,27 @@ public class InvoiceHeaderBean {
 	private String searchCustomer;
 	private boolean showPopUpPanel = false;
 
+	public String getInvoiceTypeString() {
+		return invoiceTypeString;
+	}
+
+	public void setInvoiceTypeString(String invoiceTypeString) {
+		this.invoiceTypeString = invoiceTypeString;
+	}
+
+	public boolean isInvoiceTypeBoolean() {
+		return invoiceTypeBoolean;
+	}
+
+	public void setInvoiceTypeBoolean(boolean invoiceTypeBoolean) {
+		this.invoiceTypeBoolean = invoiceTypeBoolean;
+	}
+
+	private String invoiceTypeString;
+	private boolean invoiceTypeBoolean;
+	
+	
+	
 	static final Integer lineLimitOnPdf = 16;
 
 	public boolean isShowPopUpPanel() {
@@ -272,11 +293,13 @@ public class InvoiceHeaderBean {
 		searchList = new ArrayList<InvoiceHeaderVO>();
 		invLineItem = new InvoiceLineItemVO();
 		partVo = new PartMasterVO();
+		invoiceTypeBoolean = false;
 		// readProperties();
 		readProps();
 	}
 
-	public void readProps() {
+	public void readProps() {       System.out.println("Working Directory = " +
+            System.getProperty("user.dir"));
 		ApplicationHepler.readProperties();
 		vendorCode = ApplicationHepler.getVendorCode();
 		exciseCode = ApplicationHepler.getExciseCode();
@@ -1523,12 +1546,14 @@ public class InvoiceHeaderBean {
 					contentStream.drawString("No.");
 					contentStream.endText();
 
+					String descriptionAndSpecs = new String ("Description and specification of goods");
+					float descriptionAndSpecsWidth = fontBold.getStringWidth(descriptionAndSpecs) / 1000 * 9;
 					contentStream.beginText();
 					contentStream.setFont(fontBold, 9);
-					contentStream.moveTextPositionByAmount(xOffset + 56,
+					contentStream.moveTextPositionByAmount(xOffset + 30 + ((227 - descriptionAndSpecsWidth) / 2),
 							yOffset + height - 354);
 					contentStream
-							.drawString("Description and specification of goods");
+							.drawString(descriptionAndSpecs);
 					contentStream.endText();
 				}
 
@@ -1679,11 +1704,21 @@ public class InvoiceHeaderBean {
 				}
 
 				// Line Items Over.
+				String invoiceType = null;
+				if (invoiceTypeBoolean) {
+					if (invoiceTypeString == null)
+						invoiceTypeString = new String ("");
+					invoiceType= invoiceTypeString;
+				}
+				else
+					invoiceType= new String ("Proof M/C Non Ferrous Casting");
+				
+				float invoiceTypeWidth = fontBold.getStringWidth(invoiceType) / 1000 * 9;
 				contentStream.beginText();
 				contentStream.setFont(fontBold, 9);
-				contentStream.moveTextPositionByAmount(xOffset + 64, yOffset
+				contentStream.moveTextPositionByAmount(xOffset + 30 + ((227 - invoiceTypeWidth) / 2), yOffset
 						+ height - 365);
-				contentStream.drawString("Proof M/C Non Ferrous Casting"); // Data
+				contentStream.drawString(invoiceType); // Data
 				contentStream.endText();
 				if (printEntirePage) {
 					contentStream.addLine(xOffset + 250 + 7, yOffset + height
