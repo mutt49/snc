@@ -709,7 +709,7 @@ public class TestCertificateBean {
 					System.out.println(selectedTestCertificateVO
 							.getVendorAddress());
 					for (String addressLine : getFormattedAddress(
-							selectedTestCertificateVO.getVendorAddress(), 33)) {
+							selectedTestCertificateVO.getVendorAddress(), 80)) {
 						contentStream.beginText();
 						contentStream.setFont(font, 10);
 						contentStream
@@ -1484,6 +1484,9 @@ public class TestCertificateBean {
 
 	private List<String> getFormattedAddress(String bigString, int characters) {
 		List<String> returnValue = new ArrayList<String>();
+		// bigString = bigString.replaceAll("\\(", "");
+		// bigString = bigString.replaceAll("\\)", "");
+		
 		if (bigString.contains("\n")) {
 			// This is from a text area.
 			while (bigString.length() > characters) {
@@ -1501,14 +1504,22 @@ public class TestCertificateBean {
 					String temp = bigString.substring(0, characters);
 					if (temp.lastIndexOf(" ") > 0) {
 						temp = temp.substring(0, temp.lastIndexOf(" "));
+						temp = temp.replaceAll("\\(", "\\\\(");
+						temp = temp.replaceAll("\\)", "\\\\)");
+						temp = temp.replaceAll("\\+", "\\\\+");
 						bigString = bigString.replaceFirst(temp + " ", "");
+						temp = temp.replaceAll("\\\\\\(", "(");
+						temp = temp.replaceAll("\\\\\\)", ")");
+						temp = temp.replaceAll("\\\\\\+", "+");
 					} else {
 						temp = temp.substring(0, temp.lastIndexOf(","));
 						bigString = bigString.replaceFirst(temp + ",", "");
 					}
 					returnValue.add(temp);
 				}
-				returnValue.add(bigString);
+				returnValue.add(bigString.replaceAll("\\\\\\(", "(")
+						.replaceAll("\\\\\\)", ")").replaceAll("\\\\\\+", "+"));
+				//returnValue.add(bigString);
 			}
 		}
 		return returnValue;
