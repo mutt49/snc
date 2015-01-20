@@ -940,7 +940,7 @@ public class InvoiceHeaderBean {
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset + 140,
 							yOffset + height - 93);
-					contentStream.drawString("7101031799");
+					contentStream.drawString("711004");
 					contentStream.endText();
 
 					contentStream.beginText();
@@ -996,7 +996,7 @@ public class InvoiceHeaderBean {
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset + 50,
 							yOffset + height - 145);
-					contentStream.drawString("K II - 03");
+					contentStream.drawString("R - IV");
 					contentStream.endText();
 
 					contentStream.beginText();
@@ -1010,7 +1010,7 @@ public class InvoiceHeaderBean {
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset + 183,
 							yOffset + height - 145);
-					contentStream.drawString("PUNE VI - 01");
+					contentStream.drawString("I (Mulshi)  10");
 					contentStream.endText();
 
 					contentStream.beginText();
