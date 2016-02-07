@@ -31,6 +31,15 @@ public class InvoiceHeaderHBC {
 	private String invNo;
 	private String deliveryTo;
 	private String deliveryAddress;
+	private String exciseDutyPayableString;
+
+	public String getExciseDutyPayableString() {
+		return exciseDutyPayableString;
+	}
+
+	public void setExciseDutyPayableString(String exciseDutyPayableString) {
+		this.exciseDutyPayableString = exciseDutyPayableString;
+	}
 
 	public String getDeliveryTo() {
 		return deliveryTo;
@@ -233,7 +242,7 @@ public class InvoiceHeaderHBC {
 	}
 
 	public InvoiceHeaderHBC() {
-
+		exciseDutyPayableString = "Excise duty payable.";
 	}
 
 	public InvoiceHeaderHBC(InvoiceHeaderVO invHdr) {
@@ -262,6 +271,7 @@ public class InvoiceHeaderHBC {
 		invNo = invHdr.getInvNo();
 		deliveryTo = invHdr.getDeliveryTo();
 		deliveryAddress = invHdr.getDeliveryAddress();
+		exciseDutyPayableString = invHdr.getExciseDutyPayableString();
 	}
 
 	public void update(InvoiceHeaderVO invHdr) {
@@ -290,6 +300,7 @@ public class InvoiceHeaderHBC {
 		invNo = invHdr.getInvNo();
 		deliveryTo = invHdr.getDeliveryTo();
 		deliveryAddress = invHdr.getDeliveryAddress();
+		exciseDutyPayableString = invHdr.getExciseDutyPayableString();
 	}
 
 }

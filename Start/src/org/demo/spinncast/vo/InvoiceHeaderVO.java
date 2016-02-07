@@ -40,6 +40,16 @@ public class InvoiceHeaderVO {
 	private String deliveryTo;
 	private String deliveryAddress;
 
+	private String exciseDutyPayableString;
+	
+	public String getExciseDutyPayableString() {
+		return exciseDutyPayableString;
+	}
+
+	public void setExciseDutyPayableString(String exciseDutyPayableString) {
+		this.exciseDutyPayableString = exciseDutyPayableString;
+	}
+
 	/**
 	 * This member contains the number of lines this invoice will generate in
 	 * the pdf.
@@ -89,6 +99,7 @@ public class InvoiceHeaderVO {
 		this.deliveryAddress = invHeaderHbc.getDeliveryAddress();
 		this.deliveryTo = invHeaderHbc.getDeliveryTo();
 		this.linesOfLineItem = 0;
+		this.exciseDutyPayableString = invHeaderHbc.getExciseDutyPayableString();
 	}
 
 	public InvoiceHeaderVO(PurchaseOrderVO purchaseOrderHbc) {
@@ -100,6 +111,7 @@ public class InvoiceHeaderVO {
 		this.purchaseOrderDate = purchaseOrderHbc.getPurchaseOrderDate();
 		// this.netTotalAmount = purchaseOrderHbc.getNetTotalAmount();
 		this.linesOfLineItem = 0;
+		exciseDutyPayableString = "Excise duty table.";
 	}
 
 	public InvoiceHeaderVO() {
@@ -107,6 +119,7 @@ public class InvoiceHeaderVO {
 		removalDate = Calendar.getInstance().getTime();
 		invDate = Calendar.getInstance().getTime();
 		this.linesOfLineItem = 0;
+		exciseDutyPayableString = "Excise duty table.";
 	}
 
 	// tariff & exemption notiff

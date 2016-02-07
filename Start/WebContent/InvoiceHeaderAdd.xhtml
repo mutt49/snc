@@ -344,6 +344,11 @@
 					<h:outputText styleClass="leftColumn" value="Type Of Invoice" />
 					<h:inputText styleClass="searchEntry" id="invoiceTypeString"
 						value="#{InvoiceHeaderBean.invoiceTypeString}" />
+						
+						
+					<h:outputText styleClass="leftColumn" value="Excise Duty Payable Str:" />
+					<h:inputText styleClass="searchEntry" id="exciseDutyPayableString"
+						value="#{InvoiceHeaderBean.selectedInvHdrVo.exciseDutyPayableString}" />
 				</h:panelGrid>
 
 				<h:panelGrid columns="2">

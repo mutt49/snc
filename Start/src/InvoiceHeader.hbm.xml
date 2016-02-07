@@ -31,5 +31,6 @@
 		<property name="invNo" column="inv_no"></property>
 		<property name="deliveryTo" column="delivery_to"></property>
 		<property name="deliveryAddress" column="delivery_address"></property>
+		<property name="exciseDutyPayableString" column="excise_duty_payable"></property>
 	</class>
 </hibernate-mapping>  

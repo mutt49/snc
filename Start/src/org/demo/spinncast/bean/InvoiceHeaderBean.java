@@ -103,8 +103,6 @@ public class InvoiceHeaderBean {
 	private String invoiceTypeString;
 	private boolean invoiceTypeBoolean;
 	
-	
-	
 	static final Integer lineLimitOnPdf = 16;
 
 	public boolean isShowPopUpPanel() {
@@ -2412,7 +2410,7 @@ public class InvoiceHeaderBean {
 					contentStream.setFont(fontBold, 10);
 					contentStream.moveTextPositionByAmount(xOffset + 216,
 							yOffset + height - 722 + registerOffset);
-					contentStream.drawString("Excise duty payable.");
+					contentStream.drawString(selectedInvHdrVo.getExciseDutyPayableString());
 					contentStream.endText();
 
 					// Line Below Excise Duty Payable
