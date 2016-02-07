@@ -242,7 +242,6 @@ public class InvoiceHeaderHBC {
 	}
 
 	public InvoiceHeaderHBC() {
-		exciseDutyPayableString = "Excise duty payable.";
 	}
 
 	public InvoiceHeaderHBC(InvoiceHeaderVO invHdr) {

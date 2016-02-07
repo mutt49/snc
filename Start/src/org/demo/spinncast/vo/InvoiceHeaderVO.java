@@ -111,7 +111,7 @@ public class InvoiceHeaderVO {
 		this.purchaseOrderDate = purchaseOrderHbc.getPurchaseOrderDate();
 		// this.netTotalAmount = purchaseOrderHbc.getNetTotalAmount();
 		this.linesOfLineItem = 0;
-		exciseDutyPayableString = "Excise duty table.";
+		exciseDutyPayableString = "Excise duty payable.";
 	}
 
 	public InvoiceHeaderVO() {
