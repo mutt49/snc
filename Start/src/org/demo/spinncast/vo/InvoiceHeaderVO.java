@@ -119,7 +119,7 @@ public class InvoiceHeaderVO {
 		removalDate = Calendar.getInstance().getTime();
 		invDate = Calendar.getInstance().getTime();
 		this.linesOfLineItem = 0;
-		exciseDutyPayableString = "Excise duty table.";
+		exciseDutyPayableString = "Excise duty payable.";
 	}
 
 	// tariff & exemption notiff
