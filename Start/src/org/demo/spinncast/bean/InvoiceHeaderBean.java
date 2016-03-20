@@ -617,7 +617,9 @@ public class InvoiceHeaderBean {
 		hibernateQuery.setInteger("inv_id", selectedInvHdrVo.getInvId());
 		java.util.List<InvoiceLineItemHBC> results = hibernateQuery.list();
 		invLineItemList = new ArrayList<InvoiceLineItemVO>();
-
+		
+		selectedInvHdrVo.setLinesOfLineItem(0);
+		
 		for (int i = 0; i < results.size(); i++) {
 			InvoiceLineItemVO tempInvLI = new InvoiceLineItemVO();
 			tempInvLI.setInvId(results.get(i).getInvId());
