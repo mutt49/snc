@@ -107,6 +107,18 @@
 										target="#{TestCertificateBean.editFlag}" value="true" />	
 								</h:commandButton>
 							</rich:column>
+							
+							
+							<rich:column>
+								<h:commandButton value="Delete"
+									action="#{TestCertificateBean.deleteTestCertificate}">
+									<f:setPropertyActionListener
+										target="#{TestCertificateBean.selectedTestCertificateVO}" value="#{tc}" />
+									<f:setPropertyActionListener
+										target="#{TestCertificateBean.editFlag}" value="true" />	
+								</h:commandButton>
+							</rich:column>
+							
 							<!-- <rich:column>
 								<f:facet name="header">
 									<h:outputText value="Description" />

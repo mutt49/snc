@@ -27,11 +27,13 @@ import org.demo.spinncast.handler.CustomerHandler;
 import org.demo.spinncast.hibernate.CustomerHBC;
 import org.demo.spinncast.hibernate.GradeCompositionHBC;
 import org.demo.spinncast.hibernate.GradeMasterHBC;
+import org.demo.spinncast.hibernate.PartMasterHBC;
 import org.demo.spinncast.hibernate.TestCertificateActualValuesHBC;
 import org.demo.spinncast.hibernate.TestCertificateHBC;
 import org.demo.spinncast.vo.CustomerVO;
 import org.demo.spinncast.vo.GradeCompositionVO;
 import org.demo.spinncast.vo.GradeMasterVO;
+import org.demo.spinncast.vo.PartMasterVO;
 import org.demo.spinncast.vo.TestCertificateActualValuesVO;
 import org.demo.spinncast.vo.TestCertificateVO;
 import org.hibernate.Query;
@@ -472,6 +474,20 @@ public class TestCertificateBean {
 		return "TestCertificateAdd";
 	}
 
+	public String deleteTestCertificate() {
+
+		ConnectionPool cpool = ConnectionPool.getInstance();
+		Session session = cpool.getSession();
+		TestCertificateHBC partMasterHbc = new TestCertificateHBC(selectedTestCertificateVO);
+		session.delete(partMasterHbc);
+		session.flush();
+		session.close();
+		selectedTestCertificateVO = new TestCertificateVO();
+		return search();
+		
+	}
+
+	
 	public String save() {
 		try {
 			ConnectionPool cpool = ConnectionPool.getInstance();
