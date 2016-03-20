@@ -135,6 +135,11 @@ public class TestCertificateBean {
 			query.append(" and m.challanNo = :chNo ");
 		}
 
+		if (searchTestCertificateVO.getGrade() != null 
+				&& !searchTestCertificateVO.getGrade().equals("")) {
+			query.append(" and m.grade = :grade ");
+		}
+		
 		query.append(") order by m.tcId");
 
 		Query hibernateQuery = session.createQuery(query.toString());
@@ -153,6 +158,11 @@ public class TestCertificateBean {
 				&& !searchTestCertificateVO.getChallanNo().equals("")) {
 			hibernateQuery.setString("chNo",
 					searchTestCertificateVO.getChallanNo());
+		}
+		if (searchTestCertificateVO.getGrade () != null
+				&& !searchTestCertificateVO.getGrade().equals("")) {
+			hibernateQuery.setString("grade",
+					searchTestCertificateVO.getGrade());
 		}
 
 		java.util.List<TestCertificateHBC> results = hibernateQuery.list();

@@ -45,6 +45,14 @@
 									label="Rate" /></td>
 						</tr>
 						<tr>
+						
+							<td class="leftColumn"><h:outputText value="Grade " /></td>
+							<td><h:inputText styleClass="searchEntry" id="grade"
+									value="#{TestCertificateBean.searchTestCertificateVO.grade}"
+									label="Grade" /></td>
+						
+						</tr>
+						<tr>
 							<td class="leftColumn"><a4j:commandButton
 									styleClass="searchButton" value="Search" reRender="SearchTable"
 									action="#{TestCertificateBean.search}" /></td>
